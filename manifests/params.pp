@@ -1,5 +1,10 @@
 # class tsuru::params
-class tsuru::params {
+class tsuru::params (
+  $redis_source_list  = false,
+  $tsuru_source_list  = false,
+  $docker_source_list = false,
+  $lvm2_source_list   = false
+) {
 
   $tsuru_pub_key = '
 -----BEGIN PGP PUBLIC KEY BLOCK-----
@@ -28,9 +33,9 @@ kDrSLb2SyfEoJ0psRDssSDHjOaIDEDpaACkSd+hm
       key_content => $tsuru_pub_key
   }
 
-  if ($::redis_source_list) {
+  if ($redis_source_list) {
     apt::source { 'redis':
-      location    => $::redis_source_list,
+      location    => $redis_source_list,
       include_src => false,
       repos       => 'main',
       require     => Apt::Key['tsuru']
@@ -41,9 +46,9 @@ kDrSLb2SyfEoJ0psRDssSDHjOaIDEDpaACkSd+hm
     }
   }
 
-  if ($::tsuru_source_list) {
+  if ($tsuru_source_list) {
     apt::source { 'tsuru':
-      location    => $::tsuru_source_list,
+      location    => $tsuru_source_list,
       include_src => false,
       repos       => 'main',
       require     => Apt::Key['tsuru']
@@ -54,9 +59,9 @@ kDrSLb2SyfEoJ0psRDssSDHjOaIDEDpaACkSd+hm
     }
   }
 
-  if ($::docker_source_list) {
+  if ($docker_source_list) {
     apt::source { 'docker' :
-      location    => $::docker_source_list,
+      location    => $docker_source_list,
       include_src => false,
       repos       => 'main',
       require     => Apt::Key['tsuru']
@@ -67,9 +72,9 @@ kDrSLb2SyfEoJ0psRDssSDHjOaIDEDpaACkSd+hm
     }
   }
 
-  if ($::lvm2_source_list) {
+  if ($lvm2_source_list) {
     apt::source { 'lvm2' :
-      location    => $::lvm2_source_list,
+      location    => $lvm2_source_list,
       include_src => false,
       repos       => 'main',
       require     => Apt::Key['tsuru']
