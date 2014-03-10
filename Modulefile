@@ -8,3 +8,4 @@ description 'Tsuru is an open source polyglot cloud application platform (PaaS).
 project_page 'https://github.com/globocom/puppet-tsuru'
 
 dependency 'puppetlabs/stdlib', '>= 2.5.0'
+dependency 'puppetlabs/apt', '>=1.4.0'

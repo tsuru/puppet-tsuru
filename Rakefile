@@ -3,3 +3,5 @@ require 'puppet-lint/tasks/puppet-lint'
 
 PuppetLint.configuration.send('disable_80chars')
 PuppetLint.configuration.send('disable_class_parameter_defaults')
+
+task :default => [:spec_prep, :test, :lint, :spec_clean]
