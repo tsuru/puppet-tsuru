@@ -3,6 +3,6 @@ require 'puppet-lint/tasks/puppet-lint'
 
 PuppetLint.configuration.send('disable_80chars')
 PuppetLint.configuration.send('disable_class_parameter_defaults')
-PuppetLint.configuration.ignore_paths = ["spec/**/*.pp"]
+PuppetLint.configuration.ignore_paths = ["spec/**/*.pp", "vendor/**/*.pp"]
 
 Rake::Task[:spec].enhance [:lint]
