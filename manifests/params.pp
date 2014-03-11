@@ -21,68 +21,76 @@ kDrSLb2SyfEoJ0psRDssSDHjOaIDEDpaACkSd+hm
 =37Zt
 -----END PGP PUBLIC KEY BLOCK-----
 '
+  case $::operatingsystem {
 
-  class { 'apt':
-    always_apt_update => true,
-    disable_keys      => true,
-    update_timeout    => 600
-  }
+    /Ubuntu/ : {
 
-  apt::key { 'tsuru':
-      key         => '383F073D',
-      key_content => $tsuru_pub_key
-  }
+      class { 'apt':
+        always_apt_update => true,
+        disable_keys      => true,
+        update_timeout    => 600
+      }
 
-  if ($redis_source_list) {
-    apt::source { 'redis':
-      location    => $redis_source_list,
-      include_src => false,
-      repos       => 'main',
-      require     => Apt::Key['tsuru']
-    }
-  } else {
-    apt::ppa { 'ppa:tsuru/redis-server':
-      require     => Apt::Key['tsuru']
-    }
-  }
+      apt::key { 'tsuru':
+        key         => '383F073D',
+        key_content => $tsuru_pub_key
+      }
 
-  if ($tsuru_source_list) {
-    apt::source { 'tsuru':
-      location    => $tsuru_source_list,
-      include_src => false,
-      repos       => 'main',
-      require     => Apt::Key['tsuru']
-    }
-  } else {
-    apt::ppa { 'ppa:tsuru/ppa':
-      require     => Apt::Key['tsuru']
-    }
-  }
+      if ($redis_source_list) {
+        apt::source { 'redis':
+          location    => $redis_source_list,
+          include_src => false,
+          repos       => 'main',
+          require     => Apt::Key['tsuru']
+        }
+      } else {
+        apt::ppa { 'ppa:tsuru/redis-server':
+          require     => Apt::Key['tsuru']
+        }
+      }
 
-  if ($docker_source_list) {
-    apt::source { 'docker' :
-      location    => $docker_source_list,
-      include_src => false,
-      repos       => 'main',
-      require     => Apt::Key['tsuru']
-    }
-  } else {
-    apt::ppa { 'ppa:tsuru/docker':
-      require     => Apt::Key['tsuru']
-    }
-  }
+      if ($tsuru_source_list) {
+        apt::source { 'tsuru':
+          location    => $tsuru_source_list,
+          include_src => false,
+          repos       => 'main',
+          require     => Apt::Key['tsuru']
+        }
+      } else {
+        apt::ppa { 'ppa:tsuru/ppa':
+          require     => Apt::Key['tsuru']
+        }
+      }
 
-  if ($lvm2_source_list) {
-    apt::source { 'lvm2' :
-      location    => $lvm2_source_list,
-      include_src => false,
-      repos       => 'main',
-      require     => Apt::Key['tsuru']
+      if ($docker_source_list) {
+        apt::source { 'docker' :
+          location    => $docker_source_list,
+          include_src => false,
+          repos       => 'main',
+          require     => Apt::Key['tsuru']
+        }
+      } else {
+        apt::ppa { 'ppa:tsuru/docker':
+          require     => Apt::Key['tsuru']
+        }
+      }
+
+      if ($lvm2_source_list) {
+        apt::source { 'lvm2' :
+          location    => $lvm2_source_list,
+          include_src => false,
+          repos       => 'main',
+          require     => Apt::Key['tsuru']
+        }
+      } else {
+        apt::ppa { 'ppa:tsuru/lvm2':
+          require     => Apt::Key['tsuru']
+        }
+      }
+
     }
-  } else {
-    apt::ppa { 'ppa:tsuru/lvm2':
-      require     => Apt::Key['tsuru']
-    }
+
+    default : { fail('OS not supported') }
   }
 
 }
