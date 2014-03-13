@@ -1,4 +1,15 @@
-# class tsuru::params
+#
+# == Class: tsuru::params
+#
+#  Params used by other tsuru classes
+#
+# === Parameters
+#
+# [redis_source_list] Optional source list used instead tsuru PPA
+# [tsuru_source_list] Optional source list used instead tsuru PPA
+# [docker_source_list] Optional source list used instead tsuru PPA
+# [lvm2_source_list] Optional source list used instead tsuru PPA
+#
 class tsuru::params (
   $redis_source_list  = false,
   $tsuru_source_list  = false,

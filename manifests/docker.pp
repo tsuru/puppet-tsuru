@@ -1,3 +1,15 @@
+#
+# == Class: tsuru::docker
+#
+#  Tsuru docker node
+#
+# === Parameters
+#
+# [tsuru_ssh_agent] Install tsuru-ssh-agent on docker node
+# [tsuru_server_version] Package tsuru-server version
+# [lxc_docker_version] LXC docker package version
+# [tsuru_ssh_agent_private_key] Private key used to access docker containers. Must be the same on all tsuru docker nodes
+#
 class tsuru::docker (
   $tsuru_ssh_agent              = false,
   $tsuru_server_version         = latest,
