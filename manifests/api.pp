@@ -1,4 +1,26 @@
-# class tsuru::api
+#
+# == Class: tsuru::api
+#
+# Installs and configures
+#
+# === Parameters
+#
+# [tsuru_server_version] Package tsuru-server to be installed.
+# [tsuru_collector_server] Server name where collector runs.
+# [tsuru_app_domain] Domain appended to apps created on tsuru and serverd by hipache.
+# [tsuru_server_bind] Ip:port where tsuru-server runs.
+# [tsuru_api_server_url] URL exposed by tsuru-api
+# [tsuru_mongodb_url] MongoDB url
+# [tsuru_mongodb_database] MongoDB db
+# [tsuru_git_url] URL API where Gandalf server runs
+# [tsuru_git_rw_host] Git RW host
+# [tsuru_git_ro_host] Git RO host
+# [tsuru_redis_server] Redis server
+# [tsuru_registry_server] Docker registry server
+# [tsuru_segregate] Turns segregation between apps x teams
+# [tsuru_docker_servers_urls] Docker urls array. Eg: [host1:4243, host2:4243, ... hostN:4243]
+#
+
 class tsuru::api (
   $tsuru_server_version = latest,
   $tsuru_collector_server = undef,
@@ -10,7 +32,7 @@ class tsuru::api (
   $tsuru_git_url,
   $tsuru_git_rw_host,
   $tsuru_git_ro_host,
-  $tsuru_redis_master,
+  $tsuru_redis_server,
   $tsuru_registry_server,
   $tsuru_segregate = false,
   $tsuru_docker_servers_urls,
@@ -87,11 +109,11 @@ class tsuru::api (
 
 
   service { 'tsuru-server-collector' :
-    ensure    => $tsuru_server_collector_ensure,
-    enable    => true,
-    provider  => 'upstart',
-    subscribe  => [ File['/etc/tsuru/tsuru.conf'], File['/etc/default/tsuru-server'], Package['tsuru-server'] ],
-    require   => Package['tsuru-server']
+    ensure      => $tsuru_server_collector_ensure,
+    enable      => true,
+    provider    => 'upstart',
+    subscribe   => [ File['/etc/tsuru/tsuru.conf'], File['/etc/default/tsuru-server'], Package['tsuru-server'] ],
+    require     => Package['tsuru-server']
   }
 
 }

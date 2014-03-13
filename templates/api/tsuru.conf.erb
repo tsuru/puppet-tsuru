@@ -161,7 +161,7 @@ auth:
 provisioner: docker
 hipache:
   domain: <%= tsuru_app_domain %>
-  redis-server: <%= tsuru_redis_master %>
+  redis-server: <%= tsuru_redis_server %>
 docker:
   segregate: <%= tsuru_segregate %>
   registry: <%= tsuru_registry_server %>
@@ -176,7 +176,7 @@ docker:
   ssh-agent-port: 4545
   seggregate: false
   scheduler:
-    redis-server: <%= tsuru_redis_master %>
+    redis-server: <%= tsuru_redis_server %>
     redis-prefix: <%= @tsuru_docker_redis_prefix %>
   run-cmd:
     bin: /var/lib/tsuru/start

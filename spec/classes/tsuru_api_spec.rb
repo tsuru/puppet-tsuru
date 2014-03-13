@@ -14,7 +14,7 @@ describe 'tsuru::api'  do
       :tsuru_git_url          => 'http://git.tsuru.localdomain',
       :tsuru_git_rw_host      => 'git.tsuru.localdomain',
       :tsuru_git_ro_host      => 'git.tsuru.localdomain',
-      :tsuru_redis_master     => 'redis.tsuru.localdomain',
+      :tsuru_redis_server     => 'redis.tsuru.localdomain',
       :tsuru_registry_server  => 'registry.tsuru.localdomain',
       :tsuru_docker_servers_urls   => [ 'foo.localdomain:4243', 'bar.localdomain:4243' ]
     }
