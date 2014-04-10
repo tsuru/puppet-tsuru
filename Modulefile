@@ -1,5 +1,5 @@
 name    'tsuru-tsuru'
-version '0.1.0'
+version '0.1.1'
 source 'https://github.com/tsuru/puppet-tsuru'
 author 'Globo.com'
 license 'BSD-style license that can be found in the LICENSE file'
