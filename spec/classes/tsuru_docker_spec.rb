@@ -61,7 +61,7 @@ describe 'tsuru::docker'  do
   end
 
   it 'creates /etc/profile.d/docker.sh with alias to docker' do
-    should contain_file('/etc/profile.d/docker.sh').with_content(/alias docker='docker -H=localhost'/)
+    should contain_file('/etc/profile.d/docker.sh').with_content(/alias docker="docker -H=localhost"/)
   end
 
   it 'creates docker service, ensure running and notifies Package[lxc-docker], File[/etc/init/docker.conf] ' do

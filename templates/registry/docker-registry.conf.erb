@@ -1,0 +1,13 @@
+limit nofile 10000 10000
+
+kill timeout 180
+
+start on runlevel [2345]
+stop on runlevel [06]
+
+setuid <%= @registry_user %>
+setgid <%= @registry_group %>
+
+respawn
+exec /usr/bin/docker-registry -l <%= @registry_ipbind_port %> -d <%= @registry_path %> -p /var/run/registry/docker-registry.pid
+post-stop exec sleep 5
