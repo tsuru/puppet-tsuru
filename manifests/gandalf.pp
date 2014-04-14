@@ -10,7 +10,9 @@
 # [gandalf_db_url] Gandalf mongodb url
 # [gandalf_db_name] Gandalf mongodb database name
 # [gandalf_repositories_path] Git repository root path
+# [gandalf_create_repositories] Create repositories base dir
 # [gandalf_bare_template_path] Git base template to use
+# [gandalf_create_bare_template] Create bare template dir
 # [gandalf_user] Gandalf running user
 # [gandalf_group] Gandalf running group
 # [gandalf_version] Gandalf server package version
@@ -24,7 +26,9 @@ class tsuru::gandalf (
   $gandalf_db_url        = 'localhost:27017',
   $gandalf_db_name       = 'gandalf',
   $gandalf_repositories_path  = '/var/lib/gandalf/repositories',
+  $gandalf_create_repositories = true,
   $gandalf_bare_template_path = '/var/lib/gandalf/bare-template',
+  $gandalf_create_bare_template = true,
   $gandalf_user           = 'git',
   $gandalf_group          = 'git',
   $gandalf_version        = 'latest',
@@ -82,6 +86,22 @@ class tsuru::gandalf (
     require    => File['/etc/init/git-daemon.conf']
   }
 
+  if ($gandalf_create_repositories) {
+    file { $gandalf_repositories_path:
+      ensure => directory,
+      mode   => '0755',
+      owner  => $gandalf_user,
+      group  => $gandalf_group
+    }
+  }
+
+  if ($gandalf_create_bare_template) {
+    file { $gandalf_bare_template_path:
+      ensure => directory,
+      mode   => '0755',
+      owner  => $gandalf_user,
+      group  => $gandalf_group
+    }
+  }
+
 }
-
-

@@ -14,6 +14,8 @@ describe 'tsuru::gandalf'  do
       :gandalf_db_name => 'gandalf_db',
       :gandalf_repositories_path => '/foo/bar/repos',
       :gandalf_bare_template_path => '/foo/bar/bare',
+      :gandalf_create_repositories => true,
+      :gandalf_create_bare_template => true,
       :gandalf_user => 'gand_user',
       :gandalf_group => 'gand_group',
       :gandalf_version => '0.1.0',
@@ -58,6 +60,22 @@ describe 'tsuru::gandalf'  do
     should contain_service('git-daemon').with({
       :ensure => 'running',
       :subscribe => 'File[/etc/init/git-daemon.conf]'
+    })
+  end
+
+  it 'creates git repositories base dir' do
+    should contain_file('/foo/bar/bare').with({
+      :ensure => 'directory',
+      :owner  => 'gand_user',
+      :group  => 'gand_group'
+    })
+  end
+
+  it 'create bare templte dir' do
+    should contain_file('/foo/bar/repos').with({
+      :ensure => 'directory',
+      :owner  => 'gand_user',
+      :group  => 'gand_group'
     })
   end
 
