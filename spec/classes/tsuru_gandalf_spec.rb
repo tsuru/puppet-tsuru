@@ -65,17 +65,19 @@ describe 'tsuru::gandalf'  do
 
   it 'creates git repositories base dir' do
     should contain_file('/foo/bar/bare').with({
-      :ensure => 'directory',
-      :owner  => 'gand_user',
-      :group  => 'gand_group'
+      :ensure  => 'directory',
+      :recurse => 'true',
+      :owner   => 'gand_user',
+      :group   => 'gand_group'
     })
   end
 
   it 'create bare templte dir' do
     should contain_file('/foo/bar/repos').with({
-      :ensure => 'directory',
-      :owner  => 'gand_user',
-      :group  => 'gand_group'
+      :ensure  => 'directory',
+      :recurse => 'true',
+      :owner   => 'gand_user',
+      :group   => 'gand_group'
     })
   end
 

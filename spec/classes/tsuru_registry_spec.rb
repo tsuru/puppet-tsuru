@@ -29,7 +29,7 @@ describe 'tsuru::registry'  do
   end
 
   it 'creates /var/run/registry dir' do
-    should contain_file('/var/run/registry').with({:ensure => 'directory', :notify => 'Service[docker-registry]'})
+    should contain_file('/var/run/registry').with({:ensure => 'directory', :recurse => 'true', :notify => 'Service[docker-registry]'})
   end
 
   it 'run service docker-registry and subscribe /etc/init/docker-registry.conf file' do

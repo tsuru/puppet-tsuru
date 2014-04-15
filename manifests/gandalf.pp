@@ -88,19 +88,21 @@ class tsuru::gandalf (
 
   if ($gandalf_create_repositories) {
     file { $gandalf_repositories_path:
-      ensure => directory,
-      mode   => '0755',
-      owner  => $gandalf_user,
-      group  => $gandalf_group
+      ensure  => directory,
+      recurse => true,
+      mode    => '0755',
+      owner   => $gandalf_user,
+      group   => $gandalf_group
     }
   }
 
   if ($gandalf_create_bare_template) {
     file { $gandalf_bare_template_path:
-      ensure => directory,
-      mode   => '0755',
-      owner  => $gandalf_user,
-      group  => $gandalf_group
+      ensure  => directory,
+      recurse => true,
+      mode    => '0755',
+      owner   => $gandalf_user,
+      group   => $gandalf_group
     }
   }
 
