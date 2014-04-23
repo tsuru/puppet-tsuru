@@ -1,6 +1,12 @@
+require 'rspec-puppet' 
 require 'spec_helper'
+require 'fileutils'
 
 describe 'tsuru::gandalf'  do
+
+  before (:each) do
+    FileUtils.stubs(:mkdir_p).returns(true)
+  end
 
   let :facts do
     { :osfamily => 'Debian', :operatingsystem => 'Ubuntu', :lsbdistid => 'Ubuntu', :lsbdistcodename => 'precise', :hostname => 'foo.bar' }
@@ -12,7 +18,7 @@ describe 'tsuru::gandalf'  do
       :gandalf_ipbind_port => '0.0.0.0:9000',
       :gandalf_db_url => 'foobar:27017',
       :gandalf_db_name => 'gandalf_db',
-      :gandalf_repositories_path => '/foo/bar/repos',
+      :gandalf_repositories_path =>  '/foo/bar/repos',
       :gandalf_bare_template_path => '/foo/bar/bare',
       :gandalf_create_repositories => true,
       :gandalf_create_bare_template => true,
@@ -26,6 +32,12 @@ describe 'tsuru::gandalf'  do
 
   it 'requires class params' do
     should contain_class('tsuru::params')
+  end
+
+  it 'install gandalf-server package' do
+    should contain_package('gandalf-server').with({
+      :ensure => '0.1.0'
+    })
   end
 
   it 'creates file /etc/gandalf.conf' do
@@ -63,7 +75,7 @@ describe 'tsuru::gandalf'  do
     })
   end
 
-  it 'creates git repositories base dir' do
+  it 'fix git repositories base dir permission' do
     should contain_file('/foo/bar/bare').with({
       :ensure  => 'directory',
       :recurse => 'true',
@@ -72,7 +84,7 @@ describe 'tsuru::gandalf'  do
     })
   end
 
-  it 'create bare templte dir' do
+  it 'fix bare template dir permission' do
     should contain_file('/foo/bar/repos').with({
       :ensure  => 'directory',
       :recurse => 'true',

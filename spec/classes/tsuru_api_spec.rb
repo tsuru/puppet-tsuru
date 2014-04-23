@@ -24,6 +24,13 @@ describe 'tsuru::api'  do
     should contain_class('tsuru::params')
   end
 
+  it 'enabling tsuru-server-api service' do
+    should contain_service('tsuru-server-api').with({
+      :ensure => 'running',
+      :enable => 'true'
+    })
+  end
+
   context 'enabling collector server for host foo.bar' do
 
     it 'enabling beanstalkd service' do

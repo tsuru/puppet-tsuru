@@ -32,13 +32,21 @@ class tsuru::registry (
     notify  => Service['docker-registry'],
   }
 
-  file { '/var/run/registry' :
+  file { '/var/run/registry':
     ensure  => directory,
     recurse => true,
-    mode    => '0644',
+    mode    => '0755',
     owner   => $registry_user,
     group   => $registry_group,
     notify  => Service['docker-registry'],
+  }
+
+  file { $registry_path:
+    ensure  => directory,
+    mode    => '0755',
+    owner   => $registry_user,
+    group   => $registry_group,
+    notify  => Service['docker-registry']
   }
 
   service { 'docker-registry':

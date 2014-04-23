@@ -11,6 +11,8 @@ RSpec.configure do |c|
   c.manifest_dir = File.join(fixture_path, 'manifests')
 end
 
+at_exit { RSpec::Puppet::Coverage.report! }
+
 # We need this because the RAL uses 'should' as a method.  This
 # allows us the same behaviour but with a different method name.
 class Object

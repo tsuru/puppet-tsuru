@@ -68,7 +68,7 @@ kDrSLb2SyfEoJ0psRDssSDHjOaIDEDpaACkSd+hm
     end
 
     it 'install packages on RedHat system' do
-      expect { should compile }.to raise_error(Puppet::Error, /OS not supported/)
+      expect { should compile }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /OS not supported/)
     end
 
   end

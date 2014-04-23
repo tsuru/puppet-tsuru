@@ -87,22 +87,32 @@ class tsuru::gandalf (
   }
 
   if ($gandalf_create_repositories) {
-    file { $gandalf_repositories_path:
-      ensure  => directory,
-      recurse => true,
-      mode    => '0755',
-      owner   => $gandalf_user,
-      group   => $gandalf_group
+    if ( mkdir_p($gandalf_repositories_path) ) {
+      file { $gandalf_repositories_path:
+        ensure  => directory,
+        recurse => true,
+        mode    => '0755',
+        owner   => $gandalf_user,
+        group   => $gandalf_group,
+        require => Mkdir_p[$gandalf_repositories_path]
+      }
+    } else {
+      fail("Cannot create and set ${gandalf_repositories_path}")
     }
   }
 
   if ($gandalf_create_bare_template) {
-    file { $gandalf_bare_template_path:
-      ensure  => directory,
-      recurse => true,
-      mode    => '0755',
-      owner   => $gandalf_user,
-      group   => $gandalf_group
+    if ( mkdir_p($gandalf_bare_template_path) ) {
+      file { $gandalf_bare_template_path:
+        ensure  => directory,
+        recurse => true,
+        mode    => '0755',
+        owner   => $gandalf_user,
+        group   => $gandalf_group,
+        require => Mkdir_p[$gandalf_bare_template_path]
+      }
+    } else {
+      fail("Cannot create and set ${gandalf_bare_template_path}")
     }
   }
 

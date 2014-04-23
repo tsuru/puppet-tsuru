@@ -3,6 +3,8 @@ source 'https://rubygems.org'
 group :development, :test do
   gem 'puppetlabs_spec_helper', :require => false
   gem 'puppet-lint', '~> 0.3.2'
+  gem 'rspec-mocks'
+  gem 'rspec-puppet', :git => 'https://github.com/rodjek/rspec-puppet'
 end
 
 if puppetversion = ENV['PUPPET_GEM_VERSION']
