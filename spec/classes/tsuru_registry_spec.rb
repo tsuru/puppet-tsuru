@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe 'tsuru::registry'  do
 
+  before (:each) do
+    FileUtils.stubs(:mkdir_p).returns(true)
+  end
+
   let :facts do
     { :osfamily => 'Debian', :operatingsystem => 'Ubuntu', :lsbdistid => 'Ubuntu', :lsbdistcodename => 'precise', :hostname => 'foo.bar' }
   end

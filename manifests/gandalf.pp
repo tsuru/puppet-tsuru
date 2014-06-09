@@ -36,7 +36,7 @@ class tsuru::gandalf (
   $tsuru_api_token
 ) {
 
-  include tsuru::params
+  require tsuru::params
 
   package { 'gandalf-server':
     ensure => $gandalf_version
@@ -93,8 +93,7 @@ class tsuru::gandalf (
         recurse => true,
         mode    => '0755',
         owner   => $gandalf_user,
-        group   => $gandalf_group,
-        require => Mkdir_p[$gandalf_repositories_path]
+        group   => $gandalf_group
       }
     } else {
       fail("Cannot create and set ${gandalf_repositories_path}")
@@ -108,8 +107,7 @@ class tsuru::gandalf (
         recurse => true,
         mode    => '0755',
         owner   => $gandalf_user,
-        group   => $gandalf_group,
-        require => Mkdir_p[$gandalf_bare_template_path]
+        group   => $gandalf_group
       }
     } else {
       fail("Cannot create and set ${gandalf_bare_template_path}")

@@ -17,7 +17,7 @@ class tsuru::docker (
   $tsuru_ssh_agent_private_key  = undef
 ) {
 
-  include tsuru::params
+  require tsuru::params
 
   if ($tsuru_ssh_agent) {
 

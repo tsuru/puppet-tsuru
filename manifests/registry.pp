@@ -17,7 +17,7 @@ class tsuru::registry (
   $registry_group        = 'registry'
 ) {
 
-  include tsuru::params
+  require tsuru::params
 
   package { 'docker-registry' :
     ensure =>  $registry_version
@@ -41,12 +41,14 @@ class tsuru::registry (
     notify  => Service['docker-registry'],
   }
 
-  file { $registry_path:
-    ensure  => directory,
-    mode    => '0755',
-    owner   => $registry_user,
-    group   => $registry_group,
-    notify  => Service['docker-registry']
+  if ( mkdir_p($registry_path) ) {
+    file { $registry_path:
+      ensure  => directory,
+      mode    => '0755',
+      owner   => $registry_user,
+      group   => $registry_group,
+      notify  => Service['docker-registry']
+    }
   }
 
   service { 'docker-registry':

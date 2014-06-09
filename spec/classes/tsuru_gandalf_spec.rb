@@ -76,20 +76,20 @@ describe 'tsuru::gandalf'  do
   end
 
   it 'fix git repositories base dir permission' do
-    should contain_file('/foo/bar/bare').with({
-      :ensure  => 'directory',
-      :recurse => 'true',
-      :owner   => 'gand_user',
-      :group   => 'gand_group'
-    })
-  end
-
-  it 'fix bare template dir permission' do
     should contain_file('/foo/bar/repos').with({
       :ensure  => 'directory',
       :recurse => 'true',
       :owner   => 'gand_user',
-      :group   => 'gand_group'
+      :group   => 'gand_group',
+    })
+  end
+
+  it 'fix bare template dir permission' do
+    should contain_file('/foo/bar/bare').with({
+      :ensure  => 'directory',
+      :recurse => 'true',
+      :owner   => 'gand_user',
+      :group   => 'gand_group',
     })
   end
 
