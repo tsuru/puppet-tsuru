@@ -4,4 +4,4 @@ TSR_COLLECTOR_ENABLED=no
 TSR_SSH_AGENT_ENABLED=yes
 TSR_SSH_AGENT_USER=ubuntu
 TSR_SSH_AGENT_LISTEN=0.0.0.0:4545
-TSR_SSH_AGENT_PRIVATE_KEY=<%= @tsuru_ssh_agent_private_key ? tsuru_ssh_agent_private_key : "/var/lib/tsuru/.ssh/id_rsa" %>
+TSR_SSH_AGENT_PRIVATE_KEY=<%= @tsuru_ssh_agent_private_key ? @tsuru_ssh_agent_private_key : "/var/lib/tsuru/.ssh/id_rsa" %>

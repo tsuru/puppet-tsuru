@@ -14,7 +14,7 @@ describe 'tsuru::docker'  do
 
   context 'enable tsuru_ssh_agent' do
 
-    let (:params) { { :tsuru_ssh_agent => true } }
+    let (:params) { { :tsuru_ssh_agent => true, :tsuru_ssh_agent_user => 'tsuru_user', :tsuru_ssh_agent_group => 'tsuru_group' } }
 
     it 'install tsuru-server package latest version' do
       should contain_package('tsuru-server').with({
@@ -23,7 +23,9 @@ describe 'tsuru::docker'  do
     end
 
     it 'creates /etc/init/tsuru-ssh-agent.conf with service enable' do
-      should contain_file('/etc/init/tsuru-ssh-agent.conf').with_content(/exec \/usr\/bin\/tsr docker-ssh-agent/)
+      should contain_file('/etc/init/tsuru-ssh-agent.conf').with( {
+        'content' => /.+setuid tsuru_user\nsetgid tsuru_group\n.+exec \/usr\/bin\/tsr docker-ssh-agent/m
+      })
       should contain_file('/etc/init/tsuru-ssh-agent.conf').with( {
         'ensure' => 'present',
         'owner'  => 'root',

@@ -9,12 +9,16 @@
 # [tsuru_server_version] Package tsuru-server version
 # [lxc_docker_version] LXC docker package version
 # [tsuru_ssh_agent_private_key] Private key used to access docker containers. Must be the same on all tsuru docker nodes
-#
+# [tsuru_ssh_agent_user] User used to run tsuru-ssh-agent (default to ubuntu)
+# [tsuru_ssh_agent_group] Group used to run tsuru-ssh-agent (default to ubuntu)
+
 class tsuru::docker (
   $tsuru_ssh_agent              = false,
   $tsuru_server_version         = latest,
   $lxc_docker_version           = latest,
-  $tsuru_ssh_agent_private_key  = undef
+  $tsuru_ssh_agent_private_key  = undef,
+  $tsuru_ssh_agent_user         = undef,
+  $tsuru_ssh_agent_group        = undef
 ) {
 
   require tsuru::params

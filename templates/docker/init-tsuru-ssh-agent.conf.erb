@@ -7,8 +7,8 @@ stop on runlevel [06]
 
 respawn
 
-setuid <%= @tsuru_user ? tsuru_user : 'tsuru' %>
-setgid <%= @tsuru_user ? tsuru_user : 'tsuru' %>
+setuid <%= @tsuru_ssh_agent_user ? @tsuru_ssh_agent_user : 'tsuru' %>
+setgid <%= @tsuru_ssh_agent_group ? @tsuru_ssh_agent_group : 'tsuru' %>
 
 script
   TSR_SSH_AGENT_ENABLED="no"
