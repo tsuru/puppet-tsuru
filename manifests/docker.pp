@@ -56,7 +56,7 @@ class tsuru::docker (
   }
 
   file { '/etc/profile.d/docker.sh' :
-    content => inline_template('alias docker="docker -H=localhost"'),
+    content => inline_template('alias docker="docker -H=tcp://localhost:4243"'),
     mode    => '0755'
   }
 
