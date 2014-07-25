@@ -103,7 +103,7 @@ class tsuru::docker (
   }
 
   $docker_bind_opts = $docker_bind ? { undef => '', default => "-H ${docker_bind}" }
-  $docker_opts = join([ $docker_graph_dir, "-e ${docker_exec_driver}", $docker_bind_opts, $docker_extra_opts ]," ")
+  $docker_opts = join([ "-g $docker_graph_dir", "-e ${docker_exec_driver}", $docker_bind_opts, $docker_extra_opts ]," ")
   file { '/etc/default/docker':
     ensure  => present,
     content => template('tsuru/docker/default-docker.erb'),
