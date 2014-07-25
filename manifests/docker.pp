@@ -28,7 +28,7 @@ class tsuru::docker (
   $docker_graph_dir             = '/var/lib/docker',
   $docker_exec_driver           = 'native',
   $docker_bind                  = undef,
-  $docker_extra_opts            = undef
+  $docker_extra_opts            = ''
 ) {
 
   require tsuru::params
@@ -102,8 +102,8 @@ class tsuru::docker (
     notify  => Service['docker']
   }
 
-  $docker_bind_opts = "-H ${docker_bind}"
-  $docker_opts = "${docker_graph_dir} -e ${docker_exec_driver} ${docker_bind_opts} ${docker_extra_opts}"
+  $docker_bind_opts = $docker_bind ? { undef => '', default => "-H ${docker_bind}" }
+  $docker_opts = join([ $docker_graph_dir, "-e ${docker_exec_driver}", $docker_bind_opts, $docker_extra_opts ]," ")
   file { '/etc/default/docker':
     ensure  => present,
     content => template('tsuru/docker/default-docker.erb'),
