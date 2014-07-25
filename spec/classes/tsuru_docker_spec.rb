@@ -77,7 +77,14 @@ describe 'tsuru::docker'  do
   end
 
   it 'creates service docker file /etc/init/docker.conf' do
-    should contain_file('/etc/init/docker.conf').with_content(/\/usr\/bin\/docker -r -d  -H 0.0.0.0:4243/)
+    should contain_file('/etc/init/docker.conf')
+  end
+
+  context 'enable tsuru_ssh_agent' do
+    let (:params) { { :docker_graph_dir => '/foo/bar', :docker_bind => '0.0.0.0:4243', :docker_exec_driver => 'lxc', :docker_extra_opts => '--extra-opts foo=bar' } }
+    it 'creates docker default file /etc/default/docker' do
+      should contain_file('/etc/default/docker').with_content(/^DOCKER_OPTS="\/foo\/bar -e lxc -H 0.0.0.0:4243 --extra-opts foo=bar"/m)
+    end
   end
 
   it 'tsuru::params should be called before tsuru::docker' do
