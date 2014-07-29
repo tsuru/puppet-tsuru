@@ -11,10 +11,14 @@
 # [lvm2_source_list] Optional source list used instead tsuru PPA
 #
 class tsuru::params (
-  $redis_source_list  = false,
-  $tsuru_source_list  = false,
-  $docker_source_list = false,
-  $lvm2_source_list   = false
+  $redis_source_list    = false,
+  $redis_release        = $::lsbdistcodename,
+  $tsuru_source_list    = false,
+  $tsuru_release        = $::lsbdistcodename,
+  $docker_source_list   = false,
+  $docker_release       = $::lsbdistcodename,
+  $lvm2_source_list     = false,
+  $lvm2_release         = $::lsbdistcodename
 ) {
 
   $tsuru_pub_key = '
@@ -49,13 +53,15 @@ kDrSLb2SyfEoJ0psRDssSDHjOaIDEDpaACkSd+hm
 
       if ($redis_source_list) {
         apt::source { 'redis':
-          location    => $redis_source_list,
-          include_src => false,
-          repos       => 'main',
-          require     => Apt::Key['tsuru']
+          location      => $redis_source_list,
+          include_src   => false,
+          repos         => 'main',
+          release       => $redis_release,
+          require       => Apt::Key['tsuru']
         }
       } else {
         apt::ppa { 'ppa:tsuru/redis-server':
+          release     => $redis_release,
           require     => Apt::Key['tsuru']
         }
       }
@@ -65,10 +71,12 @@ kDrSLb2SyfEoJ0psRDssSDHjOaIDEDpaACkSd+hm
           location    => $tsuru_source_list,
           include_src => false,
           repos       => 'main',
+          release     => $tsuru_release,
           require     => Apt::Key['tsuru']
         }
       } else {
         apt::ppa { 'ppa:tsuru/ppa':
+          release     => $tsuru_release,
           require     => Apt::Key['tsuru']
         }
       }
@@ -78,10 +86,12 @@ kDrSLb2SyfEoJ0psRDssSDHjOaIDEDpaACkSd+hm
           location    => $docker_source_list,
           include_src => false,
           repos       => 'main',
+          release     => $docker_release,
           require     => Apt::Key['tsuru']
         }
       } else {
         apt::ppa { 'ppa:tsuru/docker':
+          release     => $docker_release,
           require     => Apt::Key['tsuru']
         }
       }
@@ -91,10 +101,12 @@ kDrSLb2SyfEoJ0psRDssSDHjOaIDEDpaACkSd+hm
           location    => $lvm2_source_list,
           include_src => false,
           repos       => 'main',
+          release     => $lvm2_release,
           require     => Apt::Key['tsuru']
         }
       } else {
         apt::ppa { 'ppa:tsuru/lvm2':
+          release     => $lvm2_release,
           require     => Apt::Key['tsuru']
         }
       }

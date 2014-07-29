@@ -58,7 +58,18 @@ kDrSLb2SyfEoJ0psRDssSDHjOaIDEDpaACkSd+hm
     it { should contain_apt__source('tsuru').with(:location => 'tsuru_source_list_custom') }
     it { should contain_apt__source('lvm2').with(:location => 'lvm2_source_list_custom') }
     it { should contain_apt__source('docker').with(:location => 'docker_source_list_custom') }
+    context 'using custom release' do
 
+      before do
+        params.merge!( :docker_release => 'docker' )
+      end
+
+      it { should contain_apt__source('redis').with(:location => 'redis_source_list_custom', :release => 'precise') }
+      it { should contain_apt__source('tsuru').with(:location => 'tsuru_source_list_custom', :release => 'precise') }
+      it { should contain_apt__source('lvm2').with(:location => 'lvm2_source_list_custom', :release => 'precise') }
+      it { should contain_apt__source('docker').with(:location => 'docker_source_list_custom', :release => 'docker') }
+
+    end
   end
 
   context 'fail with wrong OS' do
