@@ -6,19 +6,20 @@
 # === Parameters
 #
 # [redis_source_list] Optional source list used instead tsuru PPA
+# [redis_release]     Optional release name to used instead lsb dist code
 # [tsuru_source_list] Optional source list used instead tsuru PPA
+# [tsuru_release]     Optional release name to used instead lsb dist code
 # [docker_source_list] Optional source list used instead tsuru PPA
-# [lvm2_source_list] Optional source list used instead tsuru PPA
+# [docker_release]     Optional release name to used instead lsb dist code
 #
+
 class tsuru::params (
   $redis_source_list    = false,
   $redis_release        = $::lsbdistcodename,
   $tsuru_source_list    = false,
   $tsuru_release        = $::lsbdistcodename,
   $docker_source_list   = false,
-  $docker_release       = $::lsbdistcodename,
-  $lvm2_source_list     = false,
-  $lvm2_release         = $::lsbdistcodename
+  $docker_release       = $::lsbdistcodename
 ) {
 
   $tsuru_pub_key = '
@@ -36,6 +37,29 @@ kDrSLb2SyfEoJ0psRDssSDHjOaIDEDpaACkSd+hm
 =37Zt
 -----END PGP PUBLIC KEY BLOCK-----
 '
+
+$docker_pub_key = '
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+mQENBFIOqEUBCADsvqwefcPPQArws9jHF1PaqhXxkaXzeE5uHHtefdoRxQdjoGok
+HFmHWtCd9zR7hDpHE7Q4dwJtSFWZAM3zaUtlvRAgvMmfLm08NW9QQn0CP5khjjF1
+cgckhjmzQAzpEHO5jiSwl0ZU8ouJrLDgmbhT6knB1XW5/VmeECqKRyhlEK0zRz1a
+XV+4EVDySlORmFyqlmdIUmiU1/6pKEXyRBBVCHNsbnpZOOzgNhfMz8VE8Hxq7Oh8
+1qFaFXjNGCrNZ6xr/DI+iXlsZ8urlZjke5llm4874N8VPUeFQ/szmsbSqmCnbd15
+LLtrpvpSMeyRG+LoTYvyTG9QtAuewL9EKJPfABEBAAG0OURvY2tlciBSZWxlYXNl
+IFRvb2wgKHJlbGVhc2Vkb2NrZXIpIDxkb2NrZXJAZG90Y2xvdWQuY29tPokBOAQT
+AQIAIgUCUg6oRQIbLwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQ2Fdqi6iN
+IenM+QgAnOiozhHDAYGO92SmZjib6PK/1djbrDRMreCT8bnzVpriTOlEtARDXsmX
+njKSFa+HTxHi/aTNo29TmtHDfUupcfmaI2mXbZt1ixXLuwcMv9sJXKoeWwKZnN3i
+9vAM9/yAJz3aq+sTXeG2dDrhZr34B3nPhecNkKQ4v6pnQy43Mr59Fvv5CzKFa9oZ
+IoZf+Ul0F90HSw5WJ1NsDdHGrAaHLZfzqAVrqHzazw7ghe94k460T8ZAaovCaTQV
+HzTcMfJdPz/uTim6J0OergT9njhtdg2ugUj7cPFUTpsxQ1i2S8qDEQPL7kabAZZo
+Pim0BXdjsHVftivqZqfWeVFKMorchQ==
+=fRgo
+-----END PGP PUBLIC KEY BLOCK-----
+'
+
   case $::operatingsystem {
 
     /Ubuntu/ : {
@@ -49,6 +73,11 @@ kDrSLb2SyfEoJ0psRDssSDHjOaIDEDpaACkSd+hm
       apt::key { 'tsuru':
         key         => '383F073D',
         key_content => $tsuru_pub_key
+      }
+
+      apt::key { 'docker':
+        key         => 'A88D21E9',
+        key_content => $docker_pub_key
       }
 
       if ($redis_source_list) {
@@ -87,29 +116,18 @@ kDrSLb2SyfEoJ0psRDssSDHjOaIDEDpaACkSd+hm
           include_src => false,
           repos       => 'main',
           release     => $docker_release,
-          require     => Apt::Key['tsuru']
+          require     => Apt::Key['docker']
         }
       } else {
-        apt::ppa { 'ppa:tsuru/docker':
-          release     => $docker_release,
-          require     => Apt::Key['tsuru']
+        apt::source { 'docker' :
+          location    => 'https://get.docker.io/ubuntu',
+          include_src => false,
+          repos       => 'main',
+          release     => 'docker',
+          require     => Apt::Key['docker']
         }
       }
 
-      if ($lvm2_source_list) {
-        apt::source { 'lvm2' :
-          location    => $lvm2_source_list,
-          include_src => false,
-          repos       => 'main',
-          release     => $lvm2_release,
-          require     => Apt::Key['tsuru']
-        }
-      } else {
-        apt::ppa { 'ppa:tsuru/lvm2':
-          release     => $lvm2_release,
-          require     => Apt::Key['tsuru']
-        }
-      }
 
     }
 
