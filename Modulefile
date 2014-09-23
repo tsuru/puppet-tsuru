@@ -9,3 +9,4 @@ project_page 'https://github.com/tsuru/puppet-tsuru'
 
 dependency 'puppetlabs/stdlib', '>= 2.5.0'
 dependency 'puppetlabs/apt', '>=1.4.0'
+dependency 'stankevich/python', '1.7.7'

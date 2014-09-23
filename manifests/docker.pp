@@ -16,6 +16,7 @@
 # [docker_exec_driver] Choose between native(default) or lxc
 # [docker_bind] Docker bind host:port. Socker default
 # [docker_extra_opts] Extra opts to docker daemon
+# [log_to_syslog] Log output and stderr also to syslog
 
 
 class tsuru::docker (
@@ -28,7 +29,8 @@ class tsuru::docker (
   $docker_graph_dir             = '/var/lib/docker',
   $docker_exec_driver           = 'native',
   $docker_bind                  = undef,
-  $docker_extra_opts            = ''
+  $docker_extra_opts            = '',
+  $log_to_syslog                = true
 ) {
 
   require tsuru::params
@@ -104,6 +106,7 @@ class tsuru::docker (
 
   $docker_bind_opts = $docker_bind ? { undef => '', default => "-H ${docker_bind}" }
   $docker_opts = join([ "-g $docker_graph_dir", "-e ${docker_exec_driver}", $docker_bind_opts, $docker_extra_opts ]," ")
+
   file { '/etc/default/docker':
     ensure  => present,
     content => template('tsuru/docker/default-docker.erb'),

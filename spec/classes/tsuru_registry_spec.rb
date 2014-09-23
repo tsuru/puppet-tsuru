@@ -24,19 +24,11 @@ describe 'tsuru::registry'  do
     should contain_class('tsuru::params')
   end
 
-  it 'install docker-registry package version 0.1.0' do
-    should contain_package('docker-registry').with({:ensure => '0.1.0'})
-  end
-
   it 'creates file /etc/init/docker-registry.conf' do
     should contain_file('/etc/init/docker-registry.conf').with_content(/setuid foo\nsetgid bar\n\nrespawn\nexec.+-l 0.0.0.0:9000 -d \/foo\/bar/)
   end
 
-  it 'creates /var/run/registry dir' do
-    should contain_file('/var/run/registry').with({:ensure => 'directory', :recurse => 'true', :notify => 'Service[docker-registry]'})
-  end
-
-  it 'creates /foo/bar dir' do
+  it 'creates /foo/bar registry_path dir' do
     should contain_file('/foo/bar').with({:ensure => 'directory', :notify => 'Service[docker-registry]'})
   end
 
