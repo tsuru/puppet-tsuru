@@ -6,60 +6,8 @@ describe 'tsuru::docker'  do
     { :osfamily => 'Debian', :operatingsystem => 'Ubuntu', :lsbdistid => 'Ubuntu', :lsbdistcodename => 'precise' }
   end
 
-  let (:params) { { :tsuru_ssh_agent => false } }
-
   it 'requires class params' do
     should contain_class('tsuru::params')
-  end
-
-  context 'enable tsuru_ssh_agent' do
-
-    let (:params) { { :tsuru_ssh_agent => true, :tsuru_ssh_agent_user => 'tsuru_user', :tsuru_ssh_agent_group => 'tsuru_group' } }
-
-    it 'install tsuru-server package latest version' do
-      should contain_package('tsuru-server').with({
-        :ensure  => 'latest'
-      })
-    end
-
-    it 'creates /etc/init/tsuru-ssh-agent.conf with service enable' do
-      should contain_file('/etc/init/tsuru-ssh-agent.conf').with( {
-        'content' => /.+setuid tsuru_user\nsetgid tsuru_group\n.+exec \/usr\/bin\/tsr docker-ssh-agent/m
-      })
-      should contain_file('/etc/init/tsuru-ssh-agent.conf').with( {
-        'ensure' => 'present',
-        'owner'  => 'root',
-        'group'  => 'root',
-        'mode'   => '0644'
-      })
-    end
-
-    it 'creates /etc/default/tsuru-server with default ssh key' do
-      should contain_file('/etc/default/tsuru-server').with_content(/\/var\/lib\/tsuru\/.ssh\/id_rsa/)
-    end
-
-    context 'using custom tsuru_ssh_agent_private_key to /var/lib/super_secure_id_rsa' do
-
-      before do
-        params.merge!(:tsuru_ssh_agent_private_key => '/var/lib/super_secure_id_rsa')
-      end
-
-      it 'creates /etc/default/tsuru-server with TSR_SSH_AGENT_PRIVATE_KEY=/var/lib/super_secure_id_rsa' do
-        should contain_file('/etc/default/tsuru-server').with_content(/TSR_SSH_AGENT_PRIVATE_KEY=\/var\/lib\/super_secure_id_rsa/)
-      end
-
-    end
-
-    it 'service tsuru-ssh-agent should be created and running' do
-      should contain_service('tsuru-ssh-agent').with({
-        'ensure'     => 'running',
-        'enable'     => 'true',
-        'hasrestart' => 'false',
-        'hasstatus'  => 'true',
-        'provider'   => 'upstart', 
-      })
-    end
-
   end
 
   it 'creates /etc/profile.d/docker.sh with alias to docker' do
