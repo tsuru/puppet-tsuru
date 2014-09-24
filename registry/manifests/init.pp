@@ -1,5 +1,5 @@
 #
-# == Class: tsuru::registry
+# == Class: registry
 #
 #  Tsuru registry node
 #
@@ -13,7 +13,7 @@
 # [registry_storage] storages: s3 glance swift glance-swift elliptics gcs local
 # [registry_venv_path] virtualenv to docker-registry installation
 
-class tsuru::registry (
+class registry (
   $registry_ipbind_port  = '0.0.0.0:8080',
   $registry_path         = '/var/lib/docker-registry',
   $registry_version      = latest,
@@ -23,7 +23,7 @@ class tsuru::registry (
   $registry_venv_path    = '/var/lib/venv'
 ) {
 
-  require tsuru::params
+  require base
 
   $packages = [ 'liblzma-dev', 'libyaml-dev' ]
   package { $packages:
@@ -45,7 +45,7 @@ class tsuru::registry (
 
   file { "${registry_path}/config.yml":
     ensure  => present,
-    content => template('tsuru/registry/config.yml.erb'),
+    content => template('registry/config.yml.erb'),
     mode    => '0644',
     owner   => 'root',
     group   => 'root'
@@ -57,7 +57,7 @@ class tsuru::registry (
 
   file { '/etc/init/docker-registry.conf':
     ensure  => present,
-    content => template('tsuru/registry/docker-registry.conf.erb'),
+    content => template('registry/docker-registry.conf.erb'),
     mode    => '0644',
     owner   => root,
     group   => root,

@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe 'tsuru::docker'  do
+describe 'docker'  do
 
   let :facts do
     { :osfamily => 'Debian', :operatingsystem => 'Ubuntu', :lsbdistid => 'Ubuntu', :lsbdistcodename => 'precise' }
   end
 
-  it 'requires class params' do
-    should contain_class('tsuru::params')
+  it 'requires class base' do
+    should contain_class('base')
   end
 
   it 'creates /etc/profile.d/docker.sh with alias to docker' do
@@ -41,8 +41,8 @@ describe 'tsuru::docker'  do
     end
   end
 
-  it 'tsuru::params should be called before tsuru::docker' do
-    should contain_class('tsuru::params').that_comes_before('Class[tsuru::docker]')
+  it 'base should be called before docker' do
+    should contain_class('base').that_comes_before('Class[docker]')
   end
 
 end

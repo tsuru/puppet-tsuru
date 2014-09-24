@@ -2,7 +2,7 @@ require 'rspec-puppet'
 require 'spec_helper'
 require 'fileutils'
 
-describe 'tsuru::gandalf'  do
+describe 'gandalf'  do
 
   before (:each) do
     FileUtils.stubs(:mkdir_p).returns(true)
@@ -30,8 +30,8 @@ describe 'tsuru::gandalf'  do
     }
   end
 
-  it 'requires class params' do
-    should contain_class('tsuru::params')
+  it 'requires class base' do
+    should contain_class('base')
   end
 
   it 'install gandalf-server package' do

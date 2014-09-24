@@ -1,5 +1,5 @@
 #
-# == Class: tsuru::docker
+# == Class: docker
 #
 #  Tsuru docker node
 #
@@ -14,7 +14,7 @@
 # [log_to_syslog] Log output and stderr also to syslog
 
 
-class tsuru::docker (
+class docker (
   $tsuru_server_version         = latest,
   $lxc_docker_version           = latest,
   $docker_graph_dir             = '/var/lib/docker',
@@ -24,7 +24,7 @@ class tsuru::docker (
   $log_to_syslog                = true
 ) {
 
-  require tsuru::params
+  require base
 
   file { '/etc/profile.d/docker.sh' :
     content => inline_template('alias docker="docker -H=tcp://localhost:4243"'),
@@ -49,7 +49,7 @@ class tsuru::docker (
 
   file { '/etc/init/docker.conf':
     ensure  => present,
-    content => template('tsuru/docker/init-docker.conf.erb'),
+    content => template('docker/init-docker.conf.erb'),
     mode    => '0644',
     owner   => root,
     group   => root,
@@ -61,13 +61,13 @@ class tsuru::docker (
 
   file { '/etc/default/docker':
     ensure  => present,
-    content => template('tsuru/docker/default-docker.erb'),
+    content => template('docker/default-docker.erb'),
     mode    => '0644',
     owner   => root,
     group   => root,
     notify  => Service['docker']
   }
 
-  Class['tsuru::params']->Class['tsuru::docker']
+  Class['base']->Class['docker']
 
 }

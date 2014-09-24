@@ -1,7 +1,7 @@
 #
-# == Class: tsuru::params
+# == Class: base
 #
-#  Params used by other tsuru classes
+#  base used by other tsuru classes
 #
 # === Parameters
 #
@@ -13,7 +13,7 @@
 # [docker_release]     Optional release name to used instead lsb dist code
 #
 
-class tsuru::params (
+class base (
   $redis_source_list    = false,
   $redis_release        = $::lsbdistcodename,
   $tsuru_source_list    = false,

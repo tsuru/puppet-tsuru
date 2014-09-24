@@ -4,4 +4,8 @@ fixtures:
         "apt": "git://github.com/puppetlabs/puppetlabs-apt.git"
         "python": "git://github.com/stankevich/puppet-python.git"
     symlinks:
-        "tsuru": "#{source_dir}"
+        "base": "#{source_dir}/base"
+        "api": "#{source_dir}/api"
+        "docker": "#{source_dir}/docker"
+        "gandalf": "#{source_dir}/gandalf"
+        "registry": "#{source_dir}/registry"

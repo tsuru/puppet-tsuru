@@ -1,5 +1,5 @@
 #
-# == Class: tsuru::api
+# == Class: api
 #
 # Installs and configures
 #
@@ -21,7 +21,7 @@
 # [tsuru_docker_servers_urls] Docker urls array. Eg: [host1:4243, host2:4243, ... hostN:4243]
 #
 
-class tsuru::api (
+class api (
   $tsuru_server_version = latest,
   $tsuru_collector_server = undef,
   $tsuru_app_domain,
@@ -46,7 +46,7 @@ class tsuru::api (
   $tsuru_smtp_from = 'tsuru@localdomain'
 ){
 
-  require tsuru::params
+  require base
 
   if ( $tsuru_collector_server == $::hostname) {
     $tsuru_server_collector_ensure = 'running'
@@ -75,7 +75,7 @@ class tsuru::api (
   }
 
   file { '/etc/tsuru/tsuru.conf' :
-    content => template('tsuru/api/tsuru.conf.erb'),
+    content => template('api/tsuru.conf.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
@@ -83,7 +83,7 @@ class tsuru::api (
   }
 
   file { '/etc/default/tsuru-server' :
-    content => template('tsuru/api/tsuru-server.default.erb'),
+    content => template('api/tsuru-server.default.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
@@ -92,7 +92,7 @@ class tsuru::api (
 
   file { '/etc/default/beanstalkd' :
     ensure  => $beanstalkd_file_ensure,
-    source  => 'puppet:///modules/tsuru/api/beanstalkd.default',
+    source  => 'puppet:///modules/api/beanstalkd.default',
     owner   => 'root',
     group   => 'root',
     mode    => '0644'

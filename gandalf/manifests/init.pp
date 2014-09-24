@@ -1,5 +1,5 @@
 #
-# == Class: tsuru::gandalf
+# == Class: gandalf
 #
 #  Tsuru gandalf node
 #
@@ -20,7 +20,7 @@
 # [tsuru_api_token] Tsuru API Token
 
 
-class tsuru::gandalf (
+class gandalf (
   $gandalf_host          = 'localhost',
   $gandalf_ipbind_port   = '0.0.0.0:8080',
   $gandalf_db_url        = 'localhost:27017',
@@ -36,7 +36,7 @@ class tsuru::gandalf (
   $tsuru_api_token
 ) {
 
-  require tsuru::params
+  require base
 
   package { 'gandalf-server':
     ensure => $gandalf_version
@@ -44,7 +44,7 @@ class tsuru::gandalf (
 
   file { '/etc/gandalf.conf':
     ensure  => present,
-    content => template('tsuru/gandalf/gandalf.conf.erb'),
+    content => template('gandalf/gandalf.conf.erb'),
     mode    => '0644',
     owner   => root,
     group   => root,
@@ -53,7 +53,7 @@ class tsuru::gandalf (
 
   file { '/etc/init/gandalf-server.conf':
     ensure  => present,
-    content => template('tsuru/gandalf/gandalf-server.conf.erb'),
+    content => template('gandalf/gandalf-server.conf.erb'),
     mode    => '0644',
     owner   => root,
     group   => root,
@@ -63,7 +63,7 @@ class tsuru::gandalf (
 
   file { '/etc/init/git-daemon.conf':
     ensure  => present,
-    content => template('tsuru/gandalf/git-daemon.conf.erb'),
+    content => template('gandalf/git-daemon.conf.erb'),
     mode    => '0644',
     owner   => root,
     group   => root,

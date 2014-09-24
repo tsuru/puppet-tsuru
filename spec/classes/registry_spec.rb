@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'tsuru::registry'  do
+describe 'registry'  do
 
   before (:each) do
     FileUtils.stubs(:mkdir_p).returns(true)
@@ -20,8 +20,8 @@ describe 'tsuru::registry'  do
     }
   end
 
-  it 'requires class params' do
-    should contain_class('tsuru::params')
+  it 'requires class base' do
+    should contain_class('base')
   end
 
   it 'creates file /etc/init/docker-registry.conf' do

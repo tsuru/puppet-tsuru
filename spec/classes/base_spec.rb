@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'tsuru::params'  do
+describe 'base'  do
 
   let :facts do
     { :osfamily => 'Debian', :operatingsystem => 'Ubuntu', :lsbdistid => 'Ubuntu', :lsbdistcodename => 'precise' }
@@ -22,7 +22,7 @@ describe 'tsuru::params'  do
     should contain_apt__key('docker')
   end
 
-  context 'with default params' do
+  context 'with default base' do
     [ 'ppa:tsuru/redis-server', 'ppa:tsuru/ppa' ].each do |tsuru_ppa|
       it { should contain_apt__ppa(tsuru_ppa) }
     end
