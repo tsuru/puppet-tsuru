@@ -1,0 +1,22 @@
+{
+  "name": "tsuru-api",
+  "version": "0.0.1",
+  "author": "Tsuru",
+  "license": "BSD-style license that can be found in the LICENSE file",
+  "summary": "Puppet module to Tsuru PaaS API",
+  "source": "https://github.com/tsuru/puppet-tsuru",
+  "project_page": "(https://github.com/tsuru/puppet-tsuru)",
+  "issues_url": "https://github.com/tsuru/puppet-tsuru/issues",
+  "tags": ["PaaS", "tsuru", "tsuru-api"],
+  "operatingsystem_support": [
+    {"operatingsystem":"RedHat",
+    "operatingsystemrelease":[ "6.5", "7.0" ]},
+    {"operatingsystem": "Ubuntu",
+    "operatingsystemrelease": [ "14.04" ]}
+   ]
+  "dependencies": [
+    { "name": "puppetlabs/stdlib", "version_requirement": ">= 2.5.0" },
+    { "name": "puppetlabs/apt", "version_requirement": ">= 1.4.0" },
+    { "name": "stankevich/python", "version_requirement": ">= 1.7.7" },
+  ]
+}
