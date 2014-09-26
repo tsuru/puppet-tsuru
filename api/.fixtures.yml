@@ -5,3 +5,4 @@ fixtures:
         "python": "git://github.com/stankevich/puppet-python.git"
     symlinks:
         "api": "#{source_dir}"
+        "base": "#{source_dir}/../base"

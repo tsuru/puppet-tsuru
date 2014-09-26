@@ -1,3 +1,5 @@
 .bundle
 pkg/*
 spec/fixtures
+*/pkg/*
+*/spec/fixtures
