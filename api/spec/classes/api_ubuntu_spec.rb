@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'api'  do
+describe 'api::install'  do
 
   let :facts do
     { :osfamily => 'Debian', :operatingsystem => 'Ubuntu', :lsbdistid => 'Ubuntu', :lsbdistcodename => 'precise', :hostname => 'foo.bar' }
@@ -22,6 +22,10 @@ describe 'api'  do
 
   it 'requires class base' do
     should contain_class('base')
+  end
+
+  it 'requires class base::ubuntu' do
+    should contain_class('base::ubuntu')
   end
 
   it 'enabling tsuru-server-api service' do

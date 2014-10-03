@@ -1,0 +1,73 @@
+#
+# == Class: base::ubuntu
+#
+#  base used by other tsuru classes installed on Ubuntu.
+#
+
+class base::ubuntu inherits base {
+
+  class { 'apt':
+        always_apt_update => true,
+        disable_keys      => true,
+        update_timeout    => 600
+  }
+
+  apt::key { 'tsuru':
+    key         => '383F073D',
+    key_content => $base::tsuru_pub_key
+  }
+
+  apt::key { 'docker':
+    key         => 'A88D21E9',
+    key_content => $base::docker_pub_key
+  }
+
+  if ($base::redis_source_list) {
+    apt::source { 'redis':
+      location      => $base::redis_source_list,
+      include_src   => false,
+      repos         => 'main',
+      release       => $base::redis_release,
+      require       => Apt::Key['tsuru']
+    }
+  } else {
+    apt::ppa { 'ppa:tsuru/redis-server':
+      release     => $base::redis_release,
+      require     => Apt::Key['tsuru']
+    }
+  }
+
+  if ($base::tsuru_source_list) {
+    apt::source { 'tsuru':
+      location    => $base::tsuru_source_list,
+      include_src => false,
+      repos       => 'main',
+      release     => $base::tsuru_release,
+      require     => Apt::Key['tsuru']
+    }
+  } else {
+    apt::ppa { 'ppa:tsuru/ppa':
+      release     => $base::tsuru_release,
+      require     => Apt::Key['tsuru']
+    }
+  }
+
+  if ($base::docker_source_list) {
+    apt::source { 'docker' :
+      location    => $base::docker_source_list,
+      include_src => false,
+      repos       => 'main',
+      release     => $base::docker_release,
+      require     => Apt::Key['docker']
+    }
+  } else {
+    apt::source { 'docker' :
+      location    => 'https://get.docker.io/ubuntu',
+      include_src => false,
+      repos       => 'main',
+      release     => 'docker',
+      require     => Apt::Key['docker']
+    }
+  }
+
+}

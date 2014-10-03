@@ -61,76 +61,8 @@ Pim0BXdjsHVftivqZqfWeVFKMorchQ==
 '
 
   case $::operatingsystem {
-
-    /Ubuntu/ : {
-
-      class { 'apt':
-        always_apt_update => true,
-        disable_keys      => true,
-        update_timeout    => 600
-      }
-
-      apt::key { 'tsuru':
-        key         => '383F073D',
-        key_content => $tsuru_pub_key
-      }
-
-      apt::key { 'docker':
-        key         => 'A88D21E9',
-        key_content => $docker_pub_key
-      }
-
-      if ($redis_source_list) {
-        apt::source { 'redis':
-          location      => $redis_source_list,
-          include_src   => false,
-          repos         => 'main',
-          release       => $redis_release,
-          require       => Apt::Key['tsuru']
-        }
-      } else {
-        apt::ppa { 'ppa:tsuru/redis-server':
-          release     => $redis_release,
-          require     => Apt::Key['tsuru']
-        }
-      }
-
-      if ($tsuru_source_list) {
-        apt::source { 'tsuru':
-          location    => $tsuru_source_list,
-          include_src => false,
-          repos       => 'main',
-          release     => $tsuru_release,
-          require     => Apt::Key['tsuru']
-        }
-      } else {
-        apt::ppa { 'ppa:tsuru/ppa':
-          release     => $tsuru_release,
-          require     => Apt::Key['tsuru']
-        }
-      }
-
-      if ($docker_source_list) {
-        apt::source { 'docker' :
-          location    => $docker_source_list,
-          include_src => false,
-          repos       => 'main',
-          release     => $docker_release,
-          require     => Apt::Key['docker']
-        }
-      } else {
-        apt::source { 'docker' :
-          location    => 'https://get.docker.io/ubuntu',
-          include_src => false,
-          repos       => 'main',
-          release     => 'docker',
-          require     => Apt::Key['docker']
-        }
-      }
-
-
-    }
-
+    Ubuntu : { include base::ubuntu }
+    CentOS : { include base::centos }
     default : { fail('OS not supported') }
   }
 
