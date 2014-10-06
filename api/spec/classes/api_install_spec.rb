@@ -91,82 +91,82 @@ describe 'api::install' do
           :tsuru_server_version => 'latest',
 
           :tsuru_server_listen => '0.0.0.0:8080',
-          :tsuru_use_tls => 'true',
+          :tsuru_use_tls       => 'true',
           :tsuru_tls_cert_file => '/var/lib/tsuru/cert_file.cert',
-          :tsuru_tls_key_file => '/var/lib/tsuru/key_file.key',
+          :tsuru_tls_key_file  => '/var/lib/tsuru/key_file.key',
 
-          :mongodb_url => 'localhost:27017',
-          :mongodb_database_name => 'tsuru',
-          :mongodb_database_password => '',
+          :mongodb_url               => 'localhost:27017',
+          :mongodb_database_name     => 'tsuru',
+          :mongodb_database_password => 'tsuru',
 
-          :smtp_server => '',
-          :smtp_user => '',
-          :smtp_password => '',
+          :smtp_server   => 'smtp.gmail.com',
+          :smtp_user     => 'tsuru',
+          :smtp_password => 'tsuru',
 
-          :git_unit_repo => '/home/application/current',
+          :git_unit_repo  => '/home/application/current',
           :git_api_server => 'localhost:9090',
-          :git_rw_host => '',
-          :git_ro_host => '',
+          :git_rw_host    => 'rwhost.tsuru.io',
+          :git_ro_host    => 'rohost.tsuru.io',
 
-          :auth_token_expire_days => '',
-          :auth_hash_cost => '',
+          :auth_token_expire_days => '8',
+          :auth_hash_cost         => '5',
           :auth_user_registration => true,
-          :auth_scheme => 'native',
-          :oauth_client_id => '',
-          :oauth_client_secret => '',
-          :oauth_scope => '',
-          :oauth_auth_url => '',
-          :oauth_token_url => '',
-          :oauth_info_url => '',
-          :oauth_collection => '',
-          :oauth_callback_port => '',
+          :auth_scheme            => 'oauth',
+          :oauth_client_id        => 'oauth_client_id',
+          :oauth_client_secret    => 'oauth_client_secret',
+          :oauth_scope            => 'tsuru',
+          :oauth_auth_url         => 'https://cloud.tsuru.io/authorize',
+          :oauth_token_url        => 'https://cloud.tsuru.io/token',
+          :oauth_info_url         => 'https://cloud.tsuru.io/info',
+          :oauth_collection       => 'oauth_tokens',
+          :oauth_callback_port    => '37621',
 
-          :tsuru_queue => 'redis',
-          :redis_host => 'localhost',
-          :redis_port => 6379,
-          :redis_password => '',
-          :redis_db => '',
+          :tsuru_queue    => 'redis',
+          :redis_host     => 'localhost',
+          :redis_port     => 6379,
+          :redis_password => 'redis_password',
+          :redis_db       => 'tsuru_redis_db',
 
           :tsuru_admin_team => 'admin',
 
-          :tsuru_apps_per_user => '',
-          :tsuru_units_per_app => '',
+          :tsuru_apps_per_user => 8,
+          :tsuru_units_per_app => 20,
 
-          :hipache_domain => 'cloud.tsuru.io',
+          :hipache_domain       => 'cloud.tsuru.io',
           :hipache_redis_server => 'localhost:6379',
 
-          :tsuru_provisioner => 'docker',
-          :docker_segregate => false,
-          :docker_registry_server => '',
-          :docker_router => 'hipache',
-          :docker_collection => 'docker',
-          :docker_repository_namespace => 'tsuru',
-          :docker_deploy_cmd => '/var/lib/tsuru/deploy',
-          :docker_cluster_mongo_url => 'localhost:27017',
-          :docker_cluster_mongodb_db => 'tsuru',
-          :docker_run_cmd_bin => '/var/lib/tsuru/start',
-          :docker_run_cmd_port => '8888',
-          :docker_ssh_add_key_cmd => '/var/lib/tsuru/add-key',
-          :docker_public_key => '/var/lib/tsuru/.ssh/id_rsa.pub',
-          :docker_user => 'tsuru',
-          :docker_sshd_path => 'sudo /usr/sbin/sshd',
-          :docker_healing_heal_nodes => '',
-          :docker_healing_active_monitoring_interval => '',
-          :docker_healing_disabled_time => '',
-          :docker_healing_max_failures => '',
-          :docker_healing_wait_new_time => '',
-          :docker_healing_heal_containers_timeout => '',
-          :docker_healing_events_collection => '',
-          :docker_healthcheck_max_time => '',
+          :tsuru_provisioner                         => 'docker',
+          :docker_segregate                          => true,
+          :docker_router                             => 'hipache',
+          :docker_collection                         => 'docker',
+          :docker_repository_namespace               => 'tsuru',
+          :docker_deploy_cmd                         => '/var/lib/tsuru/deploy',
+          :docker_cluster_mongo_url                  => 'localhost:27017',
+          :docker_cluster_mongodb_db                 => 'tsuru',
+          :docker_run_cmd_bin                        => '/var/lib/tsuru/start',
+          :docker_run_cmd_port                       => '8888',
+          :docker_ssh_add_key_cmd                    => '/var/lib/tsuru/add-key',
+          :docker_public_key                         => '/var/lib/tsuru/.ssh/id_rsa.pub',
+          :docker_user                               => 'tsuru',
+          :docker_sshd_path                          => 'sudo /usr/sbin/sshd',
+          :docker_healing_heal_nodes                 => 'true',
+          :docker_healing_active_monitoring_interval => 3,
+          :docker_healing_disabled_time              => 40,
+          :docker_healing_max_failures               => 10,
+          :docker_healing_wait_new_time              => 400,
+          :docker_healing_heal_containers_timeout    => 3,
+          :docker_healing_events_collection          => 'healing_events',
+          :docker_healthcheck_max_time               => 150,
 
-          :tsuru_iaas_default => '',
-          :cloudstack_apikey => '',
-          :cloudstack_secretkey => '',
-          :cloudstack_api_url => '',
-          :cloudstack_user_data => '',
-          :cloudstack_node_protocol => '',
-          :cloudstack_node_port => '',
-          :tsuru_debug => false,
+          :tsuru_iaas_default       => 'cloudstack',
+          :cloudstack_apikey        => 'cloudstack_apikey',
+          :cloudstack_secretkey     => 'cloudstack_secretkey',
+          :cloudstack_api_url       => 'https://cloudstack.tsuru.io',
+          :cloudstack_user_data     => '/var/lib/user-data/docker_user_data.sh',
+          :cloudstack_node_protocol => 'https',
+          :cloudstack_node_port     => '443',
+
+          :tsuru_debug  => false,
         }
       end
 
@@ -174,37 +174,67 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^listen: "0.0.0.0:8080"$})
       end
 
+      it 'file /etc/tsuru/tsuru.conf must contain tls contiguration' do
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^use-tls: true$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  tls-cert-file: /var/lib/tsuru/cert_file.cert$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  tls-key-file: /var/lib/tsuru/key_file.key$})
+      end
+
       it 'file /etc/tsuru/tsuru.conf must contain database contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^database:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  url: localhost:27017$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  name: tsuru$})
-        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  passord: tsuru$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  password: tsuru$})
+      end
+
+      it 'file /etc/tsuru/tsuru.conf must contain smtp contiguration' do
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^smtp:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  server: smtp.gmail.com$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  user: tsuru$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  password: tsuru$})
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain git contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^git:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  unit-repo: /home/application/current$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  api-server: localhost:9090$})
-        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  rw-host:})
-        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  ro-host:})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  rw-host: rwhost.tsuru.io$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  ro-host: rohost.tsuru.io$})
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain auth contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^auth:$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  scheme: native$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  token-expire-days: 8$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  hash-cost: 5$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  user-registration: true$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  scheme: oauth$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  oauth:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    client-id: oauth_client_id$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    client-secret: oauth_client_secret$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    scope: tsuru$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    auth-url: https://cloud.tsuru.io/authorize$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    token-url: https://cloud.tsuru.io/token$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    info-url: https://cloud.tsuru.io/info$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    collection: oauth_tokens$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    callback-port: 37621$})
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain queue contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^queue: redis$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  host: localhost$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  port: 6379$})
-        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  password:})
-        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  db:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  password: redis_password})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  db: tsuru_redis_db$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain Admin users contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain admin users contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^admin-team: admin$})
+      end
+
+      it 'file /etc/tsuru/tsuru.conf must contain quota contiguration' do
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^quota:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  apps-per-user: 8$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  units-per-app: 20$})
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain hipache contiguration' do
@@ -217,7 +247,7 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^provisioner: docker$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  memory: 512$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  swap: 1024$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  segregate: false$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  segregate: true$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  router: hipache$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  collection: docker$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  repository-namespace: tsuru$})
@@ -233,11 +263,31 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    public-key: /var/lib/tsuru/.ssh/id_rsa.pub$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    user: tsuru$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    sshd-path: sudo /usr/sbin/sshd$})
-        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  healing:})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  healing:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    heal-nodes: true$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    active-monitoring-interval: 3$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    disabled-time: 40$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    max-failures: 10$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    wait-new-time: 400$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    heal-containers-timeout: 3$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    events-collection : healing_events$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    max-time: 150$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf not contain iaas contiguration' do
-        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^iaas:$})
+      it 'file /etc/tsuru/tsuru.conf must contain iaas contiguration' do
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^iaas:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  default: cloudstack$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  cloudstack:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    api-key: "cloudstack_apikey"$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    secret-key: "cloudstack_secretkey"$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    url: https://cloudstack.tsuru.io$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    user-data: /var/lib/user-data/docker_user_data.sh$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  node-protocol: https$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  node-port: 443$})
+      end
+
+      it 'file /etc/tsuru/tsuru.conf must contain debug contiguration' do
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^debug: false$})
       end
 
       it 'requires class base' do
@@ -261,9 +311,6 @@ describe 'api::install' do
         })
       end
 
-      it 'file /etc/tsuru/tsuru.conf must exists with all parameters' do
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(/servers:\n    - http:\/\/foo.localdomain:4243\n    - http:\/\/bar.localdomain:4243/)
-      end
     end
   end
 end
