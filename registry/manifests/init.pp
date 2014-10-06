@@ -53,10 +53,6 @@ class registry (
     group   => 'root'
   }
 
-  #DOCKER_REGISTRY_CONFIG=config_sample.yml /var/lib/virtualenv/bin/gunicorn -k
-  #gevent --max-requests 100 --graceful-timeout 3600 -t 3600 -b localhost:5000
-  #-w 8 docker_registry.wsgi:application
-
   file { '/etc/init/docker-registry.conf':
     ensure  => present,
     content => template('registry/docker-registry.conf.erb'),
