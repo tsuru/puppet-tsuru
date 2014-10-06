@@ -20,7 +20,9 @@ class registry (
   $registry_user         = 'registry',
   $registry_group        = 'registry',
   $registry_storage      = 'local',
-  $registry_venv_path    = '/var/lib/venv'
+  $registry_venv_path    = '/var/lib/venv',
+  $gunicorn_max_requests = 100,
+  $gunicorn_workers      = 3
 ) {
 
   require base
