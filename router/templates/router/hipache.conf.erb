@@ -1,0 +1,16 @@
+{
+    "server": {
+        "accessLog": "<%= @access_log %>",
+        "accessLogMode": "<%= @access_log_mode %>",
+        "port": <%= @port %>, 
+        "workers": <%= @workers %>,
+        "maxSockets": <%= @max_sockets %>,
+        "deadBackendTTL": <%= @dead_backend_ttl %>,
+        "tcpTimeout": <%= @tcp_timeout %>,
+        "httpKeepAlive": <%= @http_keep_alive %>
+    },
+    "redisHost": "<%= @redis_host %>",
+    "redisPort": <%= @redis_port %>,
+    "redisMasterHost": "<%= @redis_master_host %>",
+    "redisMasterPort": <%= @redis_master_port %>
+}
