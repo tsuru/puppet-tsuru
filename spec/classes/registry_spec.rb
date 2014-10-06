@@ -25,7 +25,29 @@ describe 'registry'  do
   end
 
   it 'creates file /etc/init/docker-registry.conf' do
-    should contain_file('/etc/init/docker-registry.conf').with_content(/setuid foo\nsetgid bar\n\nrespawn\nexec.+-l 0.0.0.0:9000 -d \/foo\/bar/)
+    should contain_file('/etc/init/docker-registry.conf').with_content(<<EOF
+limit nofile 10000 10000
+
+kill timeout 180
+
+start on runlevel [2345]
+stop on runlevel [06]
+
+setuid foo
+setgid bar
+
+respawn
+
+env DOCKER_REGISTRY_CONFIG=/foo/bar/config.yml
+script
+/var/lib/venv/bin/gunicorn \\
+    -k gevent --max-requests 100 \\
+    --graceful-timeout 3600 -t 3600 -b 0.0.0.0:9000 \\
+    -w 3 docker_registry.wsgi:application
+end script
+post-stop exec sleep 5
+EOF
+    )
   end
 
   it 'creates /foo/bar registry_path dir' do

@@ -9,5 +9,12 @@ setuid <%= @registry_user %>
 setgid <%= @registry_group %>
 
 respawn
-exec /usr/bin/docker-registry -l <%= @registry_ipbind_port %> -d <%= @registry_path %> -p /var/run/registry/docker-registry.pid
+
+env DOCKER_REGISTRY_CONFIG=<%= @registry_path %>/config.yml
+script
+<%= @registry_venv_path %>/bin/gunicorn \
+    -k gevent --max-requests <%= @gunicorn_max_requests %> \
+    --graceful-timeout 3600 -t 3600 -b <%= @registry_ipbind_port %> \
+    -w <%= @gunicorn_workers %> docker_registry.wsgi:application
+end script
 post-stop exec sleep 5

@@ -16,7 +16,6 @@
    ],
   "dependencies": [
     { "name": "puppetlabs/stdlib", "version_requirement": ">= 2.5.0" },
-    { "name": "puppetlabs/apt", "version_requirement": ">= 1.4.0" },
-    { "name": "stankevich/python", "version_requirement": ">= 1.7.7" },
+    { "name": "tsuru/base" }
   ]
 }
