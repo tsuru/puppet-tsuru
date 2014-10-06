@@ -298,6 +298,10 @@ describe 'api::install' do
         should contain_class('base::ubuntu')
       end
 
+      it 'file /etc/default/tsuru-server must contain api configuration' do
+        should contain_file('/etc/default/tsuru-server').with_content("TSR_API_ENABLED=yes")
+      end
+
       it 'enabling tsuru-server-api service' do
         should contain_service('tsuru-server-api').with({
           :ensure => 'running',
