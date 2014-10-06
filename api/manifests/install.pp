@@ -109,9 +109,7 @@
 # - Debug configuration
 #
 # [tsuru_debug]
-
-
-
+#
 class api::install (
 
   $tsuru_server_version = latest,
@@ -163,7 +161,6 @@ class api::install (
 
   $tsuru_provisioner = 'docker',
   $docker_segregate = false,
-  $docker_registry_server = undef,
   $docker_router = 'hipache',
   $docker_collection = 'docker',
   $docker_repository_namespace = 'tsuru',
