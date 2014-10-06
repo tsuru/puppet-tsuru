@@ -13,24 +13,21 @@ database:
   url: <%= @mongodb_url %>
   name: <%= @mongodb_database_name %>
 
-<%- if @tsuru_smtp_server? %>
+<%- if @tsuru_smtp_server %>
 ### http://docs.tsuru.io/en/latest/reference/config.html#email-configuration
 smtp:
   server: <%= @tsuru_smtp_server %>
   user: <%= @tsuru_smtp_from %>
+  <%= @smtp_password ? "  password: #{@smtp_password}" : '' %>
 <%- end %>
-<%= @smtp_password ? "  password: #{@smtp_password}" %>
 
 
-<%- if @@smtp_password? %>
-  password: <%= @smtp_password %>
-<%- end %>
 ### http://docs.tsuru.io/en/latest/reference/config.html#git-configuration
 git:
-  unit-repo: <%= @tsuru_git_unit_repo %>
-  api-server: <%= @tsuru_git_url %>
-  rw-host: <%= @tsuru_git_rw_host %>
-  ro-host: <%= @tsuru_git_ro_host %>
+  unit-repo: <%= @git_unit_repo %>
+  api-server: <%= @git_api_server %>
+  <%= @git_rw_host ? "  rw-host: #{@git_rw_host}" : "" %>
+  <%= @git_ro_host ? "  rw-host: #{@git_ro_host}" : "" %>
 
 ### http://docs.tsuru.io/en/latest/reference/config.html#authentication-configuration
 auth:
@@ -51,34 +48,37 @@ auth:
   <%- end %>
 
 ### http://docs.tsuru.io/en/latest/reference/config.html#queue
-queue: redis
+queue: <%= @tsuru_queue %>
 redis-queue:
   host: <%= @redis_host %>
   port: <%= @redis_port %>
-  pool-max-idle-conn: <%= @redis_pool_max_idle_conn %>
+<%= @redis_password ? "  password: #{@redis_password}" : ''  %>
+<%= @redis_db ? "  db: #{@redis_db}" : ''  %>
 
 ### http://docs.tsuru.io/en/latest/reference/config.html#admin-users
 admin-team: <%= @tsuru_admin_team %>
 
+<%- if @tsuru_apps_per_user %>
 ### http://docs.tsuru.io/en/latest/reference/config.html#quota-management
 quota:
   apps-per-user: <%= @tsuru_apps_per_user %>
   units-per-app: <%= @tsuru_units_per_app %>
+<%- end %>
 
 ### http://docs.tsuru.io/en/latest/reference/config.html#hipache
 hipache:
-  domain: <%= @tsuru_server_domain %>
-  redis-server: <%= @redis_host %>
+  domain: <%= @hipache_domain %>
+  redis-server: <%= @hipache_redis_server %>
 
 ### http://docs.tsuru.io/en/latest/reference/config.html#provisioner
 provisioner: <%= @tsuru_provisioner %>
 <%- if @tsuru_provisioner.eql?('docker') %>
 docker:
-  memory: <%= @docker_memory %>
-  swap: <%= @docker_swap %>
+  memory: 512
+  swap: 1024
   segregate: <%= @docker_segregate %>
   registry: <%= @docker_registry_server %>
-  collection: <%= @docker_mongodb_collection %>
+  collection: <%= @docker_collection %>
   repository-namespace: <%= @docker_repository_namespace %>
   router: <%= @docker_router %>
   deploy-cmd: <%= @docker_deploy_cmd %>
@@ -88,7 +88,7 @@ docker:
     mongo-database: <%= @docker_cluster_mongodb_db %>
   run-cmd:
     bin: <%= @docker_run_cmd_bin %>
-    port: "<%= @docker_run_cmd_port %>"
+    port: <%= @docker_run_cmd_port %>
   ssh:
     add-key-cmd: <%= @docker_ssh_add_key_cmd %>
     public-key: <%= @docker_public_key %>
@@ -96,10 +96,10 @@ docker:
     sshd-path: <%= @docker_sshd_path %>
   <%- end %>
 
+<%- if @tsuru_iaas_default.eql?('cloudstack') %>
 ### http://docs.tsuru.io/en/latest/reference/config.html#iaas-configuration
 iaas:
   default: <%= @tsuru_iaas_default %>
-  <%- if @tsuru_iaas_default.eql?('cloudstack') %>
   cloudstack:
     api-key: "<%= @cloudstack_apikey %>"
     secret-key: "<%= @cloudstack_secretkey %>"
