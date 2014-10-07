@@ -112,7 +112,7 @@
 #
 class api::install (
 
-  $tsuru_server_version = latest,
+  $tsuru_server_version = 'latest',
 
   $tsuru_server_listen = '0.0.0.0:8080',
   $tsuru_use_tls = undef,
