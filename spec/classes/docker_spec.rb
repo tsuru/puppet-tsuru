@@ -16,7 +16,7 @@ describe 'docker'  do
 
   it 'creates docker service, ensure running and notifies Package[lxc-docker], File[/etc/init/docker.conf] ' do
     should contain_service('docker').with_ensure('running')
-    should contain_service('docker').that_subscribes_to('File[/etc/init/docker.conf]')
+    should contain_service('docker').that_subscribes_to('File[/etc/default/docker]')
     should contain_service('docker').that_subscribes_to('Package[lxc-docker]')
   end 
 

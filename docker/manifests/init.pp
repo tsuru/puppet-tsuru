@@ -41,8 +41,7 @@ class docker (
     enable     => true,
     hasrestart => true,
     hasstatus  => true,
-    subscribe  => [ File['/etc/init/docker.conf'],
-                    File['/etc/default/docker'] ],
+    subscribe  => File['/etc/default/docker'],
     provider   => 'upstart',
     require    => [ Package['lxc-docker'], File['/etc/init/docker.conf'] ]
   }
@@ -53,7 +52,6 @@ class docker (
     mode    => '0644',
     owner   => root,
     group   => root,
-    notify  => Service['docker']
   }
 
   $docker_bind_opts = $docker_bind ? { undef => '', default => "-H ${docker_bind}" }
