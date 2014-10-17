@@ -7,6 +7,7 @@ PuppetLint.configuration.ignore_paths = [
   "spec/**/*.pp",
   "vendor/**/*.pp",
   "**/pkg/**/*.pp",
+  "**/spec/fixtures/modules/**/**/*.pp"
 ]
 
 Rake::Task[:spec].enhance [:lint]
