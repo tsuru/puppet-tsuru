@@ -90,7 +90,7 @@ docker:
   deploy-cmd: <%= @docker_deploy_cmd %>
   cluster:
     storage: <%= @docker_storage %>
-    mongo-url: <%= @mongodb_url %>
+    mongo-url: <%= @docker_cluster_mongo_url %>
     mongo-database: <%= @docker_cluster_mongodb_db %>
   run-cmd:
     bin: <%= @docker_run_cmd_bin %>
