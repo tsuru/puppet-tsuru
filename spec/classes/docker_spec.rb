@@ -6,6 +6,10 @@ describe 'docker'  do
     { :osfamily => 'Debian', :operatingsystem => 'Ubuntu', :lsbdistid => 'Ubuntu', :lsbdistcodename => 'precise' }
   end
 
+  let :params do 
+    { :lxc_docker_version => 'latest' }
+  end
+
   it 'requires class base' do
     should contain_class('base')
   end
@@ -22,6 +26,28 @@ describe 'docker'  do
 
   it 'install lxc-docker package that notifies service docker' do
     should contain_package('lxc-docker').that_notifies('Service[docker]')
+  end
+
+  it 'creates service docker requiries lxc-docker' do
+    should contain_service('docker').with({
+      :require => ["Package[lxc-docker]", "File[/etc/init/docker.conf]"]
+    })
+  end
+
+  context 'when seting docker version to 1.2.0' do
+
+    before { params.merge!( :lxc_docker_version => '1.2.0' ) }
+
+    it 'install lxc-docker-1.2.0 package that notifies service docker' do
+      should contain_package('lxc-docker-1.2.0').that_notifies('Service[docker]')
+    end
+
+    it 'creates service docker requiries lxc-docker-1.2.0' do
+      should contain_service('docker').with({
+        :require => ["Package[lxc-docker-1.2.0]", "File[/etc/init/docker.conf]"]
+      })
+    end
+
   end
 
   it 'creates service docker file /etc/init/docker.conf' do

@@ -31,9 +31,18 @@ class docker (
     mode    => '0755'
   }
 
-  package { 'lxc-docker' :
-    ensure  => $lxc_docker_version,
-    notify  => Service['docker']
+  if ( $lxc_docker_version == 'latest' ) {
+    $lxc_package_name = 'lxc-docker'
+    package { 'lxc-docker' :
+      ensure  => latest,
+      notify  => Service['docker']
+    }
+  } else {
+    $lxc_package_name = "lxc-docker-${lxc_docker_version}"
+    package { "lxc-docker-${lxc_docker_version}":
+      ensure => installed,
+      notify => Service['docker']
+    }
   }
 
   service { 'docker':
@@ -43,7 +52,7 @@ class docker (
     hasstatus  => true,
     subscribe  => File['/etc/default/docker'],
     provider   => 'upstart',
-    require    => [ Package['lxc-docker'], File['/etc/init/docker.conf'] ]
+    require    => [ Package[$lxc_package_name], File['/etc/init/docker.conf'] ]
   }
 
   file { '/etc/init/docker.conf':
