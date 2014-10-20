@@ -14,6 +14,7 @@
 # - HTTP Server
 #
 # [tsuru_server_listen] defines in which address tsuru webserver will listen
+# [tsuru_host]          defines tsuru hostname
 # [tsuru_use_tls]       indicates whether tsuru should use TLS or not
 # [tsuru_tls_cert_file] is the path to the X.509 certificate file configured to serve the domain
 # [tsuru_tls_key_file]  is the path to private key file configured to serve the domain
@@ -115,6 +116,7 @@ class api::install (
   $tsuru_server_version = 'latest',
 
   $tsuru_server_listen = '0.0.0.0:8080',
+  $tsuru_host = 'http://0.0.0.0:8080',
   $tsuru_use_tls = undef,
   $tsuru_tls_cert_file = undef,
   $tsuru_tls_key_file = undef,

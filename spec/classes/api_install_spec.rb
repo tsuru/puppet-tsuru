@@ -15,6 +15,7 @@ describe 'api::install' do
       end
       it 'file /etc/tsuru/tsuru.conf must contain http contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^listen: "0.0.0.0:8080"$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^host: "http://0.0.0.0:8080"$})
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain database contiguration' do
@@ -91,6 +92,7 @@ describe 'api::install' do
           :tsuru_server_version => 'latest',
 
           :tsuru_server_listen => '0.0.0.0:8080',
+          :tsuru_host          => 'http://tsuru.io:8080',
           :tsuru_use_tls       => 'true',
           :tsuru_tls_cert_file => '/var/lib/tsuru/cert_file.cert',
           :tsuru_tls_key_file  => '/var/lib/tsuru/key_file.key',
@@ -172,6 +174,7 @@ describe 'api::install' do
 
       it 'file /etc/tsuru/tsuru.conf must contain http contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^listen: "0.0.0.0:8080"$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^host: "http://tsuru.io:8080"$})
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain tls contiguration' do

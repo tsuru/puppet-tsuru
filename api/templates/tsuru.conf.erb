@@ -1,6 +1,7 @@
 # - HTTP Server
 # http://docs.tsuru.io/en/latest/reference/config.html#tsuru-configuration
 listen: "<%= @tsuru_server_listen %>"
+host: "<%= @tsuru_host %>"
 <%- if @tsuru_use_tls %>
 use-tls: <%= @tsuru_use_tls %>
   tls-cert-file: <%= @tsuru_tls_cert_file %>
