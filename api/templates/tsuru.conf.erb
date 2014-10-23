@@ -85,6 +85,7 @@ docker:
   memory: 512
   swap: 1024
   segregate: <%= @docker_segregate %>
+  <%= @docker_registry ? "registry: #{@docker_registry}" : '' %>
   collection: <%= @docker_collection %>
   repository-namespace: <%= @docker_repository_namespace %>
   router: <%= @docker_router %>

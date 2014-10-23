@@ -139,6 +139,7 @@ describe 'api::install' do
 
           :tsuru_provisioner                         => 'docker',
           :docker_segregate                          => true,
+          :docker_registry                           => 'registry.tsuru.io',
           :docker_router                             => 'hipache',
           :docker_collection                         => 'docker',
           :docker_repository_namespace               => 'tsuru',
@@ -251,6 +252,7 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  memory: 512$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  swap: 1024$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  segregate: true$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  registry: registry.tsuru.io$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  router: hipache$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  collection: docker$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  repository-namespace: tsuru$})

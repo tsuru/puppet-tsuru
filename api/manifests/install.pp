@@ -82,6 +82,7 @@
 # [docker_router]                              router to be used to distribute requests to units
 # [docker_deploy_cmd]                          the command that will be called in your platform when a new deploy happens
 # [docker_segregate]                           enable segregate scheduler
+# [docker_registry]                            for tsuru to work with multiple docker nodes, you will need a docker-registry
 # [docker_cluster_mongo_url]                   connection URL to the mongodb server used to store information about the docker cluster
 # [docker_mongo_database]                      database name to be used to store information about the docker cluster
 # [docker_run_cmd_bin]                         the command that will be called on the application image to start the application
@@ -163,6 +164,7 @@ class api::install (
 
   $tsuru_provisioner = 'docker',
   $docker_segregate = false,
+  $docker_registry = undef,
   $docker_router = 'hipache',
   $docker_collection = 'docker',
   $docker_repository_namespace = 'tsuru',
