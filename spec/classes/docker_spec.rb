@@ -10,10 +10,6 @@ describe 'docker'  do
     { :lxc_docker_version => 'latest' }
   end
 
-  it 'requires class base' do
-    should contain_class('base')
-  end
-
   it 'creates /etc/profile.d/docker.sh with alias to docker' do
     should contain_file('/etc/profile.d/docker.sh').with_content(/alias docker="docker -H=tcp:\/\/localhost:4243"/)
   end
@@ -65,10 +61,6 @@ describe 'docker'  do
     it 'creates docker default file /etc/default/docker' do
       should contain_file('/etc/default/docker').with_content(/^DOCKER_OPTS="-g \/var\/lib\/docker -e native  "/m)
     end
-  end
-
-  it 'base should be called before docker' do
-    should contain_class('base').that_comes_before('Class[docker]')
   end
 
 end

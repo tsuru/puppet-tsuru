@@ -24,8 +24,6 @@ class docker (
   $log_to_syslog                = true
 ) {
 
-  require base
-
   file { '/etc/profile.d/docker.sh' :
     content => inline_template('alias docker="docker -H=tcp://localhost:4243"'),
     mode    => '0755'
@@ -74,7 +72,5 @@ class docker (
     group   => root,
     notify  => Service['docker']
   }
-
-  Class['base']->Class['docker']
 
 }
