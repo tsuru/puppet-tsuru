@@ -1,8 +1,9 @@
+# class router
 class router {
 
   $service_provider = $::operatingsystem ? {
     Ubuntu          => 'upstart',
-    (CentOS/RedHat) => 'init',
+    CentOS          => 'init',
     default         => fail('OS not supported')
   }
 

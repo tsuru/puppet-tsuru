@@ -9,3 +9,4 @@ fixtures:
         "docker": "#{source_dir}/docker"
         "gandalf": "#{source_dir}/gandalf"
         "registry": "#{source_dir}/registry"
+        "router": "#{source_dir}/router"
