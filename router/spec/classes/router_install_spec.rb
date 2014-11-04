@@ -15,7 +15,7 @@ describe 'router::install' do
 
     context "with default parameters" do
 
-      it 'required classes' do
+      it 'install required classes' do
         should contain_class('base')
         should contain_class('router')
         should contain_class('router::install')
@@ -63,6 +63,22 @@ describe 'router::install' do
 
         should contain_package('software-properties-common')
 
+      end
+
+      it 'required by hipache' do
+        should contain_package('node-hipache')
+        should contain_service('hipache')
+        should contain_file('/etc/hipache.conf')
+      end
+
+      it 'required by hchecker' do
+        should contain_package('hipache-hchecker')
+        should contain_service('hipache-hchecker')
+        should contain_file('/etc/default/hipache-hchecker')
+      end
+
+      it do
+        should contain_file('/etc/logrotate.d/rsyslog')
       end
 
     end
