@@ -94,12 +94,4 @@ class router::install (
     notify  => Service['hipache']
   }
 
-  file { '/etc/logrotate.d/rsyslog':
-    content => template('router/logrotate_rsyslog.erb'),
-    owner   => root,
-    group   => root,
-    mode    => '0644',
-    require => Package['node-hipache'],
-  }
-
 }

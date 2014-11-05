@@ -77,10 +77,6 @@ describe 'router::install' do
         should contain_file('/etc/default/hipache-hchecker')
       end
 
-      it do
-        should contain_file('/etc/logrotate.d/rsyslog')
-      end
-
     end
 
     context "with all parameters" do
