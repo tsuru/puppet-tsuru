@@ -1,8 +1,8 @@
-user www-data;
-worker_processes  2;
+user <%= @nginx_user %>;
+worker_processes  <%= @nginx_worker_processes %>;
 
 events {
-    worker_connections  1024;
+    worker_connections  <%= @nginx_worker_connections %>;
 }
 
 
@@ -14,7 +14,7 @@ http {
     keepalive_timeout   65;
 
     server {
-        listen     8089;
+        listen     <%= @nginx_admin_listen %>;
         server_name  _tsuru_nginx_admin;
 
         location /reload {
@@ -22,10 +22,9 @@ http {
         }
 
         location /dav {
-            allow           10.24.38.0/24;
-            allow           10.25.30.0/24;
-            allow           10.25.23.0/24;
-            allow           10.24.32.0/24;
+<% @nginx_allow_dav_list.each do |ip| -%>
+            allow           <%= ip %>;
+<% end -%>
             deny            all;
             root            /etc/nginx/sites-enabled;
             dav_methods     PUT DELETE;
@@ -35,8 +34,8 @@ http {
     }
 
     server {
-        listen 8080;
-        listen 8081 ssl;
+        listen <%= @nginx_listen %>;
+        listen <%= @nginx_ssl_listen %> ssl;
 
         ssl_certificate /etc/nginx/sites-enabled/dav/ssl/nginx.crt;
         ssl_certificate_key /etc/nginx/sites-enabled/dav/ssl/nginx.key;
