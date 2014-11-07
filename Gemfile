@@ -5,6 +5,7 @@ group :development, :test do
   gem 'puppet-lint', '~> 0.3.2'
   gem 'rspec-mocks'
   gem 'rspec-puppet', :git => 'https://github.com/rodjek/rspec-puppet'
+  gem 'rspec', '2.14.1'
 end
 
 if puppetversion = ENV['PUPPET_GEM_VERSION']
