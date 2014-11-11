@@ -17,6 +17,10 @@ http {
         listen     <%= @nginx_admin_listen %>;
         server_name  _tsuru_nginx_admin;
 
+        location /healthcheck {
+            echo "WORKING";
+        }
+
         location /reload {
             content_by_lua "ngx.print(os.execute('sudo service nginx reload'))";
         }
