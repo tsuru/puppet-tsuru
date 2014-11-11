@@ -7,9 +7,11 @@ class rpaas {
     default         => fail('OS not supported')
   }
 
-  $ssl_command = 'sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  $ssl_command = '/usr/bin/sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
                   -keyout /etc/nginx/sites-enabled/dav/ssl/nginx.key \
                   -out /etc/nginx/sites-enabled/dav/ssl/nginx.crt \
                   -subj "/C=BR/ST=RJ/L=RJ/O=do not use me/OU=do not use me/CN=rpaas.tsuru"'
 
+  $dav_dir = ['/etc/nginx/sites-enabled/dav',
+              '/etc/nginx/sites-enabled/dav/ssl']
 }

@@ -1,7 +1,7 @@
 # class rpaas::install
 class rpaas::install (
 
-  $nginx_package            = '1.4.6-1ubuntu3.1',
+  $nginx_package            = 'latest',
   $nginx_user               = 'www-data',
   $nginx_group              = 'www-data',
   $nginx_worker_processes   = 2,
@@ -26,14 +26,16 @@ class rpaas::install (
     require  => Package['nginx-extras'],
   }
 
-  file { '/etc/nginx/sites-enabled/dav/ssl':
+  file { $rpaas::dav_dir:
     ensure  => directory,
     recurse => true,
   }
 
   exec { 'ssl':
-    command => $::rpaas::ssl_command,
-    # onlyif  => ''
+    path    => '/etc/nginx',
+    command => $rpaas::ssl_command,
+    onlyif  => ['/usr/bin/test -f /etc/nginx/sites-enabled/dav/ssl/nginx.key',
+                '/usr/bin/test -f /etc/nginx/sites-enabled/dav/ssl/nginx.crt']
   }
 
   file { '/etc/nginx/sites-enabled':
