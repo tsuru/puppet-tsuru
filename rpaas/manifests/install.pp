@@ -34,8 +34,8 @@ class rpaas::install (
   exec { 'ssl':
     path    => '/etc/nginx',
     command => $rpaas::ssl_command,
-    onlyif  => ['/usr/bin/test -f /etc/nginx/sites-enabled/dav/ssl/nginx.key',
-                '/usr/bin/test -f /etc/nginx/sites-enabled/dav/ssl/nginx.crt']
+    onlyif  => ['/usr/bin/test ! -f /etc/nginx/sites-enabled/dav/ssl/nginx.key',
+                '/usr/bin/test ! -f /etc/nginx/sites-enabled/dav/ssl/nginx.crt']
   }
 
   file { '/etc/nginx/sites-enabled':
