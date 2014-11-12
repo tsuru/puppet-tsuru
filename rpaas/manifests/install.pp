@@ -29,19 +29,23 @@ class rpaas::install (
   file { $rpaas::dav_dir:
     ensure  => directory,
     recurse => true,
+    owner   => $nginx_user,
+    group   => $nginx_group,
   }
 
   exec { 'ssl':
     path    => '/etc/nginx',
     command => $rpaas::ssl_command,
-    onlyif  => ['/usr/bin/test ! -f /etc/nginx/sites-enabled/dav/ssl/nginx.key',
-                '/usr/bin/test ! -f /etc/nginx/sites-enabled/dav/ssl/nginx.crt']
+    onlyif  => ["/usr/bin/test ! -f ${rpaas::dav_ssl_key_file}",
+                "/usr/bin/test ! -f ${rpaas::dav_ssl_crt_file}"],
+    require => File[$rpaas::dav_ssl_dir],
   }
 
-  file { '/etc/nginx/sites-enabled':
-    ensure => directory,
-    owner  => $nginx_user,
-    group  => $nginx_group,
+  file { [$rpaas::dav_ssl_key_file, $rpaas::dav_ssl_crt_file]:
+    ensure  => file,
+    owner   => $nginx_user,
+    group   => $nginx_group,
+    require => Exec['ssl'],
   }
 
   file { '/etc/nginx/sites-enabled/default':
