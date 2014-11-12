@@ -23,7 +23,10 @@ class rpaas::install (
     ensure   => running,
     enable   => true,
     provider => 'upstart',
-    require  => Package['nginx-extras'],
+    require  => [Package['nginx-extras'],
+                 File['/etc/nginx/nginx.conf'],
+                 File[$rpaas::dav_ssl_key_file],
+                 File[$rpaas::dav_ssl_crt_file]],
   }
 
   file { $rpaas::dav_dir:
