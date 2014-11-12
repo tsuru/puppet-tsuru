@@ -14,6 +14,7 @@ class rpaas::install (
 ) inherits rpaas {
 
   include base
+  include sudo
 
   package { 'nginx-extras':
     ensure => $nginx_package,
@@ -61,6 +62,10 @@ class rpaas::install (
     # mode    => '0600',
     require => Package['nginx-extras'],
     notify  => Service['nginx'],
+  }
+
+  sudo::conf { $nginx_user:
+    content => "${nginx_user} ALL=(ALL) NOPASSWD: /usr/sbin/service nginx reload",
   }
 
 }

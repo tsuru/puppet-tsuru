@@ -1,6 +1,6 @@
 {
   "name": "tsuru-rpaas",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "author": "Tsuru",
   "license": "BSD-style license that can be found in the LICENSE file",
   "summary": "Puppet module to Tsuru PaaS rpaas",
@@ -14,6 +14,7 @@
    ],
   "dependencies": [
     { "name": "puppetlabs/stdlib", "version_requirement": ">= 2.5.0" },
+    { "name": "saz/sudo" },
     { "name": "tsuru/base" }
   ]
 }
