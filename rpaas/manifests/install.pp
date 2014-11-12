@@ -23,10 +23,7 @@ class rpaas::install (
     ensure   => running,
     enable   => true,
     provider => 'upstart',
-    require  => [Package['nginx-extras'],
-                 File['/etc/nginx/nginx.conf'],
-                 File[$rpaas::dav_ssl_key_file],
-                 File[$rpaas::dav_ssl_crt_file]],
+    require  => Package['nginx-extras'],
   }
 
   file { $rpaas::dav_dir:
@@ -49,6 +46,7 @@ class rpaas::install (
     owner   => $nginx_user,
     group   => $nginx_group,
     require => Exec['ssl'],
+    notify  => Service['nginx'],
   }
 
   file { '/etc/nginx/sites-enabled/default':
@@ -62,6 +60,7 @@ class rpaas::install (
     # group   => root,
     # mode    => '0600',
     require => Package['nginx-extras'],
+    notify  => Service['nginx'],
   }
 
 }
