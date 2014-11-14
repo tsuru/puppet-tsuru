@@ -1,0 +1,1 @@
+class redis_service {}
