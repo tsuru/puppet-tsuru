@@ -33,6 +33,9 @@ describe 'rpaas::install' do
       should contain_class('base')
       should contain_class('rpaas::install')
       should contain_class('rpaas')
+      should contain_class('sudo::package')
+      should contain_class('sudo::params')
+      should contain_class('sudo')
     end
 
     it do
@@ -43,6 +46,7 @@ describe 'rpaas::install' do
       should contain_apt__source('docker')
       should contain_apt_key('docker')
       should contain_apt_key('tsuru')
+      should contain_sudo__conf('www-data')
     end
 
     it do
@@ -53,6 +57,7 @@ describe 'rpaas::install' do
     it do
       should contain_package('nginx-extras')
       should contain_package('software-properties-common')
+      should contain_package('sudo')
     end
 
     # test files
@@ -70,6 +75,12 @@ describe 'rpaas::install' do
       should contain_file('preferences.d')
       should contain_file('sources.list.d')
       should contain_file('sources.list')
+      should contain_file('/etc/nginx/sites-enabled/dav/ssl/nginx.crt')
+      should contain_file('/etc/nginx/sites-enabled/dav/ssl/nginx.key')
+      should contain_file('/etc/nginx/sites-enabled/dav')
+      should contain_file('/etc/sudoers.d/')
+      should contain_file('/etc/sudoers')
+      should contain_file('10_www-data')
     end
 
     it do
@@ -81,6 +92,7 @@ describe 'rpaas::install' do
       should contain_exec('ssl')
       should contain_exec('add-apt-repository-ppa:tsuru/ppa')
       should contain_exec('add-apt-repository-ppa:tsuru/redis-server')
+      should contain_exec('sudo-syntax-check for file /etc/sudoers.d/10_www-data')
     end
 
   end
