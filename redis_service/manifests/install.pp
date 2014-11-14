@@ -1,5 +1,5 @@
 class redis_service::install (
-    $filer_docker
+    $filer_docker,
     $docker_version = 'latest'
 ) inherits redis_service {
 
