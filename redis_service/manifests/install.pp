@@ -55,7 +55,7 @@ class redis_service::install (
 
   file { '/etc/init/docker.conf':
     ensure  => present,
-    content => template('docker/init-docker.conf.erb'),
+    content => template('redis_service/init-docker.conf.erb'),
     mode    => '0644',
     owner   => root,
     group   => root,
