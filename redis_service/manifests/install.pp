@@ -12,7 +12,7 @@ class redis_service::install (
 
   file { '/etc/init/sentinel.conf':
     ensure  => file,
-    source  => 'puppet:///redis_service/sentinel.conf',
+    source  => 'puppet:///modules/redis_service/sentinel.conf',
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
@@ -73,7 +73,7 @@ class redis_service::install (
 
   file {'/etc/default/docker':
     ensure  => file,
-    source  => 'puppet:///redis_service/docker',
+    source  => 'puppet:///modules/redis_service/docker',
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
