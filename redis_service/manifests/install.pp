@@ -45,7 +45,7 @@ class redis_service::install (
     hasstatus  => true,
     subscribe  => [File['/etc/init/docker.conf'], File['/etc/default/docker']],
     provider   => 'upstart',
-    require    => [ Package['lxc-docker'], File['/etc/init/docker.conf'], File['/etc/default/docker'] ]
+    require    => [ Package[$lxc_package_name], File['/etc/init/docker.conf'], File['/etc/default/docker'] ]
   }
 
   service { 'sentinel':
