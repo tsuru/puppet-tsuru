@@ -6,7 +6,7 @@ class redis_service::install (
 
   class {'docker':
     lxc_docker_version => $lxc_docker_version,
-    docker_bind_opts   => '-H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock',
+    docker_extra_opts   => '-H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock',
   }
 
   file { '/etc/init/sentinel.conf':
