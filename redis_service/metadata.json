@@ -1,5 +1,5 @@
 {
-  "name": "redis-service",
+  "name": "tsuru-redis_service",
   "version": "0.0.1",
   "source": "git://github.com/tsuru/puppet-tsuru.git",
   "author": "Tsuru",
