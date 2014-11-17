@@ -1,6 +1,6 @@
 class redis_service::install (
     $filer_docker,
-    $docker_version = 'latest'
+    $lxc_docker_version = 'latest'
 ) inherits redis_service {
 
   include base
@@ -18,9 +18,18 @@ class redis_service::install (
     mode    => '0644',
   }
 
-  package { 'lxc-docker' :
-    ensure  => $docker_version,
-    notify  => Service['docker']
+  if ( $lxc_docker_version == 'latest' ) {
+    $lxc_package_name = 'lxc-docker'
+    package { 'lxc-docker' :
+      ensure  => latest,
+      notify  => Service['docker']
+    }
+  } else {
+    $lxc_package_name = "lxc-docker-${lxc_docker_version}"
+    package { "lxc-docker-${lxc_docker_version}":
+      ensure => installed,
+      notify => Service['docker']
+    }
   }
 
   package { 'redis-server':
