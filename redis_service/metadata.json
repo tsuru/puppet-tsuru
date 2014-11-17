@@ -7,4 +7,8 @@
   "summary": "Puppet module for Redis Service",
   "description": "Module to install and configure a Redis Service",
   "project_page": "https://github.com/tsuru/puppet-tsuru",
+  "dependencies": [
+    { "name": "puppetlabs/stdlib", "version_requirement": ">= 2.5.0"  },
+    { "name": "tsuru/base"  }
+  ]
 }
