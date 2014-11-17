@@ -1,6 +1,6 @@
 {
   "name": "tsuru-redis_service",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "source": "git://github.com/tsuru/puppet-tsuru.git",
   "author": "Tsuru",
   "license": "BSD-style license that can be found in the LICENSE file",
