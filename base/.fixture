@@ -1,0 +1,13 @@
+fixtures:
+  forge_modules:
+    sudo:
+      repo: "saz/sudo"
+      ref: 3.0.6
+    stdlib:
+      repo: "puppetlabs/stdlib"
+      ref: 4.3.2
+    apt:
+      repo: "puppetlabs/apt"
+      ref: 1.7.0
+  symlinks:
+    "base": "#{source_dir}"

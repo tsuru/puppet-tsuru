@@ -22,6 +22,11 @@ class base::ubuntu inherits base {
     key_content => $base::docker_pub_key
   }
 
+  apt::key { 'nginx_dev':
+    key         => 'C300EE8C',
+    key_content => $base::nginx_dev_pub_key
+  }
+
   if ($base::redis_source_list) {
     apt::source { 'redis':
       location      => $base::redis_source_list,
@@ -67,6 +72,24 @@ class base::ubuntu inherits base {
       repos       => 'main',
       release     => 'docker',
       require     => Apt::Key['docker']
+    }
+  }
+
+  if ($base::nginx_dev_source_list) {
+    apt::source { 'nginx_dev' :
+      location    => $base::nginx_dev_source_list,
+      include_src => false,
+      repos       => 'main',
+      release     => $base::nginx_dev_release,
+      require     => Apt::Key['nginx-dev']
+    }
+  } else {
+    apt::source { 'nginx_dev' :
+      location    => 'http://ppa.launchpad.net/nginx/development/ubuntu/',
+      include_src => false,
+      repos       => 'main',
+      release     => $base::nginx_dev_release,
+      require     => Apt::Key['nginx_dev']
     }
   }
 
