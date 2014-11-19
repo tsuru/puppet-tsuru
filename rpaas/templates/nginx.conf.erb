@@ -7,11 +7,19 @@ events {
 
 
 http {
-    include         mime.types;
-    default_type        application/octet-stream;
+    include      mime.types;
+    default_type application/octet-stream;
 
-    sendfile        on;
-    keepalive_timeout   65;
+    sendfile          on;
+    keepalive_timeout 65;
+
+    log_format proxy '$remote_addr [$time_local] $request Local: $status $request_time $body_bytes_sent '
+       'Proxy: $upstream_cache_status $upstream_status $upstream_response_time';
+
+    access_log /var/log/nginx/proxy.log proxy;
+
+    proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=rpaas:10m max_size=10g loader_files=50;
+    proxy_temp_path  /var/cache/nginx_temp 1 2;
 
     server {
         listen     <%= @nginx_admin_listen %>;
@@ -46,6 +54,17 @@ http {
 
         server_name  _tsuru_nginx_app;
         port_in_redirect off;
+
+        proxy_cache rpaas;
+        proxy_cache_use_stale error timeout updating invalid_header http_500 http_502 http_503 http_504;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_read_timeout 20s;
+        proxy_connect_timeout 10s;
+        proxy_send_timeout 20s;
+        proxy_http_version 1.1;
 
         location /_nginx_healthcheck/ {
             echo "WORKING";

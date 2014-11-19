@@ -1,10 +1,14 @@
 {
-  "name": "redis-service",
-  "version": "0.0.1",
+  "name": "tsuru-redis_service",
+  "version": "0.0.7",
   "source": "git://github.com/tsuru/puppet-tsuru.git",
   "author": "Tsuru",
   "license": "BSD-style license that can be found in the LICENSE file",
   "summary": "Puppet module for Redis Service",
   "description": "Module to install and configure a Redis Service",
   "project_page": "https://github.com/tsuru/puppet-tsuru",
+  "dependencies": [
+    { "name": "puppetlabs/stdlib", "version_requirement": ">= 2.5.0"  },
+    { "name": "tsuru/base"  }
+  ]
 }
