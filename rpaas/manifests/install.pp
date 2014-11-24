@@ -18,6 +18,7 @@ class rpaas::install (
 
   package { 'nginx-extras':
     ensure => $nginx_package,
+    require => Exec['apt_update']
   }
 
   service { 'nginx':
