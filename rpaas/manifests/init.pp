@@ -14,7 +14,7 @@ class rpaas {
   $ssl_command = '/usr/bin/sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
                   -keyout $dav_ssl_key_file \
                   -out $dav_ssl_crt_file \
-                  -subj \"/C=BR/ST=RJ/L=RJ/O=do not use me/OU=do not use me/CN=rpaas.tsuru\"'
+                  -subj "/C=BR/ST=RJ/L=RJ/O=do not use me/OU=do not use me/CN=rpaas.tsuru"'
 
   $dav_dir = ['/etc/nginx/sites-enabled',
               '/etc/nginx/sites-enabled/dav',
