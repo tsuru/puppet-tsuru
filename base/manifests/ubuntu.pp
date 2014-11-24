@@ -81,7 +81,7 @@ class base::ubuntu inherits base {
       include_src => false,
       repos       => 'main',
       release     => $base::nginx_dev_release,
-      require     => Apt::Key['nginx-dev']
+      require     => Apt::Key['nginx_dev']
     }
   } else {
     apt::source { 'nginx_dev' :
