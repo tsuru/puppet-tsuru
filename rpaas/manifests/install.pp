@@ -33,6 +33,7 @@ class rpaas::install (
     recurse => true,
     owner   => $nginx_user,
     group   => $nginx_group,
+    require => Package['nginx-extras'],
   }
 
   exec { 'ssl':
@@ -54,6 +55,7 @@ class rpaas::install (
   file { '/etc/nginx/sites-enabled/default':
     ensure => absent,
     force  => true,
+    require => Package['nginx-extras'],
   }
 
   file { '/etc/nginx/nginx.conf':
