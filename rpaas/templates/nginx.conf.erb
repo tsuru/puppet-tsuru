@@ -47,10 +47,12 @@ http {
 
     server {
         listen <%= @nginx_listen %>;
-        listen <%= @nginx_ssl_listen %> ssl;
+        listen <%= @nginx_ssl_listen %> ssl spdy;
 
         ssl_certificate /etc/nginx/sites-enabled/dav/ssl/nginx.crt;
         ssl_certificate_key /etc/nginx/sites-enabled/dav/ssl/nginx.key;
+
+        spdy_headers_comp 1;
 
         server_name  _tsuru_nginx_app;
         port_in_redirect off;
