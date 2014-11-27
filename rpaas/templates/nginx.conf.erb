@@ -9,14 +9,20 @@ events {
 http {
     include      mime.types;
     default_type application/octet-stream;
+    server_tokens off;
 
     sendfile          on;
     keepalive_timeout 65;
 
-    log_format proxy '$remote_addr [$time_local] $request Local: $status $request_time $body_bytes_sent '
-       'Proxy: $upstream_cache_status $upstream_status $upstream_response_time';
+    log_format main
+      '$remote_addr\t$time_local\t$host\t$request\t$http_referer\t$http_x_mobile_group\t'
+      'Local:\t$status\t$body_bytes_sent\t$request_time\t'
+      'Proxy:\t$upstream_cache_status\t$upstream_status\t$upstream_response_length\t$upstream_response_time\t'
+      'Agent:\t$http_user_agent\t'
+      'Fwd:\t$http_x_forwarded_for';
 
-    access_log /var/log/nginx/proxy.log proxy;
+    access_log /var/log/nginx/access.log main;
+    error_log  /var/log/nginx/error.log;
 
     proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=rpaas:10m max_size=10g loader_files=50;
     proxy_temp_path  /var/cache/nginx_temp 1 2;
