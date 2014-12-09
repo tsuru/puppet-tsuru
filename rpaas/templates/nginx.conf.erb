@@ -70,6 +70,7 @@ http {
 
         ssl_certificate /etc/nginx/sites-enabled/dav/ssl/nginx.crt;
         ssl_certificate_key /etc/nginx/sites-enabled/dav/ssl/nginx.key;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
         spdy_headers_comp 1;
 
