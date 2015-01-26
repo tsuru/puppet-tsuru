@@ -100,13 +100,14 @@
 #
 # - IaaS configuration
 #
-# [tsuru_iaas_default]        define the default IaaS to tsuru use to create/list/delete your nodes
+# [tsuru_iaas_default]        define the default IaaS to tsuru use to create/list/delete your nodes (default to ec2)
 # [cloudstack_apikey]         api-key to authenticate on IaaS
 # [cloudstack_secretkey]      secret-key to authenticate on IaaS
 # [cloudstack_api_url]        endpoint API to use the IaaS
 # [cloudstack_collection]     collection to handle machine data on database.
 # [cloudstack_node_protocol]  protocol to create node URL.
 # [cloudstack_node_port]      port to create node URL
+# [custom_iaas]               hash params to custom iaas with custom name as key
 #
 # - Debug configuration
 #
@@ -187,17 +188,33 @@ class api::install (
   $docker_healthcheck_max_time = undef,
 
   $tsuru_iaas_default = undef,
+  $ec2_key_id = undef,
+  $ec2_secret_key = undef,
+  $ec2_user_data = undef,
+  $ec2_wait_timeout = 300,
   $cloudstack_apikey = undef,
   $cloudstack_secretkey = undef,
   $cloudstack_api_url = undef,
   $cloudstack_user_data = undef,
-  $cloudstack_node_protocol = undef,
-  $cloudstack_node_port = undef,
+  $iaas_node_protocol = undef,
+  $iaas_node_port = undef,
+  $custom_iaas = {},
+
   $tsuru_debug = false,
 
 ) inherits api {
 
   require base
+
+  if ( !is_hash($custom_iaas) ){
+    error '$custom_iaas must be hash formated iaas with custom name as key'
+  }
+
+  if ( !empty($custom_iaas) or $ec2_key_id or $cloudstack_apikey ){
+    $iaas_enable = true
+  } else {
+    $iaas_enable = false
+  }
 
   package { 'tsuru-server' :
     ensure => $tsuru_server_version

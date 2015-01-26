@@ -115,19 +115,44 @@ docker:
   <%- end %>
   <%- end %>
 
-<%- if @tsuru_iaas_default.eql?('cloudstack') %>
 # - Iaas configuration
 # http://docs.tsuru.io/en/latest/reference/config.html#iaas-configuration
+<%- if @iaas_enable -%>
 iaas:
-  default: <%= @tsuru_iaas_default %>
+  <%= @tsuru_iaas_default ? "default: #{tsuru_iaas_default}" : ''%>
+  <%- if @cloudstack_apikey -%>
   cloudstack:
     api-key: "<%= @cloudstack_apikey %>"
     secret-key: "<%= @cloudstack_secretkey %>"
     url: <%= @cloudstack_api_url %>
     user-data: <%= @cloudstack_user_data %>
-  node-protocol: <%= @cloudstack_node_protocol %>
-  node-port: <%= @cloudstack_node_port %>
-  <%- end %>
+  <%- end -%>
+  <%- if @ec2_key_id -%>
+  ec2:
+    key-id: "<%= @ec2_key_id %>"
+    secret-key: "<%= @ec2_secret_key %>"
+    user-data: <%= @ec2_user_data %>
+    wait-timeout: <%= @ec2_wait_timeout %>
+  <%- end -%>
+  <%= @custom_iaas.empty? ? '' : 'custom:' %>
+  <%- @custom_iaas.each do |custom_key| -%>
+    <%= custom_key %>
+      provider: <%= custom_iaas[custom_key]['provider'] %>
+      <%- if custom_iaas[custom_key]['provider'].eql?('cloudstack') -%>
+      url: <%= custom_iaas[custom_key]['url'] %>
+      api-key: <%= custom_iaas[custom_key]['api_key'] %>
+      secret-key: <%= custom_iaas[custom_key]['secret_key'] %>
+      user-data: <%= custom_iaas[custom_key]['user_data'] %>
+      <%- else -%>
+      key-id: <%= custom_iaas[custom_key]['ec2_key_id'] %>
+      secret-key: <%= custom_iaas[custom_key]['ec2_secret_key'] %>
+      user-data: <%= custom_iaas[custom_key]['ec2_user_data'] %>
+      wait-timeout: <%= custom_iaas[custom_key]['ec2_wait_timeout'] %>
+      <%- end -%>
+  <%- end -%>
+  node-protocol: <%= @iaas_node_protocol ? @iaas_node_protocol : 'http' %>
+  node-port: <%= @iaas_node_port ? @iaas_node_port : '2375' %> 
+<%- end %>
 # - Debug configuration
 # http://docs.tsuru.io/en/latest/reference/config.html#log-level
 debug: <%= @tsuru_debug %>

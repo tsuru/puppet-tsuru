@@ -161,13 +161,8 @@ describe 'api::install' do
           :docker_healing_events_collection          => 'healing_events',
           :docker_healthcheck_max_time               => 150,
 
-          :tsuru_iaas_default       => 'cloudstack',
-          :cloudstack_apikey        => 'cloudstack_apikey',
-          :cloudstack_secretkey     => 'cloudstack_secretkey',
-          :cloudstack_api_url       => 'https://cloudstack.tsuru.io',
-          :cloudstack_user_data     => '/var/lib/user-data/docker_user_data.sh',
-          :cloudstack_node_protocol => 'https',
-          :cloudstack_node_port     => '443',
+          :iaas_node_protocol       => 'https',
+          :iaas_node_port           => '4243',
 
           :tsuru_debug  => false,
         }
@@ -279,16 +274,46 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    max-time: 150$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain iaas contiguration' do
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^iaas:$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  default: cloudstack$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  cloudstack:$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    api-key: "cloudstack_apikey"$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    secret-key: "cloudstack_secretkey"$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    url: https://cloudstack.tsuru.io$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    user-data: /var/lib/user-data/docker_user_data.sh$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  node-protocol: https$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  node-port: 443$})
+      context 'configuring iaas for cloudstack' do
+        before {
+          params.merge!(
+            :tsuru_iaas_default       => 'cloudstack',
+            :cloudstack_apikey        => 'cloudstack_apikey',
+            :cloudstack_secretkey     => 'cloudstack_secretkey',
+            :cloudstack_api_url       => 'https://cloudstack.tsuru.io',
+            :cloudstack_user_data     => '/var/lib/user-data/docker_user_data.sh'
+          )
+        }
+        it 'file /etc/tsuru/tsuru.conf must contain iaas contiguration for cloudstack' do
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^iaas:$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  default: cloudstack$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  cloudstack:$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    api-key: "cloudstack_apikey"$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    secret-key: "cloudstack_secretkey"$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    url: https://cloudstack.tsuru.io$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    user-data: /var/lib/user-data/docker_user_data.sh$})
+        end
+      end
+
+      context 'configuring iaas for ec2' do
+        before {
+          params.merge!(
+            :tsuru_iaas_default       => 'ec2',
+            :ec2_key_id               => 'ec2_key_id',
+            :ec2_secret_key           => 'ec2_secret_key',
+            :ec2_wait_timeout             => 400,
+            :ec2_user_data            => '/var/lib/user-data/docker_user_data.sh'
+          )
+        }
+        it 'file /etc/tsuru/tsuru.conf must contain iaas contiguration for ec2' do
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^iaas:$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  default: ec2$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  ec2:$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    key-id: "ec2_key_id"$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    secret-key: "ec2_secret_key"$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    user-data: /var/lib/user-data/docker_user_data.sh$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    wait-timeout: 400$})
+        end
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain debug contiguration' do
