@@ -135,7 +135,7 @@ iaas:
     wait-timeout: <%= @ec2_wait_timeout %>
   <%- end -%>
 <%= @custom_iaas.empty? ? nil : 'custom:' %>
-<%- @custom_iaas.each_key do |custom_key| -%>
+<%- @custom_iaas.keys.sort.each do |custom_key| -%>
     <%= custom_key %>:
       provider: <%= custom_iaas[custom_key]['provider'] %>
       <%- if custom_iaas[custom_key]['provider'].eql?('cloudstack') -%>
