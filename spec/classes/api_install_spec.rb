@@ -316,6 +316,50 @@ describe 'api::install' do
         end
       end
 
+      context 'setting custom iaas providers' do
+        let :match_string do
+'
+iaas:
+  custom:
+    test_cloudstack_1:
+      provider: cloudstack
+      url: https://cloudstack.tsuru.io
+      api-key: "cloudstack_api_key_1"
+      secret-key: "cloudstack_secret_key_1"
+      user-data: user_data_1
+    test_cloudstack_2:
+      provider: cloudstack
+      url: https://cloudstack2.tsuru.io
+      api-key: "cloudstack_api_key_2"
+      secret-key: "cloudstack_secret_key_2"
+      user-data: user_data_2
+    test_ec2:
+      provider: ec2
+      key-id: "ec2_key_id_1"
+      secret-key: "ec2_secret_key_1"
+      user-data: ec2_user_data
+      wait-timeout: 2
+'
+        end
+        before {
+          params.merge!(
+            :custom_iaas => { 'test_cloudstack_1' => { 'provider' => 'cloudstack', 'cloudstack_apikey' => 'cloudstack_api_key_1',
+                                                       'cloudstack_secretkey' => 'cloudstack_secret_key_1', 'cloudstack_user_data' => 'user_data_1',
+                                                       'cloudstack_api_url' => 'https://cloudstack.tsuru.io'},
+                              'test_cloudstack_2' => { 'provider' => 'cloudstack', 'cloudstack_apikey' => 'cloudstack_api_key_2',
+                                                      'cloudstack_secretkey' => 'cloudstack_secret_key_2', 'cloudstack_user_data' => 'user_data_2',
+                                                      'cloudstack_api_url' => 'https://cloudstack2.tsuru.io'},
+                              'test_ec2' => { 'provider' => 'ec2', 'ec2_key_id' => 'ec2_key_id_1', 'ec2_secret_key' => 'ec2_secret_key_1',
+                                             'ec2_wait_timeout' => 2, 'ec2_user_data' => 'ec2_user_data'}
+                            }
+          )
+        }
+        it 'file /etc/tsuru/tsuru.conf must contain iaas configuration for custom iaas for test_cloudstack_1, test_cloudstack_2 and test_ec2' do
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(/.+#{match_string}.+/)
+        end
+      end
+
+
       it 'file /etc/tsuru/tsuru.conf must contain debug contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^debug: false$})
       end

@@ -101,13 +101,17 @@
 # - IaaS configuration
 #
 # [tsuru_iaas_default]        define the default IaaS to tsuru use to create/list/delete your nodes (default to ec2)
+# [iaas_node_protocol]        protocol to create node URL
+# [iaas_node_port]            port to create node URL
 # [cloudstack_apikey]         api-key to authenticate on IaaS
 # [cloudstack_secretkey]      secret-key to authenticate on IaaS
 # [cloudstack_api_url]        endpoint API to use the IaaS
 # [cloudstack_collection]     collection to handle machine data on database.
-# [cloudstack_node_protocol]  protocol to create node URL.
-# [cloudstack_node_port]      port to create node URL
-# [custom_iaas]               hash params to custom iaas with custom name as key
+# [ec2_key_id]                AWS key id
+# [ec2_secret_key]            AWS secret key
+# [ec2_wait_timeout]          seconds to wait for machine to become up (defaults to 300s)
+# [ec2_user_data]             custom url for ec2 userdata (defaults to script on tsuru now installation)
+# [custom_iaas]               hash params to custom iaas with custom name as key. Format: { custom_iaas_id => { provider => <ec2|cloudstack>, <ec2|cloudstack params> }}
 #
 # - Debug configuration
 #
