@@ -211,7 +211,11 @@ class api::install (
   require base
 
   if ( !is_hash($custom_iaas) ){
-    error '$custom_iaas must be hash formated iaas with custom name as key'
+    fail('$custom_iaas must be hash formated iaas with custom name as key')
+  }
+
+  if ( ($tsuru_iaas_default == 'ec2' and !$ec2_key_id) or ($tsuru_iaas_default == 'cloudstack' and !$cloudstack_apikey) ){
+    fail("\$tsuru_iaas_default set to ${tsuru_iaas_default} but iaas conf not set")
   }
 
   if ( !empty($custom_iaas) or $ec2_key_id or $cloudstack_apikey ){

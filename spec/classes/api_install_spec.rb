@@ -301,7 +301,7 @@ describe 'api::install' do
             :tsuru_iaas_default       => 'ec2',
             :ec2_key_id               => 'ec2_key_id',
             :ec2_secret_key           => 'ec2_secret_key',
-            :ec2_wait_timeout             => 400,
+            :ec2_wait_timeout         => 400,
             :ec2_user_data            => '/var/lib/user-data/docker_user_data.sh'
           )
         }
@@ -359,6 +359,20 @@ iaas:
         end
       end
 
+      context 'configuring iaas for ec2 and set default to unknow cloudstack provider' do
+        before {
+          params.merge!(
+            :tsuru_iaas_default       => 'cloudstack',
+            :ec2_key_id               => 'ec2_key_id',
+            :ec2_secret_key           => 'ec2_secret_key',
+            :ec2_wait_timeout         => 400,
+            :ec2_user_data            => '/var/lib/user-data/docker_user_data.sh'
+          )
+        }
+        it 'raises puppet error with cloudstack provider not set' do
+          should raise_error(Puppet::Error, /\$tsuru_iaas_default set to cloudstack but iaas conf not set/)
+        end
+      end
 
       it 'file /etc/tsuru/tsuru.conf must contain debug contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^debug: false$})
