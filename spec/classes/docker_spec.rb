@@ -10,10 +10,6 @@ describe 'docker'  do
     { :lxc_docker_version => 'latest' }
   end
 
-  it 'creates /etc/profile.d/docker.sh with alias to docker' do
-    should contain_file('/etc/profile.d/docker.sh').with_content(/alias docker="docker -H=tcp:\/\/localhost:4243"/)
-  end
-
   it 'creates docker service, ensure running and notifies Package[lxc-docker], File[/etc/init/docker.conf] ' do
     should contain_service('docker').with_ensure('running')
     should contain_service('docker').that_subscribes_to('File[/etc/default/docker]')
@@ -51,15 +47,25 @@ describe 'docker'  do
   end
 
   context 'setting all docker options' do
-    let (:params) { { :docker_graph_dir => '/foo/bar', :docker_bind => '0.0.0.0:4243', :docker_exec_driver => 'lxc', :docker_extra_opts => '--extra-opts foo=bar' } }
+    let (:params) { { :docker_graph_dir => '/foo/bar',
+                      :docker_bind => ['tcp:///0.0.0.0:4243', 'unix:///var/run/docker.sock'],
+                      :docker_exec_driver => 'lxc',
+                      :docker_extra_opts => '--extra-opts foo=bar' } }
     it 'creates docker default file /etc/default/docker' do
-      should contain_file('/etc/default/docker').with_content(/^DOCKER_OPTS="-g \/foo\/bar -e lxc -H 0.0.0.0:4243 --extra-opts foo=bar"/m)
+      should contain_file('/etc/default/docker').with_content(/^DOCKER_OPTS="-g \/foo\/bar -e lxc -H tcp:\/\/\/0.0.0.0:4243 -H unix:\/\/\/var\/run\/docker.sock --extra-opts foo=bar"/m)
     end
   end
 
   context 'default docker options' do
     it 'creates docker default file /etc/default/docker' do
       should contain_file('/etc/default/docker').with_content(/^DOCKER_OPTS="-g \/var\/lib\/docker -e native  "/m)
+    end
+  end
+
+  context 'invalid docker_bind' do
+    let (:params) { { :docker_bind => "tcp:///0.0.0.0:4243" } }
+    it 'raises puppet error when not array' do
+      should raise_error(Puppet::Error, /\$docker_bind must be an array/)
     end
   end
 

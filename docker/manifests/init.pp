@@ -5,28 +5,25 @@
 #
 # === Parameters
 #
-# [tsuru_server_version] Package tsuru-server version
 # [lxc_docker_version] LXC docker package version
 # [docker_graph_dir] Docker root directory where all files are located
 # [docker_exec_driver] Choose between native(default) or lxc
-# [docker_bind] Docker bind host:port. Socker default
+# [docker_bind] Docker bind array options. Eg ['tcp://0.0.0.0:4243', 'unix:///var/run/docker.sock']
 # [docker_extra_opts] Extra opts to docker daemon
 # [log_to_syslog] Log output and stderr also to syslog
 
 
 class docker (
-  $tsuru_server_version         = latest,
   $lxc_docker_version           = latest,
   $docker_graph_dir             = '/var/lib/docker',
   $docker_exec_driver           = 'native',
-  $docker_bind                  = undef,
+  $docker_bind                  = [],
   $docker_extra_opts            = '',
   $log_to_syslog                = true
 ) {
 
-  file { '/etc/profile.d/docker.sh' :
-    content => inline_template('alias docker="docker -H=tcp://localhost:4243"'),
-    mode    => '0755'
+  if (!is_array($docker_bind)) {
+    fail("\$docker_bind must be an array")
   }
 
   if ( $lxc_docker_version == 'latest' ) {
@@ -61,8 +58,15 @@ class docker (
     group   => root,
   }
 
-  $docker_bind_opts = $docker_bind ? { undef => '', default => "-H ${docker_bind}" }
-  $docker_opts = join([ "-g $docker_graph_dir", "-e ${docker_exec_driver}", $docker_bind_opts, $docker_extra_opts ]," ")
+  $docker_bind_join = join($docker_bind, ' -H ')
+
+  if ($docker_bind_join) {
+    $docker_bind_opts = "-H ${docker_bind_join}"
+  } else {
+    $docker_bind_opts = ''
+  }
+
+  $docker_opts = join(["-g ${docker_graph_dir}", "-e ${docker_exec_driver}", $docker_bind_opts, $docker_extra_opts ],' ')
 
   file { '/etc/default/docker':
     ensure  => present,
