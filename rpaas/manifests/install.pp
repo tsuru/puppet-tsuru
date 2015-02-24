@@ -59,7 +59,6 @@ class rpaas::install (
     owner   => $nginx_user,
     group   => $nginx_group,
     require => Exec['ssl'],
-    notify  => Service['nginx'],
   }
 
   file { '/etc/nginx/sites-enabled/default':
@@ -70,11 +69,7 @@ class rpaas::install (
 
   file { '/etc/nginx/nginx.conf':
     content => template('rpaas/nginx.conf.erb'),
-    # owner   => root,
-    # group   => root,
-    # mode    => '0600',
     require => Package['nginx-extras'],
-    notify  => Service['nginx'],
   }
 
   sudo::conf { $nginx_user:
