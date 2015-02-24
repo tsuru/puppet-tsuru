@@ -23,8 +23,11 @@ http {
 
     access_log /var/log/nginx/access.log main;
     error_log  /var/log/nginx/error.log;
+<% @nginx_custom_error_codes.each do |file, codes| -%>
+    error_page <%= codes.join(" ") %> /_nginx_errordocument/<%= file %>;
+<% end -%>
 
-    proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=rpaas:10m max_size=10g loader_files=50;
+    proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=rpaas:10m inactive=7d max_size=10g loader_files=50;
     proxy_temp_path  /var/cache/nginx_temp 1 2;
 
     gzip                on;
@@ -92,6 +95,13 @@ http {
         location /_nginx_healthcheck/ {
             echo "WORKING";
         }
+
+<% if @nginx_custom_error_dir -%>
+        location ~ ^/_nginx_errordocument/ {
+            internal;
+            root <%= @nginx_custom_error_dir %>;
+        }
+<% end -%>
 
         include sites-enabled/dav/*.conf;
     }

@@ -10,11 +10,21 @@ class rpaas::install (
   $nginx_ssl_listen         = 8443,
   $nginx_admin_listen       = 8089,
   $nginx_allow_dav_list     = ['127.0.0.0/24','127.1.0.0/24'],
+  $nginx_custom_error_dir   = undef,
+  $nginx_custom_error_codes = {}
 
 ) inherits rpaas {
 
   include base
   include sudo
+
+  if ($nginx_custom_error_codes != {} and !$nginx_custom_error_dir) {
+    fail("nginx_custom_error_dir must be set with nginx_custom_error_codes")
+  }
+
+  if ($nginx_custom_error_codes and !is_hash($nginx_custom_error_codes)) {
+    fail("nginx_custom_error_codes should be in hash format")
+  }
 
   package { 'nginx-extras':
     ensure => $nginx_package,

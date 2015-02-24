@@ -2,9 +2,7 @@ require 'spec_helper'
 
 describe 'rpaas::install' do
 
-  fixture_path = File.expand_path(File.join(__FILE__, '..', '../fixtures'))
-
-  context "on a Ubuntu OS" do
+  context "on a Ubuntu OS with default params" do
     let :facts do
       {
         :osfamily                  => 'Debian',
@@ -83,8 +81,38 @@ describe 'rpaas::install' do
       should contain_file('10_www-data')
     end
 
-    it do
-      should contain_file('/etc/nginx/nginx.conf').with_content(File.read(File.join(fixture_path,'templates/nginx.conf')))
+    context "generating nginx.conf with" do
+      let :params do
+        {
+          :nginx_user => "foobar",
+          :nginx_worker_processes => 10,
+          :nginx_worker_connections => 10,
+          :nginx_admin_listen => 8081,
+          :nginx_listen => 8080,
+          :nginx_ssl_listen => 8082,
+          :nginx_allow_dav_list => ['10.0.0.1', '10.0.2.3'],
+          :nginx_custom_error_codes => {'404.html' => ['404', '403'], '500.html' => [ '500', '502', '503', '504' ]},
+          :nginx_custom_error_dir => "/mnt/error_pages"
+        }
+      end
+
+      it 'custom user, worker_processes and worker_connections' do
+        should contain_file('/etc/nginx/nginx.conf').with_content(/user foobar;\nworker_processes\s+10;\n\nevents \{\n\s+worker_connections\s+10;/)
+      end
+
+      it 'dav allow ip list' do
+        should contain_file('/etc/nginx/nginx.conf').with_content(/\s+allow\s+10.0.0.1;\n\s+allow\s+10.0.2.3;/)
+      end
+
+      it 'custom error pages for 40X and 50X errors' do
+        should contain_file('/etc/nginx/nginx.conf').with_content(/error_page 404 403 \/_nginx_errordocument\/404.html/m)
+        should contain_file('/etc/nginx/nginx.conf').with_content(/error_page 500 502 503 504 \/_nginx_errordocument\/500.html/m)
+      end
+
+      it 'custom error location' do
+        should contain_file('/etc/nginx/nginx.conf').with_content(/\s+location\ ~\ \^\/_nginx_errordocument\/ \{\n\s+internal;\n\s+root \/mnt\/error_pages;\n\s+\}/)
+      end
+
     end
 
     it 'check if exec exist' do

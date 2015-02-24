@@ -1,0 +1,1 @@
+../../rpaas/spec/classes/rpaas_install_spec.rb

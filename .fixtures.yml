@@ -1,4 +1,8 @@
 fixtures:
+    forge_modules:
+        sudo:
+            repo: "saz/sudo"
+            ref: 3.0.6
     repositories:
         "stdlib": "git://github.com/puppetlabs/puppetlabs-stdlib.git"
         "apt": "git://github.com/puppetlabs/puppetlabs-apt.git"
@@ -10,3 +14,4 @@ fixtures:
         "gandalf": "#{source_dir}/gandalf"
         "registry": "#{source_dir}/registry"
         "router": "#{source_dir}/router"
+        "rpaas": "#{source_dir}/rpaas"
