@@ -51,10 +51,12 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^admin-team: admin$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain hipache contiguration' do
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^hipache:$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  domain: cloud.tsuru.io$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  redis-server: localhost:6379$})
+      it 'file /etc/tsuru/tsuru.conf must contain routers with hipache contiguration' do
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^routers:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  my_hipache:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    type: hipache$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    domain: cloud.tsuru.io$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    redis-server: localhost:6379$})
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain docker contiguration' do
@@ -62,10 +64,11 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  memory: 512$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  swap: 1024$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  segregate: false$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  router: hipache$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  router: my_hipache$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  collection: docker$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  repository-namespace: tsuru$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  deploy-cmd: /var/lib/tsuru/deploy$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  image-history-size: 10$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  cluster:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    mongo-url: localhost:27017$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    mongo-database: tsuru$})
@@ -134,13 +137,10 @@ describe 'api::install' do
           :tsuru_apps_per_user => 8,
           :tsuru_units_per_app => 20,
 
-          :hipache_domain       => 'cloud.tsuru.io',
-          :hipache_redis_server => 'localhost:6379',
-
           :tsuru_provisioner                         => 'docker',
           :docker_segregate                          => true,
           :docker_registry                           => 'registry.tsuru.io',
-          :docker_router                             => 'hipache',
+          :docker_router                             => 'my_hipache',
           :docker_collection                         => 'docker',
           :docker_repository_namespace               => 'tsuru',
           :docker_deploy_cmd                         => '/var/lib/tsuru/deploy',
@@ -230,17 +230,20 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^admin-team: admin$})
       end
 
+      it 'file /etc/tsuru/tsuru.conf must contain routers with hipache contiguration' do
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^routers:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  my_hipache:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    type: hipache$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    domain: cloud.tsuru.io$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    redis-server: localhost:6379$})
+      end
+
       it 'file /etc/tsuru/tsuru.conf must contain quota contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^quota:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  apps-per-user: 8$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  units-per-app: 20$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain hipache contiguration' do
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^hipache:$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  domain: cloud.tsuru.io$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  redis-server: localhost:6379$})
-      end
 
       it 'file /etc/tsuru/tsuru.conf must contain docker contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^provisioner: docker$})
@@ -248,10 +251,11 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  swap: 1024$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  segregate: true$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  registry: registry.tsuru.io$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  router: hipache$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  router: my_hipache$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  collection: docker$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  repository-namespace: tsuru$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  deploy-cmd: /var/lib/tsuru/deploy$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  image-history-size: 10$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  cluster:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    mongo-url: localhost:27017$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    mongo-database: tsuru$})
@@ -272,6 +276,71 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    heal-containers-timeout: 3$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    events-collection : healing_events$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    max-time: 150$})
+      end
+
+      context 'setting routers hipache and galeb' do
+        before {
+            params.merge!(
+              :routers => { 'bar_galeb' => {'router_type' => 'galeb', 'galeb_api_url' => 'galeb2.endpoint.com', 'galeb_username' => 'bilbo', 'galeb_password' => 'secret2',
+                                            'galeb_domain' => 'cloud3.test.com', 'galeb_environment' => 'prod', 'galeb_farm_type' => 'bleh', 'galeb_plan' => 'small',
+                                            'galeb_project' => 'Y', 'galeb_load_balance_policy' => 'ip-hash', 'galeb_rule_type' => '2'},
+                            'foo_galeb' => {'router_type' => 'galeb', 'galeb_api_url' => 'galeb1.endpoint.com', 'galeb_username' => 'foobar', 'galeb_password' => 'secret',
+                                           'galeb_domain' => 'cloud2.test.com', 'galeb_environment' => 'dev', 'galeb_farm_type' => 'blah', 'galeb_plan' => 'large',
+                                           'galeb_project' => 'X', 'galeb_load_balance_policy' => 'round-robin', 'galeb_rule_type' => '1'},
+                            'foo_hipache' => {'router_type' => 'hipache', 'hipache_domain' => 'cloud.test.com', 'hipache_redis_server' => '10.10.10.10:6379' }
+                          }
+            )
+        }
+
+        let :match_string do
+'
+routers:
+  bar_galeb:
+    type: galeb
+    api-url: galeb2.endpoint.com
+    username: bilbo
+    password: secret2
+    domain: cloud3.test.com
+    environment: prod
+    farm-type: bleh
+    plan: small
+    project: Y
+    load-balance-policy: ip-hash
+    rule-type: 2
+  foo_galeb:
+    type: galeb
+    api-url: galeb1.endpoint.com
+    username: foobar
+    password: secret
+    domain: cloud2.test.com
+    environment: dev
+    farm-type: blah
+    plan: large
+    project: X
+    load-balance-policy: round-robin
+    rule-type: 1
+  foo_hipache:
+    type: hipache
+    domain: cloud.test.com
+    redis-server: 10.10.10.10:6379
+'
+        end
+
+        it 'file /etc/tsuru/tsuru.conf must contain routers foo_hipache, foo_galeb and bar_galeb' do
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(/.+#{match_string}$/)
+        end
+      end
+
+      context 'setting unknown router type' do
+        before {
+          params.merge!(
+            :routers => {'test' => { 'router_type' => 'whatever', 'option1' => 'A', 'option2' => 'B' }}
+          )
+        }
+
+        it 'rises unknown router type' do
+          should raise_error(Puppet::Error, /Router type unknown. Valid types are: hipache or galeb/)
+        end
       end
 
       context 'configuring iaas for cloudstack' do

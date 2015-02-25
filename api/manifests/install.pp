@@ -71,8 +71,19 @@
 #
 # - Router configuration
 #
-# [hipache_redis_server]  redis server used by Hipache router
-# [hipache_domain]        the domain of the server running your hipache server
+# [routers]                       hash params for desired router. Format: { 'router_name' => { 'type' => <galeb|hipache>, <galeb|hipache params as follow> }}
+# [hipache_redis_server]          redis server used by Hipache router
+# [hipache_domain]                the domain of the server running your Hipache server
+# [galeb_api_url]                 the url for the Galeb manager api.
+# [galeb_username]                Galeb manager username
+# [galeb_password]                Galeb manager password
+# [galeb_domain]                  domain of the server running your Galeb server
+# [galeb_environment]             Galeb manager environment used to create virtual hosts and backend pools.
+# [galeb_farm_type]               Galeb manager farm type used to create virtual hosts and backend pools.
+# [galeb_plan]                    Galeb manager plan used to create virtual hosts and backend pools.
+# [galeb_project]                 Galeb manager project used to create virtual hosts, backend pools and pools.
+# [galeb_load_balance_policy]     Galeb manager load balancing policy used to create backend pools.
+# [galeb_rule_type]               Galeb manager rule type used to create rules.
 #
 # - Provisioner configuration
 #
@@ -97,6 +108,7 @@
 # [docker_healing_heal_containers_timeout]     number of seconds a container should be unresponsive before triggering the recreation of the container
 # [docker_healing_events_collection]           collection name in mongodb used to store information about triggered healing events
 # [docker_healthcheck_max_time]                maximum time in seconds to wait for deployment time health check to be successful
+# [docker_image_history_size]                  number of images available for rollback using tsuru app-deploy-rollback
 #
 # - IaaS configuration
 #
@@ -164,13 +176,12 @@ class api::install (
   $tsuru_apps_per_user = undef,
   $tsuru_units_per_app = undef,
 
-  $hipache_domain = 'cloud.tsuru.io',
-  $hipache_redis_server = 'localhost:6379',
+  $routers = { 'my_hipache' => { 'router_type' => 'hipache', 'hipache_domain' => 'cloud.tsuru.io', 'hipache_redis_server' => 'localhost:6379' }},
 
   $tsuru_provisioner = 'docker',
   $docker_segregate = false,
   $docker_registry = undef,
-  $docker_router = 'hipache',
+  $docker_router = 'my_hipache',
   $docker_collection = 'docker',
   $docker_repository_namespace = 'tsuru',
   $docker_deploy_cmd = '/var/lib/tsuru/deploy',
@@ -190,6 +201,7 @@ class api::install (
   $docker_healing_heal_containers_timeout = undef,
   $docker_healing_events_collection = undef,
   $docker_healthcheck_max_time = undef,
+  $docker_image_history_size = 10,
 
   $tsuru_iaas_default = undef,
   $ec2_key_id = undef,

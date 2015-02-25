@@ -72,10 +72,30 @@ quota:
 <%- end %>
 
 # - Router configuration
-# http://docs.tsuru.io/en/latest/reference/config.html#hipache
-hipache:
-  domain: <%= @hipache_domain %>
-  redis-server: <%= @hipache_redis_server %>
+# http://docs.tsuru.io/en/latest/reference/config.html#config-routers
+routers:
+<%- @routers.keys.sort.each do |router| -%>
+  <%= router %>:
+  <%- if routers[router]['router_type'].eql?('hipache') -%>
+    type: hipache
+    domain: <%= routers[router]['hipache_domain'] %>
+    redis-server: <%= routers[router]['hipache_redis_server'] %>
+<%- elsif routers[router]['router_type'].eql?('galeb') -%>
+    type: galeb
+    api-url: <%= routers[router]['galeb_api_url'] %>
+    username: <%= routers[router]['galeb_username'] %>
+    password: <%= routers[router]['galeb_password'] %>
+    domain: <%= routers[router]['galeb_domain'] %>
+    environment: <%= routers[router]['galeb_environment'] %>
+    farm-type: <%= routers[router]['galeb_farm_type'] %>
+    plan: <%= routers[router]['galeb_plan'] %>
+    project: <%= routers[router]['galeb_project'] %>
+    load-balance-policy: <%= routers[router]['galeb_load_balance_policy'] %>
+    rule-type: <%= routers[router]['galeb_rule_type'] %>
+<%- else -%>
+    <%- raise Puppet::Error, "Router type unknown. Valid types are: hipache or galeb" -%>
+<%- end -%>
+<%- end -%>
 
 <%- if @tsuru_provisioner.eql?('docker') %>
 # - Provisioner configuration
@@ -90,6 +110,7 @@ docker:
   repository-namespace: <%= @docker_repository_namespace %>
   router: <%= @docker_router %>
   deploy-cmd: <%= @docker_deploy_cmd %>
+  image-history-size: <%= @docker_image_history_size %>
   cluster:
     storage: <%= @docker_storage %>
     mongo-url: <%= @docker_cluster_mongo_url %>
