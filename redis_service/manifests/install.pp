@@ -6,15 +6,15 @@ class redis_service::install (
 
   class {'docker':
     lxc_docker_version => $lxc_docker_version,
-    docker_extra_opts   => '-H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock',
+    docker_extra_opts  => '-H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock',
   }
 
   file { '/etc/init/sentinel.conf':
-    ensure  => file,
-    source  => 'puppet:///modules/redis_service/sentinel.conf',
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
+    ensure => file,
+    source => 'puppet:///modules/redis_service/sentinel.conf',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
   }
 
   package { 'redis-server':
@@ -24,12 +24,12 @@ class redis_service::install (
   }
 
   service { 'sentinel':
-    ensure      => running,
-    enable      => true,
-    hasrestart  => true,
-    subscribe   => File['/etc/init/sentinel.conf'],
-    provider    => 'upstart',
-    require     => [ Package['redis-server'], File['/etc/init/sentinel.conf'] ]
+    ensure     => running,
+    enable     => true,
+    hasrestart => true,
+    subscribe  => File['/etc/init/sentinel.conf'],
+    provider   => 'upstart',
+    require    => [ Package['redis-server'], File['/etc/init/sentinel.conf'] ]
   }
 
   service { 'redis-server':
