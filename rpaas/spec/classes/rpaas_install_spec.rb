@@ -104,13 +104,14 @@ describe 'rpaas::install' do
         should contain_file('/etc/nginx/nginx.conf').with_content(/\s+allow\s+10.0.0.1;\n\s+allow\s+10.0.2.3;/)
       end
 
-      it 'custom error pages for 40X and 50X errors' do
-        should contain_file('/etc/nginx/nginx.conf').with_content(/error_page 404 403 \/_nginx_errordocument\/404.html/m)
-        should contain_file('/etc/nginx/nginx.conf').with_content(/error_page 500 502 503 504 \/_nginx_errordocument\/500.html/m)
+      it 'custom error pages for 40X and 50X errors with proxy_intercept errors' do
+        should contain_file('/etc/nginx/nginx.conf').with_content(/error_page 404 403 \/_nginx_errordocument\/404.html;/m)
+        should contain_file('/etc/nginx/nginx.conf').with_content(/error_page 500 502 503 504 \/_nginx_errordocument\/500.html;/m)
+        should contain_file('/etc/nginx/nginx.conf').with_content(/proxy_intercept_errors on;/)
       end
 
       it 'custom error location' do
-        should contain_file('/etc/nginx/nginx.conf').with_content(/\s+location\ ~\ \^\/_nginx_errordocument\/ \{\n\s+internal;\n\s+root \/mnt\/error_pages;\n\s+\}/)
+        should contain_file('/etc/nginx/nginx.conf').with_content(/\s+location\ ~\ \^\/_nginx_errordocument\/\(.\+\) \{\n\s+internal;\n\s+alias \/mnt\/error_pages\/\$1;\n\s+\}/)
       end
 
     end
