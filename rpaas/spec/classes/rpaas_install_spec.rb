@@ -92,7 +92,8 @@ describe 'rpaas::install' do
           :nginx_ssl_listen => 8082,
           :nginx_allow_dav_list => ['10.0.0.1', '10.0.2.3'],
           :nginx_custom_error_codes => {'404.html' => ['404', '403'], '500.html' => [ '500', '502', '503', '504' ]},
-          :nginx_custom_error_dir => "/mnt/error_pages"
+          :nginx_custom_error_dir => "/mnt/error_pages",
+          :nginx_intercept_errors => true
         }
       end
 

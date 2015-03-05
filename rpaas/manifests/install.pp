@@ -11,7 +11,8 @@ class rpaas::install (
   $nginx_admin_listen       = 8089,
   $nginx_allow_dav_list     = ['127.0.0.0/24','127.1.0.0/24'],
   $nginx_custom_error_dir   = undef,
-  $nginx_custom_error_codes = {}
+  $nginx_custom_error_codes = {},
+  $nginx_intercept_errors   = false
 
 ) inherits rpaas {
 

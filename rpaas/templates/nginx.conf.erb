@@ -91,7 +91,7 @@ http {
         proxy_connect_timeout 10s;
         proxy_send_timeout 20s;
         proxy_http_version 1.1;
-<% if @nginx_custom_error_dir -%>
+<% if @nginx_custom_error_dir and @nginx_intercept_errors -%>
         proxy_intercept_errors on;
 <% end -%>
 
