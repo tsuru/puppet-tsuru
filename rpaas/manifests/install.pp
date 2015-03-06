@@ -35,7 +35,7 @@ class rpaas::install (
   service { 'nginx':
     ensure   => running,
     enable   => true,
-    provider => 'upstart',
+    restart  => '/etc/init.d/nginx reload',
     require  => Package['nginx-extras'],
   }
 
@@ -70,6 +70,7 @@ class rpaas::install (
 
   file { '/etc/nginx/nginx.conf':
     content => template('rpaas/nginx.conf.erb'),
+    notify  => Service['nginx'],
     require => Package['nginx-extras'],
   }
 
