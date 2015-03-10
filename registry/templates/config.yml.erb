@@ -1,4 +1,227 @@
-common:
-    loglevel: <%= @registry_log_level ? @log_level : 'info' %>
-    storage: <%= @registry_storage %>
-    storage_path: <%= @registry_path %>
+# All other flavors inherit the `common' config snippet
+common: &common
+    issue: '"docker-registry server"'
+    # Default log level is info
+    loglevel: <%= @loglevel %>
+    # Enable debugging (additional informations in the output of the _ping endpoint)
+    debug: <%= @debug %>
+    # By default, the registry acts standalone (eg: doesn't query the index)
+    standalone: <%= @standalone %>
+    # The default endpoint to use (if NOT standalone) is index.docker.io
+    index_endpoint: <%= @index_endpoint %>
+    # Storage redirect is disabled
+    storage_redirect: <%= @storage_redirect %>
+    # Token auth is enabled (if NOT standalone)
+    disable_token_auth: <%= @disable_token_auth %>
+    # No priv key
+    privileged_key: <%= @privileged_key %>
+    # No search backend
+    search_backend: <%= @search_backend %>
+    # SQLite search backend
+    sqlalchemy_index_database: <%= @sqlalchemy_index_database %>
+
+    # Mirroring is not enabled
+    mirroring:
+        source: <%= @mirror_source %>
+        source_index: <%= @mirror_source_index %>
+        tags_cache_ttl: <%= @mirror_tags_cache_ttl %>
+
+    cache:
+        host: <%= @cache_redis_host %>
+        port: <%= @cache_redis_port %>
+        db: <%= @cache_redis_db %>
+        password: <%= @cache_redis_password %>
+
+    # Enabling LRU cache for small files
+    # This speeds up read/write on small files
+    # when using a remote storage backend (like S3).
+    cache_lru:
+        host: <%= @cache_lru_redis_host %>
+        port: <%= @cache_lru_redis_port %>
+        db: <%= @cache_lru_redis_db %>
+        password: <%= @cache_lru_redis_password %>
+
+    # Enabling these options makes the Registry send an email on each code Exception
+    email_exceptions:
+        smtp_host: <%= @smtp_host %>
+        smtp_port: <%= @smtp_port %>
+        smtp_login: <%= @smtp_login %>
+        smtp_password: <%= @smtp_password %>
+        smtp_secure: <%= @smtp_secure %>
+        from_addr: <%= @smtp_from_addr %>
+        to_addr: <%= @smtp_to_addr %>
+
+    # Enable bugsnag (set the API key)
+    bugsnag: <%= @bugsnag %>
+
+    # CORS support is not enabled by default
+    cors:
+        origins: <%= @cors_origins %>
+        methods: <%= @cors_methods %>
+        headers: <%= @cors_headers %>
+        expose_headers: <%= @cors_expose_headers %>
+        supports_credentials: <%= @cors_supports_credentials %>
+        max_age: <%= @cors_max_age %>
+        send_wildcard: <%= @cors_send_wildcard %>
+        always_send: <%= @cors_always_send %>
+        automatic_options: <%= @cors_automatic_options %>
+        vary_header: <%= @cors_vary_header %>
+        resources: <%= @cors_resources %>
+
+local: &local
+    <<: *common
+    storage: local
+    storage_path: <%= @storage_path %>
+
+
+s3: &s3
+    <<: *common
+    storage: s3
+    s3_region: <%= @aws_region %>
+    s3_bucket: <%= @aws_bucket %>
+    boto_bucket: <%= @aws_bucket %>
+    storage_path: <%= @storage_path %>
+    s3_encrypt: <%= @aws_encrypt %>
+    s3_secure: <%= @aws_secure %>
+    s3_access_key: <%= @aws_key %>
+    s3_secret_key: <%= @aws_secret %>
+    s3_use_sigv4: <%= @aws_use_sigv4 %>
+    boto_host: <%= @aws_host %>
+    boto_port: <%= @aws_port %>
+    boto_calling_format: <%= @aws_calling_format %>
+
+cloudfronts3: &cloudfronts3
+    <<: *s3
+    cloudfront:
+        base: <%= @cf_base_url %>
+        keyid: <%= @cf_keyid %>
+        keysecret: <%= @cf_keysecret %>
+
+azureblob: &azureblob
+    <<: *common
+    storage: azureblob
+    azure_storage_account_name: <%= @azure_storage_account_name %>
+    azure_storage_account_key: <%= @azure_storage_account_key %>
+    azure_storage_container: <%= @azure_storage_contaiNER %>
+    azure_use_https: <%= @azure_use_https %>
+
+# Ceph Object Gateway Configuration
+# See http://ceph.com/docs/master/radosgw/ for details on installing this service.
+ceph-s3: &ceph-s3
+    <<: *common
+    storage: s3
+    s3_region: ~
+    s3_bucket: <%= @aws_bucket %>
+    s3_encrypt: <%= @aws_encrypt %>
+    s3_secure: <%= @aws_secure %>
+    storage_path: <%= @storage_path %>
+    s3_access_key: <%= @aws_key %>
+    s3_secret_key: <%= @aws_secret %>
+    boto_bucket: <%= @aws_bucket %>
+    boto_host: <%= @aws_host %>
+    boto_port: <%= @aws_port %>
+    boto_debug: <%= @aws_debug %>
+    boto_calling_format: <%= @aws_calling_format %>
+
+# Google Cloud Storage Configuration
+# See:
+# https://developers.google.com/storage/docs/reference/v1/getting-startedv1#keys
+# for details on access and secret keys.
+gcs:
+    <<: *common
+    storage: gcs
+    boto_bucket: <%= @gcs_bucket %>
+    storage_path: <%= @storage_path %>
+    gs_secure: <%= @gcs_secure %>
+    gs_access_key: <%= @gcs_key %>
+    gs_secret_key: <%= @gcs_secret %>
+    # OAuth 2.0 authentication with the storage.
+    # oauth2 can be set to true or false. If it is set to true, gs_access_key,
+    # gs_secret_key and gs_secure are not needed.
+    # Client ID and Client Secret must be set into OAUTH2_CLIENT_ID and
+    # OAUTH2_CLIENT_SECRET environment variables.
+    # See: https://developers.google.com/accounts/docs/OAuth2.
+    oauth2: <%= @gcs_oauth2 %>
+
+# This flavor is for storing images in Openstack Swift
+swift: &swift
+    <<: *common
+    storage: swift
+    storage_path: <%= @storage_path %>
+    # keystone authorization
+    swift_authurl: <%= @os_auth_url %>
+    swift_container: <%= @os_container %>
+    swift_user: <%= @os_username %>
+    swift_password: <%= @os_password %>
+    swift_tenant_name: <%= @os_tenant_name %>
+    swift_region_name: <%= @os_region_name %>
+
+# This flavor stores the images in Glance (to integrate with openstack)
+# See also: https://github.com/docker/openstack-docker
+glance: &glance
+    <<: *common
+    storage: glance
+    storage_alternate: <%= @glance_storage_alternate %>
+    storage_path: <%= @storage_path %>
+
+openstack:
+    <<: *glance
+
+# This flavor stores the images in Glance (to integrate with openstack)
+# and tags in Swift.
+glance-swift: &glance-swift
+    <<: *swift
+    storage: glance
+    storage_alternate: swift
+
+openstack-swift:
+    <<: *glance-swift
+
+elliptics:
+    <<: *common
+    storage: elliptics
+    elliptics_nodes: <%= @elliptics_nodes %>
+    elliptics_wait_timeout: <%= @elliptics_wait_timeout %>
+    elliptics_check_timeout: <%= @elliptics_check_timeout %>
+    elliptics_io_thread_num: <%= @elliptics_io_thread_num %>
+    elliptics_net_thread_num: <%= @elliptics_net_thread_num %>
+    elliptics_nonblocking_io_thread_num: <%= @elliptics_nonblocking_io_thread_num %>
+    elliptics_groups: <%= @elliptics_groups %>
+    elliptics_verbosity: <%= @elliptics_verbosity %>
+    elliptics_logfile: <%= @elliptics_logfile %>
+    elliptics_addr_family: <%= @elliptics_addr_family %>
+
+# This flavor stores the images in Aliyun OSS
+# See:
+# https://i.aliyun.com/access_key/
+# for details on access and secret keys.
+oss: &oss
+    <<: *common
+    storage: oss
+    storage_path: <%= @storage_path %>
+    oss_host: <%= @oss_host %>
+    oss_bucket: <%= @oss_bucket %>
+    oss_accessid: <%= @oss_key %>
+    oss_accesskey: <%= @oss_secret %>
+
+
+
+# This is the default configuration when no flavor is specified
+dev: &dev
+    <<: *local
+    loglevel: <%= @loglevel %>
+    debug: <%= @debug %>
+    search_backend: <%= @search_backend %>
+
+# This flavor is used by unit tests
+test:
+    <<: *dev
+    index_endpoint: https://registry-stage.hub.docker.com
+    standalone: true
+    storage_path: <%= @storage_path %>
+
+# To specify another flavor, set the environment variable SETTINGS_FLAVOR
+# $ export SETTINGS_FLAVOR=prod
+prod:
+    <<: *s3
+    storage_path: <%= @storage_path %>
