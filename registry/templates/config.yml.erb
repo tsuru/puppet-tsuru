@@ -1,37 +1,59 @@
 # All other flavors inherit the `common' config snippet
 common: &common
     issue: '"docker-registry server"'
+<% if @loglevel -%>
     # Default log level is info
     loglevel: <%= @loglevel %>
+<% end -%>
+<% if @debug -%>
     # Enable debugging (additional informations in the output of the _ping endpoint)
     debug: <%= @debug %>
+<% end -%>
+<% if @standalone -%>
     # By default, the registry acts standalone (eg: doesn't query the index)
     standalone: <%= @standalone %>
+<% end -%>
+<% if @index_endpoint -%>
     # The default endpoint to use (if NOT standalone) is index.docker.io
     index_endpoint: <%= @index_endpoint %>
+<% end -%>
+<% if @storage_redirect -%>
     # Storage redirect is disabled
     storage_redirect: <%= @storage_redirect %>
+<% end -%>
+<% if @disable_token_auth -%>
     # Token auth is enabled (if NOT standalone)
     disable_token_auth: <%= @disable_token_auth %>
+<% end -%>
+<% if @privileged_key -%>
     # No priv key
     privileged_key: <%= @privileged_key %>
+<% end -%>
+<% if @search_backend -%>
     # No search backend
     search_backend: <%= @search_backend %>
+<% end -%>
+<% if @sqlalchemy_index_database -%>
     # SQLite search backend
     sqlalchemy_index_database: <%= @sqlalchemy_index_database %>
-
+<% end -%>
+<% if @mirror_source -%>
     # Mirroring is not enabled
     mirroring:
         source: <%= @mirror_source %>
         source_index: <%= @mirror_source_index %>
         tags_cache_ttl: <%= @mirror_tags_cache_ttl %>
+<% end -%>
 
+<% if @cache_redis_host -%>
     cache:
         host: <%= @cache_redis_host %>
         port: <%= @cache_redis_port %>
         db: <%= @cache_redis_db %>
         password: <%= @cache_redis_password %>
+<% end -%>
 
+<% if @cache_lru_redis_host -%>
     # Enabling LRU cache for small files
     # This speeds up read/write on small files
     # when using a remote storage backend (like S3).
@@ -40,7 +62,9 @@ common: &common
         port: <%= @cache_lru_redis_port %>
         db: <%= @cache_lru_redis_db %>
         password: <%= @cache_lru_redis_password %>
+<% end -%>
 
+<% if @smtp_host -%>
     # Enabling these options makes the Registry send an email on each code Exception
     email_exceptions:
         smtp_host: <%= @smtp_host %>
@@ -50,10 +74,14 @@ common: &common
         smtp_secure: <%= @smtp_secure %>
         from_addr: <%= @smtp_from_addr %>
         to_addr: <%= @smtp_to_addr %>
+<% end -%>
 
+<% if @bugsnag -%>
     # Enable bugsnag (set the API key)
     bugsnag: <%= @bugsnag %>
+<% end -%>
 
+<% if @cors_origins -%>
     # CORS support is not enabled by default
     cors:
         origins: <%= @cors_origins %>
@@ -67,13 +95,16 @@ common: &common
         automatic_options: <%= @cors_automatic_options %>
         vary_header: <%= @cors_vary_header %>
         resources: <%= @cors_resources %>
+<% end -%>
 
+<% if @storage == local -%>
 local: &local
     <<: *common
     storage: local
     storage_path: <%= @storage_path %>
+<% end -%>
 
-
+<% if @storage == s3 or @storage == cloudfronts3 -%>
 s3: &s3
     <<: *common
     storage: s3
@@ -89,14 +120,18 @@ s3: &s3
     boto_host: <%= @aws_host %>
     boto_port: <%= @aws_port %>
     boto_calling_format: <%= @aws_calling_format %>
+<% end -%>
 
+<% if @storage == cloudfronts3 -%>
 cloudfronts3: &cloudfronts3
     <<: *s3
     cloudfront:
         base: <%= @cf_base_url %>
         keyid: <%= @cf_keyid %>
         keysecret: <%= @cf_keysecret %>
+<% end -%>
 
+<% if @storage == azureblob -%>
 azureblob: &azureblob
     <<: *common
     storage: azureblob
@@ -104,7 +139,9 @@ azureblob: &azureblob
     azure_storage_account_key: <%= @azure_storage_account_key %>
     azure_storage_container: <%= @azure_storage_contaiNER %>
     azure_use_https: <%= @azure_use_https %>
+<% end -%>
 
+<% if @storage == ceph-s3 -%>
 # Ceph Object Gateway Configuration
 # See http://ceph.com/docs/master/radosgw/ for details on installing this service.
 ceph-s3: &ceph-s3
@@ -122,7 +159,9 @@ ceph-s3: &ceph-s3
     boto_port: <%= @aws_port %>
     boto_debug: <%= @aws_debug %>
     boto_calling_format: <%= @aws_calling_format %>
+<% end -%>
 
+<% if @storage == gcs -%>
 # Google Cloud Storage Configuration
 # See:
 # https://developers.google.com/storage/docs/reference/v1/getting-startedv1#keys
@@ -142,7 +181,9 @@ gcs:
     # OAUTH2_CLIENT_SECRET environment variables.
     # See: https://developers.google.com/accounts/docs/OAuth2.
     oauth2: <%= @gcs_oauth2 %>
+<% end -%>
 
+<% if @storage == swift or @storage == glance-swift-%>
 # This flavor is for storing images in Openstack Swift
 swift: &swift
     <<: *common
@@ -156,6 +197,7 @@ swift: &swift
     swift_tenant_name: <%= @os_tenant_name %>
     swift_region_name: <%= @os_region_name %>
 
+<% if @storage == glance -%>
 # This flavor stores the images in Glance (to integrate with openstack)
 # See also: https://github.com/docker/openstack-docker
 glance: &glance
@@ -166,7 +208,9 @@ glance: &glance
 
 openstack:
     <<: *glance
+<% end -%>
 
+<% if @storage == glance-swift -%>
 # This flavor stores the images in Glance (to integrate with openstack)
 # and tags in Swift.
 glance-swift: &glance-swift
@@ -176,7 +220,9 @@ glance-swift: &glance-swift
 
 openstack-swift:
     <<: *glance-swift
+<% end -%>
 
+<% if @storage == elliptics -%>
 elliptics:
     <<: *common
     storage: elliptics
@@ -190,7 +236,9 @@ elliptics:
     elliptics_verbosity: <%= @elliptics_verbosity %>
     elliptics_logfile: <%= @elliptics_logfile %>
     elliptics_addr_family: <%= @elliptics_addr_family %>
+<% end -%>
 
+<% if @storage == oss -%>
 # This flavor stores the images in Aliyun OSS
 # See:
 # https://i.aliyun.com/access_key/
@@ -203,25 +251,30 @@ oss: &oss
     oss_bucket: <%= @oss_bucket %>
     oss_accessid: <%= @oss_key %>
     oss_accesskey: <%= @oss_secret %>
+<% end -%>
 
-
-
+<% if @flavor == dev -%>
 # This is the default configuration when no flavor is specified
 dev: &dev
     <<: *local
     loglevel: <%= @loglevel %>
     debug: <%= @debug %>
     search_backend: <%= @search_backend %>
+<% end -%>
 
+<% if @flavor == test -%>
 # This flavor is used by unit tests
 test:
     <<: *dev
     index_endpoint: https://registry-stage.hub.docker.com
     standalone: true
     storage_path: <%= @storage_path %>
+<% end -%>
 
+<% if @flavor == prod -%>
 # To specify another flavor, set the environment variable SETTINGS_FLAVOR
 # $ export SETTINGS_FLAVOR=prod
 prod:
     <<: *s3
     storage_path: <%= @storage_path %>
+<% end -%>
