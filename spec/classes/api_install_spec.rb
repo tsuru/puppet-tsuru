@@ -357,8 +357,8 @@ routers:
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^iaas:$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  default: cloudstack$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  cloudstack:$})
-          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    api-key: "cloudstack_apikey"$})
-          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    secret-key: "cloudstack_secretkey"$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    api-key: cloudstack_apikey$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    secret-key: cloudstack_secretkey$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    url: https://cloudstack.tsuru.io$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    user-data: /var/lib/user-data/docker_user_data.sh$})
         end
@@ -378,8 +378,8 @@ routers:
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^iaas:$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  default: ec2$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  ec2:$})
-          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    key-id: "ec2_key_id"$})
-          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    secret-key: "ec2_secret_key"$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    key-id: ec2_key_id$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    secret-key: ec2_secret_key$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    user-data: /var/lib/user-data/docker_user_data.sh$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    wait-timeout: 400$})
         end
@@ -389,6 +389,7 @@ routers:
         let :match_string do
 '
 iaas:
+  default: ec2
   custom:
     test_cloudstack_1:
       provider: cloudstack
