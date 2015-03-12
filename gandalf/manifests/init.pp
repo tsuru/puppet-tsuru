@@ -32,6 +32,7 @@ class gandalf (
   $gandalf_user           = 'git',
   $gandalf_group          = 'git',
   $gandalf_version        = 'latest',
+  $gandalf_git_daemon     = 'false',
   $tsuru_api_host,
   $tsuru_api_token
 ) {
@@ -61,29 +62,31 @@ class gandalf (
     require => File['/etc/gandalf.conf']
   }
 
-  file { '/etc/init/git-daemon.conf':
-    ensure  => present,
-    content => template('gandalf/git-daemon.conf.erb'),
-    mode    => '0644',
-    owner   => root,
-    group   => root,
-    notify  => Service['git-daemon'],
-  }
+  if ($gandalf_git_daemon) {
+    file { '/etc/init/git-daemon.conf':
+      ensure  => present,
+      content => template('gandalf/git-daemon.conf.erb'),
+      mode    => '0644',
+      owner   => root,
+      group   => root,
+      notify  => Service['git-daemon'],
+    }
 
+    service { 'git-daemon':
+      ensure     => running,
+      enable     => true,
+      provider   => 'upstart',
+      subscribe  => File['/etc/init/git-daemon.conf'],
+      require    => File['/etc/init/git-daemon.conf']
+    }
+  }
+ 
   service { 'gandalf-server':
     ensure     => running,
     enable     => true,
     provider   => 'upstart',
     subscribe  => File['/etc/init/gandalf-server.conf'],
     require    => File['/etc/init/gandalf-server.conf']
-  }
-
-  service { 'git-daemon':
-    ensure     => running,
-    enable     => true,
-    provider   => 'upstart',
-    subscribe  => File['/etc/init/git-daemon.conf'],
-    require    => File['/etc/init/git-daemon.conf']
   }
 
   # if ($gandalf_create_repositories) {
