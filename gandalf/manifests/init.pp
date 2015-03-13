@@ -80,7 +80,7 @@ class gandalf (
       require    => File['/etc/init/git-daemon.conf']
     }
   }
- 
+
   service { 'gandalf-server':
     ensure     => running,
     enable     => true,

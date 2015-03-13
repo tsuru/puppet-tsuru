@@ -31,7 +31,7 @@
 # [smtp_password] is the password for authentication within the SMTP server
 #
 # - Git configuration
-#
+# [repo_manager]    represents the repository manager that tsuru-server should use. Use none to disable git on tsuru
 # [git_unit_repo]   is the path where tsuru will clone and manage the git repository in all units of an application
 # [git_api_server]  is the address of the Gandalf API
 # [git_rw_host]     is the host that will be used to build the push URL
@@ -98,8 +98,7 @@
 # [docker_mongo_database]                      database name to be used to store information about the docker cluster
 # [docker_run_cmd_bin]                         the command that will be called on the application image to start the application
 # [docker_run_cmd_port]                        the tcp port that will be exported by the container to the node network
-# [docker_ssh_add_key_cmd]                     the command that will be called with the ssh public key created for the application
-# [docker_ssh_user]                            the user used to connect via ssh to running containers
+# [docker_user]                                the user which runs processes on containers
 # [docker_healing_heal_nodes]                  boolean value that indicates whether tsuru should try to heal nodes that have failed a specified number of times
 # [docker_healing_active_monitoring_interval]  number of seconds between calls to <server>/_ping in each one of the docker nodes
 # [docker_healing_disabled_time]               number of seconds tsuru disables a node after a failure
@@ -147,6 +146,7 @@ class api::install (
   $smtp_user = undef,
   $smtp_password = undef,
 
+  $repo_manager = 'none',
   $git_unit_repo = '/home/application/current',
   $git_api_server = 'localhost:9090',
   $git_rw_host = undef,
@@ -189,10 +189,7 @@ class api::install (
   $docker_cluster_mongodb_db = 'tsuru',
   $docker_run_cmd_bin = '/var/lib/tsuru/start',
   $docker_run_cmd_port = '8888',
-  $docker_ssh_add_key_cmd = '/var/lib/tsuru/add-key',
-  $docker_public_key = '/var/lib/tsuru/.ssh/id_rsa.pub',
   $docker_user = 'tsuru',
-  $docker_sshd_path = 'sudo /usr/sbin/sshd',
   $docker_healing_heal_nodes = undef,
   $docker_healing_active_monitoring_interval = undef,
   $docker_healing_disabled_time = undef,
