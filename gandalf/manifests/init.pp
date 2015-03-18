@@ -32,7 +32,12 @@ class gandalf (
   $gandalf_user           = 'git',
   $gandalf_group          = 'git',
   $gandalf_version        = 'latest',
-  $gandalf_git_daemon     = 'false',
+  $gandalf_git_daemon     = false,
+  $gandalf_storage_type   = 'archive',
+  $gandalf_storage_venv   = '/var/lib/gandalf/virtualenv',
+  $gandalf_storage_bucket = undef,
+  $gandalf_cdn_url        = undef,
+  $gandalf_auth_params    = undef,
   $tsuru_api_host         = 'localhost:8081',
   $tsuru_api_token        = undef
 ) {
@@ -116,5 +121,49 @@ class gandalf (
       fail("Cannot create and set ${gandalf_bare_template_path}")
     }
   }
+
+  if ($gandalf_storage_type in ['s3', 'swift']) {
+
+    class { 'python' :
+      version    => 'system',
+      pip        => true,
+      dev        => true,
+      virtualenv => true,
+      gunicorn   => false
+    }
+
+    python::virtualenv { $gandalf_storage_venv :
+      ensure       => present,
+      version      => 'system',
+      owner        => $gandalf_user,
+      group        => $gandalf_group,
+      require      => Class['Python']
+    }
+
+    if ($gandalf_storage_type == 's3') {
+      $python_archive_package = 's3cmd'
+    } else {
+      $python_archive_package = 'swift'
+    }
+
+    python::pip { $python_archive_package:
+      pkgname    => $python_archive_package,
+      owner      => $gandalf_user,
+      virtualenv => $gandalf_storage_venv,
+      require    => Python::Virtualenv[$gandalf_storage_venv]
+    }
+
+  }
+
+  file { "${gandalf_bare_template_path}/hooks/pre-receive":
+    ensure    => file,
+    recurse   => true,
+    mode      => '0755',
+    owner     => $gandalf_user,
+    group     => $gandalf_group,
+    content   => template("gandalf/pre-receive-${gandalf_storage_type}.erb"),
+    require   => File[$gandalf_bare_template_path]
+  }
+
 
 }

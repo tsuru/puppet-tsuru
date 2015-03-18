@@ -6,9 +6,11 @@ fixtures:
         base:
             repo: "tsuru/base"
             ref: 0.0.4
+        python:
+            repo: "stankevich/python"
+            ref: 1.9.0
     repositories:
         "stdlib": "git://github.com/puppetlabs/puppetlabs-stdlib.git"
         "apt": "git://github.com/puppetlabs/puppetlabs-apt.git"
-        "python": "git://github.com/stankevich/puppet-python.git"
     symlinks:
         "gandalf": "#{source_dir}"

@@ -54,24 +54,12 @@ describe 'gandalf'  do
     })
   end
 
-  it 'creates file /etc/init/git-daemon.conf' do
-    should contain_file('/etc/init/git-daemon.conf').with ({
-      :content => /setuid gand_user\nsetgid gand_group\nexec .+git daemon --base-path=\/foo\/bar\/repos/,
-      :notify => 'Service[git-daemon]'
-    })
-  end
+
 
   it 'runs gandalf-server service' do
     should contain_service('gandalf-server').with({
       :ensure => 'running',
       :subscribe => 'File[/etc/init/gandalf-server.conf]'
-    })
-  end
-
-  it 'runs git-daemon service' do
-    should contain_service('git-daemon').with({
-      :ensure => 'running',
-      :subscribe => 'File[/etc/init/git-daemon.conf]'
     })
   end
 
@@ -91,6 +79,24 @@ describe 'gandalf'  do
        :owner   => 'gand_user',
        :group   => 'gand_group',
     })
+  end
+
+  context 'enabling git-daemon' do
+    before {  params.merge!( :gandalf_git_daemon => true ) }
+
+    it 'runs git-daemon service' do
+      should contain_service('git-daemon').with({
+        :ensure => 'running',
+        :subscribe => 'File[/etc/init/git-daemon.conf]'
+      })
+    end
+
+    it 'creates file /etc/init/git-daemon.conf' do
+      should contain_file('/etc/init/git-daemon.conf').with ({
+        :content => /setuid gand_user\nsetgid gand_group\nexec .+git daemon --base-path=\/foo\/bar\/repos/,
+        :notify => 'Service[git-daemon]'
+      })
+    end
   end
 
 end
