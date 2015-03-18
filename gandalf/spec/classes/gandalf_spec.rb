@@ -4,9 +4,9 @@ require 'spec_helper'
 
 describe 'gandalf'  do
 
-  # before (:each) do
-  #   FileUtils.stubs(:mkdir_p).returns(true)
-  # end
+  before (:each) do
+     FileUtils.stubs(:mkdir_p).returns(true)
+  end
 
   let :facts do
     { :osfamily => 'Debian', :operatingsystem => 'Ubuntu', :lsbdistid => 'Ubuntu', :lsbdistcodename => 'precise', :hostname => 'foo.bar' }
@@ -75,22 +75,22 @@ describe 'gandalf'  do
     })
   end
 
-  # it 'fix git repositories base dir permission' do
-  #   should contain_file('/foo/bar/repos').with({
-  #     :ensure  => 'directory',
-  #     :recurse => 'true',
-  #     :owner   => 'gand_user',
-  #     :group   => 'gand_group',
-  #   })
-  # end
+  it 'fix git repositories base dir permission' do
+    should contain_file('/foo/bar/repos').with({
+       :ensure  => 'directory',
+       :recurse => 'true',
+       :owner   => 'gand_user',
+       :group   => 'gand_group',
+    })
+  end
 
-  # it 'fix bare template dir permission' do
-  #   should contain_file('/foo/bar/bare').with({
-  #     :ensure  => 'directory',
-  #     :recurse => 'true',
-  #     :owner   => 'gand_user',
-  #     :group   => 'gand_group',
-  #   })
-  # end
+  it 'fix bare template dir permission' do
+    should contain_file('/foo/bar/bare').with({
+       :ensure  => 'directory',
+       :recurse => 'true',
+       :owner   => 'gand_user',
+       :group   => 'gand_group',
+    })
+  end
 
 end

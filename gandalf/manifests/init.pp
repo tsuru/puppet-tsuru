@@ -33,8 +33,8 @@ class gandalf (
   $gandalf_group          = 'git',
   $gandalf_version        = 'latest',
   $gandalf_git_daemon     = 'false',
-  $tsuru_api_host,
-  $tsuru_api_token
+  $tsuru_api_host         = 'localhost:8081',
+  $tsuru_api_token        = undef
 ) {
 
   require base
@@ -89,32 +89,32 @@ class gandalf (
     require    => File['/etc/init/gandalf-server.conf']
   }
 
-  # if ($gandalf_create_repositories) {
-  #   if ( mkdir_p($gandalf_repositories_path) ) {
-  #     file { $gandalf_repositories_path:
-  #       ensure  => directory,
-  #       recurse => true,
-  #       mode    => '0755',
-  #       owner   => $gandalf_user,
-  #       group   => $gandalf_group
-  #     }
-  #   } else {
-  #     fail("Cannot create and set ${gandalf_repositories_path}")
-  #   }
-  # }
+  if ($gandalf_create_repositories) {
+    if ( mkdir_p($gandalf_repositories_path) ) {
+      file { $gandalf_repositories_path:
+        ensure  => directory,
+        recurse => true,
+        mode    => '0755',
+        owner   => $gandalf_user,
+        group   => $gandalf_group
+      }
+    } else {
+      fail("Cannot create and set ${gandalf_repositories_path}")
+    }
+  }
 
-#   if ($gandalf_create_bare_template) {
-#     if ( mkdir_p($gandalf_bare_template_path) ) {
-#       file { $gandalf_bare_template_path:
-#         ensure  => directory,
-#         recurse => true,
-#         mode    => '0755',
-#         owner   => $gandalf_user,
-#         group   => $gandalf_group
-#       }
-#     } else {
-#       fail("Cannot create and set ${gandalf_bare_template_path}")
-#     }
-#   }
+  if ($gandalf_create_bare_template) {
+    if ( mkdir_p($gandalf_bare_template_path) ) {
+      file { $gandalf_bare_template_path:
+        ensure  => directory,
+        recurse => true,
+        mode    => '0755',
+        owner   => $gandalf_user,
+        group   => $gandalf_group
+      }
+    } else {
+      fail("Cannot create and set ${gandalf_bare_template_path}")
+    }
+  }
 
 }
