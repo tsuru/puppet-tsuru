@@ -26,9 +26,10 @@ describe 'api::install' do
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain git contiguration' do
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^repo-manager: none$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^git:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  unit-repo: /home/application/current$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  api-server: localhost:9090$})
+        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  api-server:$})
         should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  rw-host:})
         should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  ro-host:})
       end
@@ -76,10 +77,7 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    bin: /var/lib/tsuru/start$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    port: 8888$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  ssh:$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    add-key-cmd: /var/lib/tsuru/add-key$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    public-key: /var/lib/tsuru/.ssh/id_rsa.pub$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    user: tsuru$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    sshd-path: sudo /usr/sbin/sshd$})
         should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  healing:})
       end
 
@@ -108,6 +106,7 @@ describe 'api::install' do
           :smtp_user     => 'tsuru',
           :smtp_password => 'tsuru',
 
+          :repo_manager   => 'gandalf',
           :git_unit_repo  => '/home/application/current',
           :git_api_server => 'localhost:9090',
           :git_rw_host    => 'rwhost.tsuru.io',
@@ -148,10 +147,7 @@ describe 'api::install' do
           :docker_cluster_mongodb_db                 => 'tsuru',
           :docker_run_cmd_bin                        => '/var/lib/tsuru/start',
           :docker_run_cmd_port                       => '8888',
-          :docker_ssh_add_key_cmd                    => '/var/lib/tsuru/add-key',
-          :docker_public_key                         => '/var/lib/tsuru/.ssh/id_rsa.pub',
           :docker_user                               => 'tsuru',
-          :docker_sshd_path                          => 'sudo /usr/sbin/sshd',
           :docker_healing_heal_nodes                 => 'true',
           :docker_healing_active_monitoring_interval => 3,
           :docker_healing_disabled_time              => 40,
@@ -194,6 +190,7 @@ describe 'api::install' do
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain git contiguration' do
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^repo-manager: gandalf$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^git:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  unit-repo: /home/application/current$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  api-server: localhost:9090$})
@@ -263,10 +260,7 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    bin: /var/lib/tsuru/start$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    port: 8888$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  ssh:$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    add-key-cmd: /var/lib/tsuru/add-key$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    public-key: /var/lib/tsuru/.ssh/id_rsa.pub$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    user: tsuru$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    sshd-path: sudo /usr/sbin/sshd$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  healing:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    heal-nodes: true$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    active-monitoring-interval: 3$})
@@ -357,8 +351,8 @@ routers:
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^iaas:$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  default: cloudstack$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  cloudstack:$})
-          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    api-key: "cloudstack_apikey"$})
-          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    secret-key: "cloudstack_secretkey"$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    api-key: cloudstack_apikey$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    secret-key: cloudstack_secretkey$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    url: https://cloudstack.tsuru.io$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    user-data: /var/lib/user-data/docker_user_data.sh$})
         end
@@ -378,8 +372,8 @@ routers:
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^iaas:$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  default: ec2$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  ec2:$})
-          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    key-id: "ec2_key_id"$})
-          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    secret-key: "ec2_secret_key"$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    key-id: ec2_key_id$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    secret-key: ec2_secret_key$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    user-data: /var/lib/user-data/docker_user_data.sh$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    wait-timeout: 400$})
         end
@@ -389,6 +383,7 @@ routers:
         let :match_string do
 '
 iaas:
+  default: ec2
   custom:
     test_cloudstack_1:
       provider: cloudstack

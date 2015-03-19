@@ -22,3 +22,6 @@ if [ -d "$HOME/bin" ] ; then
 fi
 export TSURU_HOST=<%= @tsuru_api_host %>
 export TSURU_TOKEN=<%= @tsuru_api_token %>
+<%= @gandalf_storage_bucket ? "export BUCKET_NAME=#{gandalf_storage_bucket}\nexport CONTAINER_NAME=#{gandalf_storage_bucket}" : '' %>
+<%= @gandalf_cdn_url ? "export CDN_URL=\"#{gandalf_cdn_url}\"" : '' %>
+<%= @gandalf_auth_params ? "export AUTH_PARAMS=\"#{gandalf_auth_params}\"" : '' %>

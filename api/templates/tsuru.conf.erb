@@ -25,6 +25,7 @@ smtp:
 
 # - Git configuration
 # http://docs.tsuru.io/en/latest/reference/config.html#git-configuration
+repo-manager: <%= @repo_manager %>
 git:
   unit-repo: <%= @git_unit_repo %>
   api-server: <%= @git_api_server %>
@@ -119,10 +120,7 @@ docker:
     bin: <%= @docker_run_cmd_bin %>
     port: <%= @docker_run_cmd_port %>
   ssh:
-    add-key-cmd: <%= @docker_ssh_add_key_cmd %>
-    public-key: <%= @docker_public_key %>
     user: <%= @docker_user %>
-    sshd-path: <%= @docker_sshd_path %>
   <%- if @docker_healing_heal_nodes %>
   healing:
     heal-nodes: <%= @docker_healing_heal_nodes %>
@@ -140,22 +138,22 @@ docker:
 # http://docs.tsuru.io/en/latest/reference/config.html#iaas-configuration
 <%- if @iaas_enable -%>
 iaas:
-  <%= @tsuru_iaas_default ? "default: #{tsuru_iaas_default}\n" : nil -%>
+  <%= @tsuru_iaas_default ? "default: #{tsuru_iaas_default}\n" : "default: ec2\n" -%>
   <%- if @cloudstack_apikey -%>
   cloudstack:
-    api-key: "<%= @cloudstack_apikey %>"
-    secret-key: "<%= @cloudstack_secretkey %>"
+    api-key: <%= @cloudstack_apikey %>
+    secret-key: <%= @cloudstack_secretkey %>
     url: <%= @cloudstack_api_url %>
     user-data: <%= @cloudstack_user_data %>
   <%- end -%>
   <%- if @ec2_key_id -%>
   ec2:
-    key-id: "<%= @ec2_key_id %>"
-    secret-key: "<%= @ec2_secret_key %>"
+    key-id: <%= @ec2_key_id %>
+    secret-key: <%= @ec2_secret_key %>
     user-data: <%= @ec2_user_data %>
     wait-timeout: <%= @ec2_wait_timeout %>
   <%- end -%>
-<%= @custom_iaas.empty? ? nil : 'custom:' %>
+<%= @custom_iaas.empty? ? nil : '  custom:' %>
 <%- @custom_iaas.keys.sort.each do |custom_key| -%>
     <%= custom_key %>:
       provider: <%= custom_iaas[custom_key]['provider'] %>
