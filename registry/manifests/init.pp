@@ -15,17 +15,20 @@
 
 class registry (
   $ipbind_port                         = '0.0.0.0:8080',
-  $version                             = latest,
+  $version                             = '0.9.1',
   $user                                = 'registry',
   $group                               = 'registry',
+  $path                                = '/etc/docker-registry/config',
   $storage                             = 'local',
   $venv_path                           = '/var/lib/venv',
+  $environment                         = 'prod',
+  $install_args                        = '',
   $gunicorn_max_requests               = 100,
   $gunicorn_workers                    = 3,
   $storage                             = 'local',
   $loglevel                            = 'info',
-  $debug                               = 'false',
-  $standalone                          = 'true',
+  $debug                               = false,
+  $standalone                          = true,
   $index_endpoint                      = 'https://index.docker.io',
   $storage_redirect                    = undef,
   $disable_token_auth                  = undef,
@@ -47,7 +50,7 @@ class registry (
   $smtp_port                           = 25,
   $smtp_login                          = undef,
   $smtp_password                       = undef,
-  $smtp_secure                         = 'false',
+  $smtp_secure                         = false,
   $smtp_from_addr                      = 'docker-registry@localdomain.local',
   $smtp_to_addr                        = 'noise+dockerregistry@localdomain.local',
   $bugsnag                             = undef,
@@ -132,11 +135,38 @@ class registry (
     virtualenv => true,
   }
 
-  python::virtualenv { $venv_path :
+  python::virtualenv { $venv_path:
     ensure       => present,
     version      => 'system',
     owner        => 'root',
     group        => 'root'
+  }
+
+  python::pip { $venv_path:
+    ensure        => $version,
+    pkgname       => 'docker-registry',
+    virtualenv    => $venv_path,
+    owner         => $user,
+    install_args  => $install_args,
+    timeout       => 1800,
+  }
+
+  python::gunicorn { 'vhost':
+    ensure      => present,
+    virtualenv  => $venv_path,
+    dir         => "${venv_path}/current",
+    bind        => $ipbind_port,
+    environment => $environment,
+    appmodule   => 'app:app',
+    timeout     => 30,
+  }
+
+  file { $path:
+    ensure  => directory,
+    recurse => true,
+    mode    => '0755',
+    owner   => $user,
+    group   => $group,
   }
 
   file { "${path}/config.yml":
@@ -144,7 +174,8 @@ class registry (
     content => template('registry/config.yml.erb'),
     mode    => '0644',
     owner   => 'root',
-    group   => 'root'
+    group   => 'root',
+    require => File[$path]
   }
 
   file { '/etc/init/docker-registry.conf':
@@ -156,20 +187,9 @@ class registry (
     notify  => Service['docker-registry'],
   }
 
-  if ( $storage == local and mkdir_p($path) ) {
-    file { $path:
-      ensure  => directory,
-      mode    => '0755',
-      owner   => $user,
-      group   => $group,
-      notify  => Service['docker-registry']
-    }
-  }
-
   service { 'docker-registry':
     ensure     => running,
     enable     => true,
-    provider   => 'upstart',
     subscribe  => File['/etc/init/docker-registry.conf'],
     require    => [ File['/etc/init/docker-registry.conf'],
                     Python::Gunicorn['docker-registry'] ]
