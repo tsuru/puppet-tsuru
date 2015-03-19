@@ -99,4 +99,41 @@ describe 'gandalf'  do
     end
   end
 
+  context 'using s3 storage' do
+
+    before { params.merge!( :gandalf_storage_type => 's3', :gandalf_storage_bucket => 'foobar' ) }
+
+    it { should contain_class('python') }
+    it { should contain_python__virtualenv('/var/lib/gandalf/virtualenv') }
+    it { should contain_python__pip('s3cmd') }
+    it { should contain_file('/foo/bar/bare/hooks/pre-receive').with_content(/.+s3cmd.+/) }
+    it "generate .profile " do
+      should contain_file('/var/lib/gandalf/.profile').with_content(%r{^export[  ]TSURU_HOST=api_host\n
+                                                                       ^export[  ]TSURU_TOKEN=api_token\n
+                                                                       ^export[  ]BUCKET_NAME=foobar\n
+                                                                       ^export[  ]CONTAINER_NAME=foobar}mx)
+    end
+
+  end
+
+  context 'using swift storage' do
+
+    before { params.merge!( :gandalf_storage_type => 'swift', :gandalf_storage_bucket => 'foobar',
+                            :gandalf_cdn_url => 'http://foobar', :gandalf_auth_params => '-x foo -y bar') }
+
+    it { should contain_class('python') }
+    it { should contain_python__virtualenv('/var/lib/gandalf/virtualenv') }
+    it { should contain_python__pip('swift') }
+    it { should contain_file('/foo/bar/bare/hooks/pre-receive').with_content(/.+swift.+/) }
+    it "generate .profile " do
+      should contain_file('/var/lib/gandalf/.profile').with_content(%r{^export[  ]TSURU_HOST=api_host\n
+                                                                       ^export[  ]TSURU_TOKEN=api_token\n
+                                                                       ^export[  ]BUCKET_NAME=foobar\n
+                                                                       ^export[  ]CONTAINER_NAME=foobar\n
+                                                                       ^export[  ]CDN_URL="http://foobar"\n
+                                                                       ^export[  ]AUTH_PARAMS="-x[  ]foo[  ]-y[  ]bar"}mx)
+    end
+
+  end 
+
 end

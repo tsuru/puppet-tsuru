@@ -31,6 +31,7 @@ class gandalf (
   $gandalf_create_bare_template = true,
   $gandalf_user           = 'git',
   $gandalf_group          = 'git',
+  $gandalf_user_home      = '/var/lib/gandalf',
   $gandalf_version        = 'latest',
   $gandalf_git_daemon     = false,
   $gandalf_storage_type   = 'archive',
@@ -165,5 +166,12 @@ class gandalf (
     require   => File[$gandalf_bare_template_path]
   }
 
+  file { "${gandalf_user_home}/.profile":
+    ensure  => file,
+    mode    => '0755',
+    owner   => $gandalf_user,
+    group   => $gandalf_group,
+    content => template("gandalf/git-profile.erb")
+  }
 
 }
