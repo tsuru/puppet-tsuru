@@ -43,10 +43,11 @@ class gandalf (
   $tsuru_api_token        = undef
 ) {
 
-  require base
+  include base
 
   package { 'gandalf-server':
-    ensure => $gandalf_version
+    ensure => $gandalf_version,
+    require => Class['Base']
   }
 
   file { '/etc/gandalf.conf':
@@ -92,7 +93,7 @@ class gandalf (
     enable     => true,
     provider   => 'upstart',
     subscribe  => File['/etc/init/gandalf-server.conf'],
-    require    => File['/etc/init/gandalf-server.conf']
+    require    => [ File['/etc/init/gandalf-server.conf'] , Package['gandalf-server'] ]
   }
 
   if ($gandalf_create_repositories) {
@@ -102,7 +103,8 @@ class gandalf (
         recurse => true,
         mode    => '0755',
         owner   => $gandalf_user,
-        group   => $gandalf_group
+        group   => $gandalf_group,
+        require => Package['gandalf-server']
       }
     } else {
       fail("Cannot create and set ${gandalf_repositories_path}")
@@ -110,13 +112,14 @@ class gandalf (
   }
 
   if ($gandalf_create_bare_template) {
-    if ( mkdir_p($gandalf_bare_template_path) ) {
+    if ( mkdir_p("${gandalf_bare_template_path}/hooks") ) {
       file { $gandalf_bare_template_path:
         ensure  => directory,
         recurse => true,
         mode    => '0755',
         owner   => $gandalf_user,
-        group   => $gandalf_group
+        group   => $gandalf_group,
+        require => Package['gandalf-server']
       }
     } else {
       fail("Cannot create and set ${gandalf_bare_template_path}")
@@ -130,7 +133,8 @@ class gandalf (
       pip        => true,
       dev        => true,
       virtualenv => true,
-      gunicorn   => false
+      gunicorn   => false,
+      require => Package['gandalf-server']
     }
 
     python::virtualenv { $gandalf_storage_venv :
@@ -171,7 +175,8 @@ class gandalf (
     mode    => '0755',
     owner   => $gandalf_user,
     group   => $gandalf_group,
-    content => template("gandalf/git-profile.erb")
+    content => template("gandalf/git-profile.erb"),
+    require => Package['gandalf-server']
   }
 
 }
