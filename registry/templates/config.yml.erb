@@ -36,17 +36,17 @@ common: &common
 <% if @sqlalchemy_index_database -%>
     # SQLite search backend
     sqlalchemy_index_database: <%= @sqlalchemy_index_database %>
-
 <% end -%>
 <% if @mirror_source -%>
+
     # Mirroring is not enabled
     mirroring:
         source: <%= @mirror_source %>
         source_index: <%= @mirror_source_index %>
         tags_cache_ttl: <%= @mirror_tags_cache_ttl %>
-
 <% end -%>
 <% if @cache_redis_host -%>
+
     cache:
         host: <%= @cache_redis_host %>
         port: <%= @cache_redis_port %>
@@ -54,6 +54,7 @@ common: &common
         password: <%= @cache_redis_password %>
 <% end -%>
 <% if @cache_lru_redis_host -%>
+
     # Enabling LRU cache for small files
     # This speeds up read/write on small files
     # when using a remote storage backend (like S3).
@@ -64,6 +65,7 @@ common: &common
         password: <%= @cache_lru_redis_password %>
 <% end -%>
 <% if @smtp_host -%>
+
     # Enabling these options makes the Registry send an email on each code Exception
     email_exceptions:
         smtp_host: <%= @smtp_host %>
@@ -75,10 +77,12 @@ common: &common
         to_addr: <%= @smtp_to_addr %>
 <% end -%>
 <% if @bugsnag -%>
+
     # Enable bugsnag (set the API key)
     bugsnag: <%= @bugsnag %>
 <% end -%>
 <% if @cors_origins -%>
+
     # CORS support is not enabled by default
     cors:
         origins: <%= @cors_origins %>
@@ -94,10 +98,11 @@ common: &common
         resources: <%= @cors_resources %>
 <% end -%>
 <% if @storage == "local" -%>
+
 local: &local
     <<: *common
     storage: local
-    storage_path: <%= @storage_path %>
+    storage_path: <%= @local_storage_path %>
 <% end -%>
 <% if @storage == "s3" or @storage == "cloudfronts3" -%>
 
@@ -107,7 +112,7 @@ s3: &s3
     s3_region: <%= @aws_region %>
     s3_bucket: <%= @aws_bucket %>
     boto_bucket: <%= @aws_bucket %>
-    storage_path: <%= @storage_path %>
+    storage_path: <%= @aws_storage_path %>
     s3_encrypt: <%= @aws_encrypt %>
     s3_secure: <%= @aws_secure %>
     s3_access_key: <%= @aws_key %>
@@ -147,7 +152,7 @@ ceph-s3: &ceph-s3
     s3_bucket: <%= @aws_bucket %>
     s3_encrypt: <%= @aws_encrypt %>
     s3_secure: <%= @aws_secure %>
-    storage_path: <%= @storage_path %>
+    storage_path: <%= @aws_storage_path %>
     s3_access_key: <%= @aws_key %>
     s3_secret_key: <%= @aws_secret %>
     boto_bucket: <%= @aws_bucket %>
@@ -166,7 +171,7 @@ gcs:
     <<: *common
     storage: gcs
     boto_bucket: <%= @gcs_bucket %>
-    storage_path: <%= @storage_path %>
+    storage_path: <%= @gcs_storage_path %>
     gs_secure: <%= @gcs_secure %>
     gs_access_key: <%= @gcs_key %>
     gs_secret_key: <%= @gcs_secret %>
@@ -184,7 +189,7 @@ gcs:
 swift: &swift
     <<: *common
     storage: swift
-    storage_path: <%= @storage_path %>
+    storage_path: <%= @os_storage_path %>
     # keystone authorization
     swift_authurl: <%= @os_auth_url %>
     swift_container: <%= @os_container %>
@@ -201,7 +206,7 @@ glance: &glance
     <<: *common
     storage: glance
     storage_alternate: <%= @glance_storage_alternate %>
-    storage_path: <%= @storage_path %>
+    storage_path: <%= @glance_storage_path %>
 
 openstack:
     <<: *glance
@@ -243,7 +248,7 @@ elliptics:
 oss: &oss
     <<: *common
     storage: oss
-    storage_path: <%= @storage_path %>
+    storage_path: <%= @oss_storage_path %>
     oss_host: <%= @oss_host %>
     oss_bucket: <%= @oss_bucket %>
     oss_accessid: <%= @oss_key %>
