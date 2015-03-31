@@ -13,9 +13,9 @@ Puppet module for docker registry config and instalation
   }
 ```
 
-
 # Full Parameters list
 
+```puppet
   $ipbind_port                         = '0.0.0.0:8080',  
   $version                             = latest,  
   $user                                = 'registry',  
@@ -118,3 +118,4 @@ Puppet module for docker registry config and instalation
   $dev_search_backend                  = 'sqlalchemy',  
   $test_storage_path                   = './tmp/test',  
   $prod_storage_path                   = '/prod',  
+```
