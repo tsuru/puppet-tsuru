@@ -41,16 +41,16 @@ APP_NAME=${APP_DIR/.git/}
 UUID=`python -c 'import uuid; print uuid.uuid4().hex'`
 ARCHIVE_FILE_NAME=${APP_NAME}_${COMMIT}_${UUID}.tar.gz
 git archive --format=tar.gz -o /tmp/$ARCHIVE_FILE_NAME $COMMIT
-swift -q $AUTH_PARAMS upload $CONTAINER_NAME /tmp/$ARCHIVE_FILE_NAME --object-name $ARCHIVE_FILE_NAME
-swift -q $AUTH_PARAMS post -r ".r:*" $CONTAINER_NAME
+<%= @gandalf_storage_venv %>/bin/swift -q $AUTH_PARAMS upload $CONTAINER_NAME /tmp/$ARCHIVE_FILE_NAME --object-name $ARCHIVE_FILE_NAME
+<%= @gandalf_storage_venv %>/bin/swift -q $AUTH_PARAMS post -r ".r:*" $CONTAINER_NAME
 rm /tmp/$ARCHIVE_FILE_NAME
 if [ -z "${CDN_URL}" ]
 then
-	ARCHIVE_URL=`swift $AUTH_PARAMS stat -v $CONTAINER_NAME $ARCHIVE_FILE_NAME | grep URL | awk -F': ' '{print $2}'`
+	ARCHIVE_URL=`<%= @gandalf_storage_venv %>/bin/swift $AUTH_PARAMS stat -v $CONTAINER_NAME $ARCHIVE_FILE_NAME | grep URL | awk -F': ' '{print $2}'`
 else
 	ARCHIVE_URL=${CDN_URL}/${ARCHIVE_FILE_NAME}
 fi
 URL="${TSURU_HOST}/apps/${APP_NAME}/repository/clone"
 curl -H "Authorization: bearer ${TSURU_TOKEN}" -d "archive-url=${ARCHIVE_URL}&commit=${COMMIT}&user=${TSURU_USER}" -s -N $URL | tee /tmp/deploy-${APP_NAME}.log
-swift -q $AUTH_PARAMS delete $CONTAINER_NAME $ARCHIVE_FILE_NAME
+<%= @gandalf_storage_venv %>/bin/swift -q $AUTH_PARAMS delete $CONTAINER_NAME $ARCHIVE_FILE_NAME
 tail -1 /tmp/deploy-${APP_NAME}.log | grep -q "^OK$"
