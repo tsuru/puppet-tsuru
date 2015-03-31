@@ -1,0 +1,20 @@
+{
+  "name": "tsuru-registry",
+  "version": "0.0.1",
+  "author": "Tsuru",
+  "license": "BSD-style license that can be found in the LICENSE file",
+  "summary": "Puppet module to Tsuru PaaS Docker Registry",
+  "source": "https://github.com/tsuru/puppet-tsuru",
+  "project_page": "(https://github.com/tsuru/puppet-tsuru)",
+  "issues_url": "https://github.com/tsuru/puppet-tsuru/issues",
+  "tags": ["PaaS", "tsuru", "Registry"],
+  "operatingsystem_support": [
+    {"operatingsystem": "Ubuntu",
+    "operatingsystemrelease": [ "14.04" ]}
+   ],
+  "dependencies": [
+    { "name": "puppetlabs/stdlib", "version_requirement": ">= 2.5.0" },
+    { "name": "saz/sudo" },
+    { "name": "tsuru/base" }
+  ]
+}
