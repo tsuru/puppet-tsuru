@@ -95,6 +95,7 @@ class registry (
   $os_auth_url                         = undef,
   $os_container                        = undef,
   $os_container                        = undef,
+  $os_username                         = undef,
   $os_password                         = undef,
   $os_tenant_name                      = undef,
   $os_region_name                      = undef,
