@@ -125,7 +125,7 @@ class registry (
 
   require base
 
-  $packages = [ 'liblzma-dev', 'libyaml-dev' ]
+  $packages = [ 'liblzma-dev', 'libyaml-dev', 'libssl-dev' ]
   package { $packages:
     ensure => installed
   }
@@ -162,6 +162,32 @@ class registry (
     timeout     => 30,
   }
 
+  user { $user:
+    ensure  => present,
+    comment => 'Registry User',
+    home    => '/home/name',
+    groups  => $group,
+    require => Group[$group]
+  }
+
+  group { $group:
+    ensure  => present,
+  }
+
+  file { "/etc/docker-registry":
+    ensure  => directory,
+    mode    => '0644',
+    owner   => 'root',
+    group   => 'root',
+  }
+
+  file { "/etc/gunicorn.d":
+    ensure  => directory,
+    mode    => '0644',
+    owner   => 'root',
+    group   => 'root',
+  }
+
   file { $path:
     ensure  => directory,
     recurse => true,
@@ -193,7 +219,7 @@ class registry (
     enable     => true,
     subscribe  => File['/etc/init/docker-registry.conf'],
     require    => [ File['/etc/init/docker-registry.conf'],
-                    Python::Gunicorn['docker-registry'] ]
+                    Class['python'] ]
   }
 
 }
