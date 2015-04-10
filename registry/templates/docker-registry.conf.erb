@@ -5,14 +5,14 @@ kill timeout 180
 start on runlevel [2345]
 stop on runlevel [06]
 
-setuid <%= @registry_user %>
-setgid <%= @registry_group %>
+setuid <%= @user %>
+setgid <%= @group %>
 
 respawn
 
-env DOCKER_REGISTRY_CONFIG=<%= @registry_path %>/config.yml
+env DOCKER_REGISTRY_CONFIG=<%= @path %>/config.yml
 script
-<%= @registry_venv_path %>/bin/gunicorn \
+<%= @venv_path %>/bin/gunicorn \
     -k gevent --max-requests <%= @gunicorn_max_requests %> \
     --graceful-timeout 3600 -t 3600 -b <%= @ipbind_port %> \
     -w <%= @gunicorn_workers %> docker_registry.wsgi:application
