@@ -61,8 +61,6 @@ describe 'router::install' do
         should contain_apt__key('tsuru')
         should contain_apt__key('docker')
 
-        should contain_package('software-properties-common')
-
       end
 
       it 'required by hipache' do
