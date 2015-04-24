@@ -39,8 +39,11 @@ class gandalf (
   $gandalf_storage_bucket = undef,
   $gandalf_cdn_url        = undef,
   $gandalf_auth_params    = undef,
+  $gandalf_pre_receive_template   = undef,
+  $gandalf_post_receive_template  = undef,
   $tsuru_api_host         = 'localhost:8081',
   $tsuru_api_token        = undef
+
 ) {
 
   include base
@@ -160,14 +163,30 @@ class gandalf (
 
   }
 
-  file { "${gandalf_bare_template_path}/hooks/pre-receive":
-    ensure    => file,
-    recurse   => true,
-    mode      => '0755',
-    owner     => $gandalf_user,
-    group     => $gandalf_group,
-    content   => template("gandalf/pre-receive-${gandalf_storage_type}.erb"),
-    require   => File[$gandalf_bare_template_path]
+  if ($gandalf_pre_receive_template) {
+    file { "${gandalf_bare_template_path}/hooks/pre-receive":
+      ensure    => file,
+      recurse   => true,
+      mode      => '0755',
+      owner     => $gandalf_user,
+      group     => $gandalf_group,
+      content   => multitemplate($gandalf_pre_receive_template,
+                                "gandalf/pre-receive-${gandalf_storage_type}.erb"),
+      require   => File[$gandalf_bare_template_path]
+      }
+  }
+
+  if ($gandalf_post_receive_template) {
+    file { "${gandalf_bare_template_path}/hooks/post-receive":
+      ensure    => file,
+      recurse   => true,
+      mode      => '0755',
+      owner     => $gandalf_user,
+      group     => $gandalf_group,
+      content   => multitemplate($gandalf_post_receive_template,
+                                "gandalf/post-receive-${gandalf_storage_type}.erb"),
+      require   => File[$gandalf_bare_template_path]
+    }
   }
 
   file { "${gandalf_user_home}/.profile":
@@ -175,7 +194,7 @@ class gandalf (
     mode    => '0755',
     owner   => $gandalf_user,
     group   => $gandalf_group,
-    content => template("gandalf/git-profile.erb"),
+    content => template('gandalf/git-profile.erb'),
     require => Package['gandalf-server']
   }
 

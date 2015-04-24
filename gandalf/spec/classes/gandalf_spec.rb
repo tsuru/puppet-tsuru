@@ -99,9 +99,10 @@ describe 'gandalf'  do
     end
   end
 
-  context 'using s3 storage' do
+  context 'using pre_receive with s3 storage' do
 
-    before { params.merge!( :gandalf_storage_type => 's3', :gandalf_storage_bucket => 'foobar' ) }
+    before { params.merge!( :gandalf_storage_type => 's3', :gandalf_storage_bucket => 'foobar',
+                            :gandalf_pre_receive_template => 'true' ) }
 
     it { should contain_class('python') }
     it { should contain_python__virtualenv('/var/lib/gandalf/virtualenv') }
@@ -116,10 +117,12 @@ describe 'gandalf'  do
 
   end
 
-  context 'using swift storage' do
+  context 'using pre_receive with swift storage' do
 
     before { params.merge!( :gandalf_storage_type => 'swift', :gandalf_storage_bucket => 'foobar',
-                            :gandalf_cdn_url => 'http://foobar', :gandalf_auth_params => '-x foo -y bar') }
+                            :gandalf_cdn_url => 'http://foobar', :gandalf_auth_params => '-x foo -y bar',
+                            :gandalf_pre_receive_template => 'true' )  }
+
 
     it { should contain_class('python') }
     it { should contain_python__virtualenv('/var/lib/gandalf/virtualenv') }
