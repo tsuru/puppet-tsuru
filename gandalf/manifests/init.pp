@@ -49,7 +49,7 @@ class gandalf (
   include base
 
   package { 'gandalf-server':
-    ensure => $gandalf_version,
+    ensure  => $gandalf_version,
     require => Class['Base']
   }
 
@@ -83,20 +83,20 @@ class gandalf (
     }
 
     service { 'git-daemon':
-      ensure     => running,
-      enable     => true,
-      provider   => 'upstart',
-      subscribe  => File['/etc/init/git-daemon.conf'],
-      require    => File['/etc/init/git-daemon.conf']
+      ensure    => running,
+      enable    => true,
+      provider  => 'upstart',
+      subscribe => File['/etc/init/git-daemon.conf'],
+      require   => File['/etc/init/git-daemon.conf']
     }
   }
 
   service { 'gandalf-server':
-    ensure     => running,
-    enable     => true,
-    provider   => 'upstart',
-    subscribe  => File['/etc/init/gandalf-server.conf'],
-    require    => [ File['/etc/init/gandalf-server.conf'] , Package['gandalf-server'] ]
+    ensure    => running,
+    enable    => true,
+    provider  => 'upstart',
+    subscribe => File['/etc/init/gandalf-server.conf'],
+    require   => [ File['/etc/init/gandalf-server.conf'] , Package['gandalf-server'] ]
   }
 
   if ($gandalf_create_repositories) {
@@ -137,15 +137,15 @@ class gandalf (
       dev        => true,
       virtualenv => true,
       gunicorn   => false,
-      require => Package['gandalf-server']
+      require    => Package['gandalf-server']
     }
 
     python::virtualenv { $gandalf_storage_venv :
-      ensure       => present,
-      version      => 'system',
-      owner        => $gandalf_user,
-      group        => $gandalf_group,
-      require      => Class['Python']
+      ensure  => present,
+      version => 'system',
+      owner   => $gandalf_user,
+      group   => $gandalf_group,
+      require => Class['Python']
     }
 
     if ($gandalf_storage_type == 's3') {
@@ -165,27 +165,27 @@ class gandalf (
 
   if ($gandalf_pre_receive_template) {
     file { "${gandalf_bare_template_path}/hooks/pre-receive":
-      ensure    => file,
-      recurse   => true,
-      mode      => '0755',
-      owner     => $gandalf_user,
-      group     => $gandalf_group,
-      content   => multitemplate($gandalf_pre_receive_template,
+      ensure  => file,
+      recurse => true,
+      mode    => '0755',
+      owner   => $gandalf_user,
+      group   => $gandalf_group,
+      content => multitemplate($gandalf_pre_receive_template,
                                 "gandalf/pre-receive-${gandalf_storage_type}.erb"),
-      require   => File[$gandalf_bare_template_path]
+      require => File[$gandalf_bare_template_path]
       }
   }
 
   if ($gandalf_post_receive_template) {
     file { "${gandalf_bare_template_path}/hooks/post-receive":
-      ensure    => file,
-      recurse   => true,
-      mode      => '0755',
-      owner     => $gandalf_user,
-      group     => $gandalf_group,
-      content   => multitemplate($gandalf_post_receive_template,
+      ensure  => file,
+      recurse => true,
+      mode    => '0755',
+      owner   => $gandalf_user,
+      group   => $gandalf_group,
+      content => multitemplate($gandalf_post_receive_template,
                                 "gandalf/post-receive-${gandalf_storage_type}.erb"),
-      require   => File[$gandalf_bare_template_path]
+      require => File[$gandalf_bare_template_path]
     }
   }
 
