@@ -16,6 +16,14 @@
 # [gandalf_user] Gandalf running user
 # [gandalf_group] Gandalf running group
 # [gandalf_version] Gandalf server package version
+# [gandalf_git_daemon]     Install git daemon - usefull if using post-receive
+# [gandalf_storage_type]   Storage type [archive, swift, s3]
+# [gandalf_storage_venv]   Virtualenv location for swift or s3 storage
+# [gandalf_storage_bucket] Bucket or container for swift / s3
+# [gandalf_cdn_url]        CDN URL for swift / s3
+# [gandalf_auth_params]    Auth params for swift / s3
+# [gandalf_pre_receive_template]   Use pre_receive or location for custom template
+# [gandalf_post_receive_template]  Use post_receive or location for custom template
 # [tsuru_api_host] Tsuru Server API Host
 # [tsuru_api_token] Tsuru API Token
 
