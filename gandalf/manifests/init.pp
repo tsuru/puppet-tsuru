@@ -192,7 +192,7 @@ class gandalf (
       owner   => $gandalf_user,
       group   => $gandalf_group,
       content => multitemplate($gandalf_post_receive_template,
-                                "gandalf/post-receive-${gandalf_storage_type}.erb"),
+                                "gandalf/post-receive.erb"),
       require => File[$gandalf_bare_template_path]
     }
   }

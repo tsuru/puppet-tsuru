@@ -137,6 +137,17 @@ describe 'gandalf'  do
                                                                        ^export[ ]AUTH_PARAMS="-x[ ]foo[ ]-y[ ]bar"}x)
     end
 
-  end 
+  end
+
+  context 'using post_receive hook' do
+
+    before { params.merge!( :gandalf_post_receive_template => 'true' )  }
+
+    it { should contain_file('/foo/bar/bare/hooks/post-receive') }
+    it "generate .profile " do
+      should contain_file('/var/lib/gandalf/.profile').with_content(%r{^export[ ]TSURU_HOST=api_host\n
+                                                                       ^export[ ]TSURU_TOKEN=api_token\n}x)
+    end
+  end
 
 end
