@@ -5,221 +5,39 @@
 #
 # === Parameters
 #
-# [ipbind_port] Registry ip X bind port
-# [path] Registry local path
-# [version] Registry package version
-# [user] Registre user name
-# [group] Registre group name
-# [storage] storages: s3 glance swift glance-swift elliptics gcs local
-# [venv_path] virtualenv to docker-registry installation
-
+# [lxc_docker_version] LXC docker package version
+# [docker_graph_dir] Docker root directory where all files are located
+# [docker_bind] Docker bind array options. Eg ['tcp://0.0.0.0:4243', 'unix:///var/run/docker.sock']
+# [docker_extra_opts] Extra opts to docker daemon
+# [registry_install_command]
+# [registry_start_command]
 class registry (
-  $ipbind_port                         = '0.0.0.0:8080',
-  $version                             = '0.9.1',
-  $user                                = 'registry',
-  $group                               = 'registry',
-  $path                                = '/etc/docker-registry/config',
-  $storage                             = 'local',
-  $venv_path                           = '/var/lib/venv',
-  $environment                         = 'prod',
-  $install_args                        = '',
-  $gunicorn_max_requests               = 100,
-  $gunicorn_workers                    = 3,
-  $storage                             = 'local',
-  $loglevel                            = 'info',
-  $debug                               = false,
-  $standalone                          = true,
-  $index_endpoint                      = 'https://index.docker.io',
-  $storage_redirect                    = undef,
-  $disable_token_auth                  = undef,
-  $privileged_key                      = undef,
-  $search_backend                      = undef,
-  $sqlalchemy_index_database           = 'sqlite:////tmp/docker-registry.db',
-  $mirror_source                       = undef,
-  $mirror_source_index                 = undef,
-  $mirror_tags_cache_ttl               = '172800',
-  $cache_redis_host                    = undef,
-  $cache_redis_port                    = undef,
-  $cache_redis_db                      = '0',
-  $cache_redis_password                = undef,
-  $cache_lru_redis_host                = undef,
-  $cache_lru_redis_port                = undef,
-  $cache_lru_redis_db                  = '0',
-  $cache_lru_redis_password            = undef,
-  $smtp_host                           = undef,
-  $smtp_port                           = 25,
-  $smtp_login                          = undef,
-  $smtp_password                       = undef,
-  $smtp_secure                         = false,
-  $smtp_from_addr                      = 'docker-registry@localdomain.local',
-  $smtp_to_addr                        = 'noise+dockerregistry@localdomain.local',
-  $bugsnag                             = undef,
-  $cors_origins                        = undef,
-  $cors_methods                        = undef,
-  $cors_headers                        = '[Content-Type]',
-  $cors_expose_headers                 = undef,
-  $cors_supports_credentials           = undef,
-  $cors_max_age                        = undef,
-  $cors_send_wildcard                  = undef,
-  $cors_always_send                    = undef,
-  $cors_automatic_options              = undef,
-  $cors_vary_header                    = undef,
-  $cors_resources                      = undef,
-  $local_storage_path                  = '/tmp/registry',
-  $aws_region                          = undef,
-  $aws_bucket                          = undef,
-  $aws_storage_path                    = '/registry',
-  $aws_encrypt                         = true,
-  $aws_secure                          = true,
-  $aws_key                             = undef,
-  $aws_secret                          = undef,
-  $aws_use_sigv4                       = undef,
-  $aws_host                            = undef,
-  $aws_port                            = undef,
-  $aws_debug                           = 0,
-  $aws_calling_format                  = undef,
-  $cf_base_url                         = undef,
-  $cf_keyid                            = undef,
-  $cf_keysecret                        = undef,
-  $azure_storage_account_name          = undef,
-  $azure_storage_account_key           = undef,
-  $azure_storage_container             = 'registry',
-  $azure_use_https                     = true,
-  $gcs_bucket                          = undef,
-  $gcs_storage_path                    = '/registry',
-  $gcs_secure                          = true,
-  $gcs_key                             = undef,
-  $gcs_secret                          = undef,
-  $gcs_oauth2                          = false,
-  $os_storage_path                     = undef,
-  $os_auth_url                         = undef,
-  $os_container                        = undef,
-  $os_container                        = undef,
-  $os_username                         = undef,
-  $os_password                         = undef,
-  $os_tenant_name                      = undef,
-  $os_region_name                      = undef,
-  $glance_storage_alternate            = file,
-  $glance_storage_path                 = '/tmp/registry',
-  $elliptics_nodes                     = undef,
-  $elliptics_wait_timeout              = 60,
-  $elliptics_check_timeout             = 60,
-  $elliptics_io_thread_num             = 2,
-  $elliptics_net_thread_num            = 2,
-  $elliptics_nonblocking_io_thread_num = 2,
-  $elliptics_groups                    = undef,
-  $elliptics_verbosity                 = 4,
-  $elliptics_logfile                   = '/dev/stderr',
-  $elliptics_addr_family               = 2,
-  $oss_storage_path                    = '/registry/',
-  $oss_host                            = undef,
-  $oss_bucket                          = undef,
-  $oss_key                             = undef,
-  $oss_secret                          = undef,
-  $dev_loglevel                        = 'debug',
-  $dev_debug                           = true,
-  $dev_search_backend                  = 'sqlalchemy',
-  $test_storage_path                   = './tmp/test',
-  $prod_storage_path                   = '/prod',
-) {
+  $lxc_docker_version = 'latest',
+  $docker_graph_dir = undef,
+  $docker_bind = undef,
+  $docker_extra_opts = undef,
+  $registry_install_command = undef,
+  $registry_start_command = undef,
+  ){
 
-  require base
-
-  $packages = [ 'liblzma-dev', 'libyaml-dev', 'libssl-dev' ]
-  package { $packages:
-    ensure => installed
+  class { 'docker':
+    lxc_docker_version           => $lxc_docker_version,
+    docker_graph_dir             => $docker_graph_dir,
+    docker_bind                  => $docker_bind,
+    docker_extra_opts            => $docker_extra_opts
   }
 
-  class { 'python':
-    version    => 'system',
-    dev        => true,
-    virtualenv => true,
+  exec { 'install registry':
+    command => $registry_install_command,
+    path    => '/usr/bin',
+    require => Class['docker']
   }
 
-  python::virtualenv { $venv_path:
-    ensure       => present,
-    version      => 'system',
-    owner        => 'root',
-    group        => 'root'
-  }
-
-  python::pip { $venv_path:
-    ensure        => $version,
-    pkgname       => 'docker-registry',
-    virtualenv    => $venv_path,
-    owner         => $user,
-    install_args  => $install_args,
-    timeout       => 1800,
-  }
-
-  python::gunicorn { 'vhost':
-    ensure      => present,
-    virtualenv  => $venv_path,
-    dir         => "${venv_path}/current",
-    bind        => $ipbind_port,
-    environment => $environment,
-    appmodule   => 'app:app',
-    timeout     => 30,
-  }
-
-  user { $user:
-    ensure  => present,
-    comment => 'Registry User',
-    home    => '/home/name',
-    groups  => $group,
-    require => Group[$group]
-  }
-
-  group { $group:
-    ensure  => present,
-  }
-
-  file { "/etc/docker-registry":
-    ensure  => directory,
-    mode    => '0644',
-    owner   => 'root',
-    group   => 'root',
-  }
-
-  file { "/etc/gunicorn.d":
-    ensure  => directory,
-    mode    => '0644',
-    owner   => 'root',
-    group   => 'root',
-  }
-
-  file { $path:
-    ensure  => directory,
-    recurse => true,
-    mode    => '0755',
-    owner   => $user,
-    group   => $group,
-  }
-
-  file { "${path}/config.yml":
-    ensure  => present,
-    content => template('registry/config.yml.erb'),
-    mode    => '0644',
-    owner   => 'root',
-    group   => 'root',
-    require => File[$path]
-  }
-
-  file { '/etc/init/docker-registry.conf':
-    ensure  => present,
-    content => template('registry/docker-registry.conf.erb'),
-    mode    => '0644',
-    owner   => root,
-    group   => root,
-    notify  => Service['docker-registry'],
-  }
-
-  service { 'docker-registry':
-    ensure     => running,
-    enable     => true,
-    subscribe  => File['/etc/init/docker-registry.conf'],
-    require    => [ File['/etc/init/docker-registry.conf'],
-                    Class['python'] ]
+  exec { 'start registry':
+    command => $registry_start_command,
+    path    =>  '/usr/bin',
+    unless  =>  '/usr/bin/docker inspect --format="{{ .State.Running }}" $(docker ps -q)',
+    require => Exec['install registry']
   }
 
 }
