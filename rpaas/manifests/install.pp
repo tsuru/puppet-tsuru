@@ -29,7 +29,7 @@ class rpaas::install (
 
   package { 'nginx-extras':
     ensure => $nginx_package,
-    require => Exec['apt_update']
+    require => [ Exec['apt_update'], File['/etc/nginx/nginx.conf'] ]
   }
 
   service { 'nginx':
@@ -68,10 +68,14 @@ class rpaas::install (
     require => Package['nginx-extras'],
   }
 
+  file { '/etc/nginx':
+    ensure => directory
+  }
+
   file { '/etc/nginx/nginx.conf':
     content => template('rpaas/nginx.conf.erb'),
     notify  => Service['nginx'],
-    require => Package['nginx-extras'],
+    require => File['/etc/nginx']
   }
 
   sudo::conf { $nginx_user:
