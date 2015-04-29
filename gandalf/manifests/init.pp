@@ -160,6 +160,12 @@ class gandalf (
       $python_archive_package = 's3cmd'
     } else {
       $python_archive_package = 'swift'
+      python::pip { 'pbr':
+        pkgname    => 'pbr',
+        owner      => $gandalf_user,
+        virtualenv => $gandalf_storage_venv,
+        require    => Python::Virtualenv[$gandalf_storage_venv]
+      }
     }
 
     python::pip { $python_archive_package:
