@@ -160,12 +160,28 @@ class gandalf (
       $python_archive_package = 's3cmd'
     } else {
       $python_archive_package = 'swift'
+
+      package { 'libffi-dev':
+        ensure => installed
+      }
+
       python::pip { 'pbr':
         pkgname    => 'pbr',
         owner      => $gandalf_user,
         virtualenv => $gandalf_storage_venv,
         require    => Python::Virtualenv[$gandalf_storage_venv]
       }
+
+      python::pip { 'cffi':
+        pkgname    => 'pbr',
+        owner      => $gandalf_user,
+        virtualenv => $gandalf_storage_venv,
+        require    => [ Python::Virtualenv[$gandalf_storage_venv], Python::Pip['pbr'],
+                        Package['libffi-dev'] ]
+      }
+
+      Python::Pip['swift']->Python::Pip['pbr']
+
     }
 
     python::pip { $python_archive_package:
