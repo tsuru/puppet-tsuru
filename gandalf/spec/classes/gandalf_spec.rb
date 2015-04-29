@@ -126,7 +126,8 @@ describe 'gandalf'  do
 
     it { should contain_class('python') }
     it { should contain_python__virtualenv('/var/lib/gandalf/virtualenv') }
-    it { should contain_python__pip('swift') }
+    it { should contain_python__pip('python-keystoneclient') }
+    it { should contain_python__pip('python-swiftclient') }
     it { should contain_file('/foo/bar/bare/hooks/pre-receive').with_content(/.+swift.+/) }
     it "generate .profile " do
       should contain_file('/var/lib/gandalf/.profile').with_content(%r{^export[ ]TSURU_HOST=api_host\n

@@ -159,11 +159,7 @@ class gandalf (
     if ($gandalf_storage_type == 's3') {
       $python_archive_package = 's3cmd'
     } else {
-      $python_archive_package = 'swift'
-
-      package { 'libffi-dev':
-        ensure => installed
-      }
+      $python_archive_package = ['python-keystoneclient', 'python-swiftclient']
 
       python::pip { 'pbr':
         pkgname    => 'pbr',
@@ -172,15 +168,7 @@ class gandalf (
         require    => Python::Virtualenv[$gandalf_storage_venv]
       }
 
-      python::pip { 'cffi':
-        pkgname    => 'pbr',
-        owner      => $gandalf_user,
-        virtualenv => $gandalf_storage_venv,
-        require    => [ Python::Virtualenv[$gandalf_storage_venv], Python::Pip['pbr'],
-                        Package['libffi-dev'] ]
-      }
-
-      Python::Pip['swift']->Python::Pip['pbr']
+      Python::Pip['pbr']->Python::Pip['python-keystoneclient']
 
     }
 
