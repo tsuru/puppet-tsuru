@@ -44,7 +44,7 @@ class rpaas::install (
     recurse => true,
     owner   => $nginx_user,
     group   => $nginx_group,
-    require => Package['nginx-extras'],
+    require => File['/etc/nginx'],
   }
 
   exec { 'ssl':
@@ -52,7 +52,7 @@ class rpaas::install (
     command => $rpaas::ssl_command,
     onlyif  => ["/usr/bin/test ! -f ${rpaas::dav_ssl_key_file}",
                 "/usr/bin/test ! -f ${rpaas::dav_ssl_crt_file}"],
-    require => File[$rpaas::dav_ssl_dir],
+    require => [File['/etc/nginx'], File[$rpaas::dav_ssl_dir]],
   }
 
   file { [$rpaas::dav_ssl_key_file, $rpaas::dav_ssl_crt_file]:
