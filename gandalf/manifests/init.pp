@@ -157,9 +157,13 @@ class gandalf (
     }
 
     if ($gandalf_storage_type == 's3') {
-      $python_archive_package = 's3cmd'
+      python::pip { 's3cmd':
+        pkgname    => 's3cmd',
+        owner      => $gandalf_user,
+        virtualenv => $gandalf_storage_venv,
+        require    => Python::Virtualenv[$gandalf_storage_venv]
+      }
     } else {
-      $python_archive_package = ['python-keystoneclient', 'python-swiftclient']
 
       python::pip { 'pbr':
         pkgname    => 'pbr',
@@ -168,15 +172,22 @@ class gandalf (
         require    => Python::Virtualenv[$gandalf_storage_venv]
       }
 
+      python::pip { 'python-keystoneclient':
+        pkgname    => 'python-keystoneclient',
+        owner      => $gandalf_user,
+        virtualenv => $gandalf_storage_venv,
+        require    => Python::Virtualenv[$gandalf_storage_venv]
+      }
+
+      python::pip { 'python-swiftclient':
+        pkgname    => 'python-swiftclient',
+        owner      => $gandalf_user,
+        virtualenv => $gandalf_storage_venv,
+        require    => Python::Virtualenv[$gandalf_storage_venv]
+      }
+
       Python::Pip['pbr']->Python::Pip['python-keystoneclient']
 
-    }
-
-    python::pip { $python_archive_package:
-      pkgname    => $python_archive_package,
-      owner      => $gandalf_user,
-      virtualenv => $gandalf_storage_venv,
-      require    => Python::Virtualenv[$gandalf_storage_venv]
     }
 
   }
