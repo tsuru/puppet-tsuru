@@ -156,38 +156,28 @@ class gandalf (
       require => Class['Python']
     }
 
+    $python_os_dependencies = [ 'libffi-dev', 'libssl-dev' ]
+    package { $python_os_dependencies :
+      ensure => installed
+    }
+
+    python::pip { 'pyopenssl':
+      owner      => $gandalf_user,
+      virtualenv => $gandalf_storage_venv,
+      require    => [ Python::Virtualenv[$gandalf_storage_venv], Package[$python_os_dependencies] ]
+    }
+
     if ($gandalf_storage_type == 's3') {
-      python::pip { 's3cmd':
-        pkgname    => 's3cmd',
-        owner      => $gandalf_user,
-        virtualenv => $gandalf_storage_venv,
-        require    => Python::Virtualenv[$gandalf_storage_venv]
-      }
+      $python_archive_packages = 's3cmd'
     } else {
-
-      python::pip { 'pbr':
-        pkgname    => 'pbr',
-        owner      => $gandalf_user,
-        virtualenv => $gandalf_storage_venv,
-        require    => Python::Virtualenv[$gandalf_storage_venv]
-      }
-
-      python::pip { 'python-keystoneclient':
-        pkgname    => 'python-keystoneclient',
-        owner      => $gandalf_user,
-        virtualenv => $gandalf_storage_venv,
-        require    => Python::Virtualenv[$gandalf_storage_venv]
-      }
-
-      python::pip { 'python-swiftclient':
-        pkgname    => 'python-swiftclient',
-        owner      => $gandalf_user,
-        virtualenv => $gandalf_storage_venv,
-        require    => Python::Virtualenv[$gandalf_storage_venv]
-      }
-
+      $python_archive_packages = ['pbr', 'python-keystoneclient', 'python-swiftclient']
       Python::Pip['pbr']->Python::Pip['python-keystoneclient']
+    }
 
+    python::pip { $python_archive_packages:
+      owner      => $gandalf_user,
+      virtualenv => $gandalf_storage_venv,
+      require    => Python::Virtualenv[$gandalf_storage_venv]
     }
 
   }
