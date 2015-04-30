@@ -1,6 +1,6 @@
 {
   "name": "tsuru-gandalf",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "author": "Tsuru",
   "license": "BSD-style license that can be found in the LICENSE file",
   "summary": "Puppet module for Gandalf git repository manager",
