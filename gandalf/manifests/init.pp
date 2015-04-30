@@ -161,7 +161,8 @@ class gandalf (
       ensure => installed
     }
 
-    python::pip { 'pyopenssl':
+    $python_security_extra = [ 'pyopenssl', 'ndg-httpsclient', 'pyasn1' ]
+    python::pip { $python_security_extra:
       owner      => $gandalf_user,
       virtualenv => $gandalf_storage_venv,
       require    => [ Python::Virtualenv[$gandalf_storage_venv], Package[$python_os_dependencies] ]
