@@ -11,6 +11,7 @@
 # [docker_extra_opts] Extra opts to docker daemon
 # [registry_install_command]
 # [registry_start_command]
+# [proxy_url]
 class registry (
   $lxc_docker_version = 'latest',
   $docker_graph_dir = undef,
@@ -18,13 +19,15 @@ class registry (
   $docker_extra_opts = undef,
   $registry_install_command = undef,
   $registry_start_command = undef,
+  $proxy_url = undef
   ){
 
   class { 'docker':
     lxc_docker_version           => $lxc_docker_version,
     docker_graph_dir             => $docker_graph_dir,
     docker_bind                  => $docker_bind,
-    docker_extra_opts            => $docker_extra_opts
+    docker_extra_opts            => $docker_extra_opts,
+    proxy_url                    => $proxy_url,
   }
 
   exec { 'install registry':
