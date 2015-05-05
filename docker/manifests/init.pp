@@ -19,7 +19,8 @@ class docker (
   $docker_exec_driver           = 'native',
   $docker_bind                  = [],
   $docker_extra_opts            = '',
-  $log_to_syslog                = true
+  $log_to_syslog                = true,
+  $proxy_url                    = undef
 ) {
 
   if (!is_array($docker_bind)) {
