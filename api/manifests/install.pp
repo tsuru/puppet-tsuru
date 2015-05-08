@@ -108,6 +108,7 @@
 # [docker_healing_events_collection]           collection name in mongodb used to store information about triggered healing events
 # [docker_healthcheck_max_time]                maximum time in seconds to wait for deployment time health check to be successful
 # [docker_image_history_size]                  number of images available for rollback using tsuru app-deploy-rollback
+# [docker_security_opts]                       list of security options that will be passed to containers
 #
 # - IaaS configuration
 #
@@ -199,6 +200,7 @@ class api::install (
   $docker_healing_events_collection = undef,
   $docker_healthcheck_max_time = undef,
   $docker_image_history_size = 10,
+  $docker_security_opts = [],
 
   $tsuru_iaas_default = undef,
   $ec2_key_id = undef,

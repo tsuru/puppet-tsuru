@@ -438,6 +438,26 @@ iaas:
         end
       end
 
+      context 'using security-opts' do
+        before {
+          params.merge!(
+            :docker_security_opts   => ['apparmor:foo', 'apparmor:bar']
+          )
+        }
+
+        it 'writes apparmor:foo and bar to conf' do
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  security-opts:$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    - apparmor:foo$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    - apparmor:bar$})
+        end
+      end
+
+      context 'security-opts not set' do
+        it 'will not write security-opts' do
+          should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  security-opts:$})
+        end
+      end
+
       it 'file /etc/tsuru/tsuru.conf must contain debug contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^debug: false$})
       end
