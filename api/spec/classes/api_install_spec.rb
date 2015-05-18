@@ -458,6 +458,72 @@ iaas:
         end
       end
 
+      context 'auto-scale' do
+
+        context 'using default options' do
+          let :auto_scale_default_options do
+'
+  auto-scale:
+    enabled: false
+    wait-new-time: 300
+    group-by-metadata: pool
+    metadata-filter: fallback
+    max-container-count: 10
+    scale-down-ratio: 1.1
+    prevent-rebalance: false
+    run-interval: 3600
+
+'
+          end
+          before {
+            params.merge!( :docker_use_auto_scale => true,
+                           :docker_auto_scale_groupby_metadata => 'pool',
+                           :docker_auto_scale_metadata_filter => 'fallback',
+                           :docker_auto_scale_max_container_count => 10
+                         )
+          }
+
+          it 'set auto-scale with disabled status' do
+            should contain_file('/etc/tsuru/tsuru.conf').with_content(/.+#{auto_scale_default_options}.+/)
+          end
+
+        end
+
+        context 'enable memory based' do
+
+          before {
+            params.merge!( :docker_scheduler_total_memory_metadata => 'memory',
+                           :docker_scheduler_max_used_memory => 0.8
+                         )
+          }
+          let :docker_scheduler_file do
+'
+  scheduler:
+    total-memory-metadata: memory
+    max-used-memory: 0.8
+
+'
+          end
+
+          it { should contain_file('/etc/tsuru/tsuru.conf').with_content(/.+#{docker_scheduler_file}.+/) }
+
+        end
+
+        context 'set max-used-memory to 2.0' do
+
+          before {
+            params.merge!( :docker_scheduler_total_memory_metadata => 'memory',
+                           :docker_scheduler_max_used_memory => 2.0  )
+          }
+
+          it 'raises puppet error with invalid max-used-memory' do
+            should raise_error(Puppet::Error, /\$docker_scheduler_max_used_memory must be a value between 0.0 and 1.0/)
+          end
+
+        end
+
+      end
+
       it 'file /etc/tsuru/tsuru.conf must contain debug contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^debug: false$})
       end

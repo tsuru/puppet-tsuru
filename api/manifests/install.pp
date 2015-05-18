@@ -203,7 +203,7 @@ class api::install (
   $docker_security_opts = [],
   $docker_scheduler_total_memory_metadata = undef,
   $docker_scheduler_max_used_memory = undef,
-  $docker_use_auto_scable = false,
+  $docker_use_auto_scale = false,
   $docker_auto_scale_enabled = false,
   $docker_auto_scale_wait_time = 300,
   $docker_auto_scale_groupby_metadata = undef,
