@@ -201,6 +201,13 @@ class api::install (
   $docker_healthcheck_max_time = undef,
   $docker_image_history_size = 10,
   $docker_security_opts = [],
+  $docker_scheduler_total_memory_metadata = undef,
+  $docker_scheduler_max_used_memory = undef,
+  $docker_use_auto_scable = true,
+  $docker_auto_scale_enabled = false,
+  $docker_auto_scale_groupby_metadata = undef,
+  $docker_auto_scale_max_container_count = undef,
+  $docker_auto_scale_down_ratio = 1.1,
 
   $tsuru_iaas_default = undef,
   $ec2_key_id = undef,
@@ -233,6 +240,14 @@ class api::install (
     $iaas_enable = true
   } else {
     $iaas_enable = false
+  }
+
+  if ( $docker_scheduler_total_memory_metadata and $docker_scheduler_max_used_memory ) {
+    $docker_scheduler_memory = true
+  }
+
+  if ( $docker_auto_scale_down_ratio < 1) {
+    fail("\$docker_auto_scale_down_ration should be greater than 1")
   }
 
   package { 'tsuru-server' :

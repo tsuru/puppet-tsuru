@@ -98,10 +98,10 @@ routers:
 <%- end -%>
 <%- end -%>
 
-<%- if @tsuru_provisioner.eql?('docker') %>
 # - Provisioner configuration
 # http://docs.tsuru.io/en/latest/reference/config.html#provisioner
 provisioner: <%= @tsuru_provisioner %>
+<%- if @tsuru_provisioner.eql?('docker') -%>
 docker:
   memory: 512
   swap: 1024
@@ -132,13 +132,25 @@ docker:
     events-collection : <%= @docker_healing_events_collection %>
     max-time: <%= @docker_healthcheck_max_time %>
   <%- end -%>
-  <%- end -%>
   <%- if @docker_security_opts.length > 1 -%>
   security-opts:
   <%- docker_security_opts.each do |security_opt_item| -%>
     - <%= security_opt_item %>
   <%- end -%>
   <%- end -%>
+  <%- if @docker_scheduler_memory -%>
+  scheduler:
+    total-memory-metadata: <%= @docker_scheduler_total_memory_metadata %>
+    max-used-memory: <%= @docker_scheduler_max_used_memory %>
+  <%- end -%>
+  <%- if @docker_use_auto_scale -%>
+  auto-scale:
+    enabled: <%= @docker_auto_scale_enabled %>
+    group-by-metadata: <%= @docker_auto_scale_groupby_metadata %>
+    max-container-count: <%= @docker_auto_scale_max_container_count %>
+    scale-down-ration: <%= @docker_auto_scale_down_ratio %>
+  <%- end -%>
+<%- end -%>
 
 # - Iaas configuration
 # http://docs.tsuru.io/en/latest/reference/config.html#iaas-configuration

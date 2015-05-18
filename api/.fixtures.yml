@@ -1,0 +1,22 @@
+fixtures:
+    forge_modules:
+        base:
+            repo: "tsuru/base"
+            ref: 0.0.5
+        sudo:
+            repo: "saz/sudo"
+            ref: 3.0.6
+        multitemplate:
+            repo: "deanwilson/multitemplate"
+            ref: 1.0.1
+        apt:
+            repo: "puppetlabs/apt"
+            ref: 1.8.0
+        stdlib:
+            repo: "puppetlabs/stdlib"
+            ref: 4.3.2
+        python:
+            repo: "stankevich/python"
+            ref: 1.9.0
+    symlinks:
+        "api": "#{source_dir}"
