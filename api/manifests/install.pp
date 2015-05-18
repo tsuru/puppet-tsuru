@@ -203,10 +203,14 @@ class api::install (
   $docker_security_opts = [],
   $docker_scheduler_total_memory_metadata = undef,
   $docker_scheduler_max_used_memory = undef,
-  $docker_use_auto_scable = true,
+  $docker_use_auto_scable = false,
   $docker_auto_scale_enabled = false,
+  $docker_auto_scale_wait_time = 300,
   $docker_auto_scale_groupby_metadata = undef,
+  $docker_auto_scale_metadata_filter = undef,
   $docker_auto_scale_max_container_count = undef,
+  $docker_auto_scale_prevent_rebalance = false,
+  $docker_auto_scale_run_interval = 3600,
   $docker_auto_scale_down_ratio = 1.1,
 
   $tsuru_iaas_default = undef,
@@ -243,6 +247,9 @@ class api::install (
   }
 
   if ( $docker_scheduler_total_memory_metadata and $docker_scheduler_max_used_memory ) {
+    if ( $docker_scheduler_max_used_memory < 0 or $docker_scheduler_max_used_memory > 1 ) {
+      fail("\$docker_scheduler_max_used_memory must be a value between 0.0 and 1.0")
+    }
     $docker_scheduler_memory = true
   }
 
