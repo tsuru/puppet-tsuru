@@ -52,13 +52,16 @@ auth:
   <%- end %>
 
 # Queue configuration
-# http://docs.tsuru.io/en/latest/reference/config.html#queue
-queue: <%= @tsuru_queue %>
-redis-queue:
-  host: <%= @redis_host %>
-  port: <%= @redis_port %>
-<%= @redis_password ? "  password: #{@redis_password}" : ''  %>
-<%= @redis_db ? "  db: #{@redis_db}" : ''  %>
+# http://docs.tsuru.io/en/latest/reference/config.html#config-queue
+queue:
+  mongo-url: <%= @queue_mongo_url %>
+  mongo-database: <%= @queue_mongo_database %>
+
+pubsub:
+  redis-host: <%= @redis_host %>
+  redis-port: <%= @redis_port %>
+<%= @redis_password ? "  redis-password: #{@redis_password}" : ''  %>
+<%= @redis_db ? "  redis-db: #{@redis_db}" : ''  %>
 
 # - Admin users
 # http://docs.tsuru.io/en/latest/reference/config.html#admin-users

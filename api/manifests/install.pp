@@ -166,7 +166,8 @@ class api::install (
   $oauth_collection = undef,
   $oauth_callback_port = undef,
 
-  $tsuru_queue = 'redis',
+  $queue_mongo_url = 'localhost:27017',
+  $queue_mongo_database = 'tsuru',
   $redis_host = 'localhost',
   $redis_port = 6379,
   $redis_password = undef,

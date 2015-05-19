@@ -41,11 +41,11 @@ describe 'api::install' do
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain queue contiguration' do
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^queue: redis$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  host: localhost$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  port: 6379$})
-        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  password:})
-        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  db:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^pubsub:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  redis-host: localhost$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  redis-port: 6379$})
+        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  redis-password:})
+        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  redis-db:$})
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain Admin users contiguration' do
@@ -125,7 +125,6 @@ describe 'api::install' do
           :oauth_collection       => 'oauth_tokens',
           :oauth_callback_port    => '37621',
 
-          :tsuru_queue    => 'redis',
           :redis_host     => 'localhost',
           :redis_port     => 6379,
           :redis_password => 'redis_password',
@@ -216,11 +215,18 @@ describe 'api::install' do
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain queue contiguration' do
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^queue: redis$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  host: localhost$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  port: 6379$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  password: redis_password})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  db: tsuru_redis_db$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^queue:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  mongo-url: localhost:27017$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  mongo-database: tsuru$})
+      end
+
+
+      it 'file /etc/tsuru/tsuru.conf must contain pubsub contiguration' do
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^pubsub:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  redis-host: localhost$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  redis-port: 6379$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  redis-password: redis_password})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  redis-db: tsuru_redis_db$})
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain admin users contiguration' do
