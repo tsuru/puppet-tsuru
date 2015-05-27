@@ -458,6 +458,19 @@ iaas:
         end
       end
 
+      context 'only one security-opt set' do
+        before {
+          params.merge!(
+            :docker_security_opts   => ['apparmor:foo']
+          )
+        }
+
+        it 'writes apparmor:foo to conf' do
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  security-opts:$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    - apparmor:foo$})
+        end
+      end
+
       context 'security-opts not set' do
         it 'will not write security-opts' do
           should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  security-opts:$})

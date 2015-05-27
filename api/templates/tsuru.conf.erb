@@ -135,7 +135,7 @@ docker:
     events-collection : <%= @docker_healing_events_collection %>
     max-time: <%= @docker_healthcheck_max_time %>
   <%- end -%>
-  <%- if @docker_security_opts.length > 1 -%>
+  <%- if @docker_security_opts.length > 0 -%>
   security-opts:
   <%- docker_security_opts.each do |security_opt_item| -%>
     - <%= security_opt_item %>
