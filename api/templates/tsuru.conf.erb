@@ -13,6 +13,8 @@ use-tls: <%= @tsuru_use_tls %>
 database:
   url: <%= @mongodb_url %>
   name: <%= @mongodb_database_name %>
+  logdb-url: <%= @logdb_url %>
+  logdb-name: <%= @logdb_database_name %>
 
 <%- if @smtp_server %>
 # - Email configuration

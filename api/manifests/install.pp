@@ -24,6 +24,9 @@
 # [mongodb_url]           is the database connection string
 # [mongodb_database_name] is the name of the database that tsuru uses
 #
+# [logdb_url]           is the log database connection string
+# [logdb_database_name] is the name of the log database that tsuru uses
+#
 # - Email configuration
 #
 # [smtp_server]   is the SMTP server to connect to
@@ -142,6 +145,10 @@ class api::install (
   $mongodb_url = 'localhost:27017',
   $mongodb_database_name = 'tsuru',
   $mongodb_database_password = undef,
+
+  $logdb_url = 'localhost:27017',
+  $logdb_database_name = 'tsuru',
+  $logdb_database_password = undef,
 
   $smtp_server = undef,
   $smtp_user = undef,
