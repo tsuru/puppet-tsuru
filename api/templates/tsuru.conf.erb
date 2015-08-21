@@ -97,6 +97,10 @@ routers:
     type: hipache
     domain: <%= routers[router]['hipache_domain'] %>
     redis-server: <%= routers[router]['hipache_redis_server'] %>
+<%- when 'vulcand' -%>
+    type: vulcand
+    api-url: <%= routers[router]['vulcand_api_url'] %>
+    domain: <%= routers[router]['vulcand_domain'] %>
 <%- when 'galeb' -%>
     type: galeb
     api-url: <%= routers[router]['galeb_api_url'] %>
@@ -110,7 +114,7 @@ routers:
     load-balance-policy: <%= routers[router]['galeb_load_balance_policy'] %>
     rule-type: <%= routers[router]['galeb_rule_type'] %>
 <%- else -%>
-    <%- raise Puppet::Error, "Router type unknown. Valid types are: hipache or galeb" -%>
+    <%- raise Puppet::Error, "Router type unknown. Valid types are: hipache, vulcand or galeb" -%>
 <%- end -%>
 <%- end -%>
 

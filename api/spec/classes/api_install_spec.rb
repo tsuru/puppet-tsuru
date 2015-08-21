@@ -295,7 +295,8 @@ describe 'api::install' do
                             'foo_galeb' => {'router_type' => 'galeb', 'galeb_api_url' => 'galeb1.endpoint.com', 'galeb_username' => 'foobar', 'galeb_password' => 'secret',
                                            'galeb_domain' => 'cloud2.test.com', 'galeb_environment' => 'dev', 'galeb_farm_type' => 'blah', 'galeb_plan' => 'large',
                                            'galeb_project' => 'X', 'galeb_load_balance_policy' => 'round-robin', 'galeb_rule_type' => '1'},
-                            'foo_hipache' => {'router_type' => 'hipache', 'hipache_domain' => 'cloud.test.com', 'hipache_redis_server' => '10.10.10.10:6379' }
+                            'foo_hipache' => {'router_type' => 'hipache', 'hipache_domain' => 'cloud.test.com', 'hipache_redis_server' => '10.10.10.10:6379' },
+                            'foo_vulcand' => {'router_type' => 'vulcand', 'vulcand_api_url' => 'http://localhost:8009', 'vulcand_domain' => 'cloud4.test.com'}
                           }
             )
         }
@@ -331,6 +332,10 @@ routers:
     type: hipache
     domain: cloud.test.com
     redis-server: 10.10.10.10:6379
+  foo_vulcand:
+    type: vulcand
+    api-url: http://localhost:8009
+    domain: cloud4.test.com
 '
         end
 
@@ -347,7 +352,7 @@ routers:
         }
 
         it 'rises unknown router type' do
-          should raise_error(Puppet::Error, /Router type unknown. Valid types are: hipache or galeb/)
+          should raise_error(Puppet::Error, /Router type unknown. Valid types are: hipache, vulcand or galeb/)
         end
       end
 
