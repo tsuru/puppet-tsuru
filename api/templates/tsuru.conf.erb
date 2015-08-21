@@ -8,6 +8,11 @@ use-tls: <%= @tsuru_use_tls %>
   tls-key-file: <%= @tsuru_tls_key_file %>
 <%- end %>
 
+# - Index API page
+# http://docs.tsuru.io/en/stable/reference/config.html#index-page-template
+disable-index-page: <%= @disable_index_page %>
+<%= @index_page_template ? "index-page-template: #{@index_page_template}" : '' %>
+
 # - Database access
 # http://docs.tsuru.io/en/latest/reference/config.html#database-access
 database:
@@ -37,11 +42,14 @@ git:
 # - Authentication configuration
 # http://docs.tsuru.io/en/latest/reference/config.html#authentication-configuration
 auth:
-  token-expire-days: <%= @auth_token_expire_days %>
-  hash-cost: <%= @auth_hash_cost %>
-  user-registration: <%= @auth_user_registration %>
   scheme: <%= @auth_scheme %>
-  <%- if @auth_scheme.eql?('oauth') %>
+  user-registration: <%= @auth_user_registration %>
+  <%= @auth_max_simultaneous_sessions ? "max-simultaneous-sessions: #{@auth_max_simultaneous_sessions}" : '' %>
+  <%- case @auth_scheme -%>
+  <%- when 'native' -%>
+  token-expire-days: <%= @auth_token_expire_days %>
+  hash-cost: <%= @auth_hash_cost %> 
+  <%- when 'oauth' -%>
   oauth:
     client-id: <%= @oauth_client_id %>
     client-secret: <%= @oauth_client_secret %>
@@ -51,6 +59,8 @@ auth:
     info-url: <%= @oauth_info_url %>
     collection: <%= @oauth_collection %>
     callback-port: <%= @oauth_callback_port %>
+  <%- else -%>
+  <%- raise Puppet::Error, "Auth scheme unknown. Valid types are: native or oauth" -%>
   <%- end %>
 
 # Queue configuration
@@ -82,11 +92,12 @@ quota:
 routers:
 <%- @routers.keys.sort.each do |router| -%>
   <%= router %>:
-  <%- if routers[router]['router_type'].eql?('hipache') -%>
+<%- case routers[router]['router_type'] -%>
+<%- when 'hipache' -%>
     type: hipache
     domain: <%= routers[router]['hipache_domain'] %>
     redis-server: <%= routers[router]['hipache_redis_server'] %>
-<%- elsif routers[router]['router_type'].eql?('galeb') -%>
+<%- when 'galeb' -%>
     type: galeb
     api-url: <%= routers[router]['galeb_api_url'] %>
     username: <%= routers[router]['galeb_username'] %>

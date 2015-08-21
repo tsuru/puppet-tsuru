@@ -112,8 +112,6 @@ describe 'api::install' do
           :git_rw_host    => 'rwhost.tsuru.io',
           :git_ro_host    => 'rohost.tsuru.io',
 
-          :auth_token_expire_days => '8',
-          :auth_hash_cost         => '5',
           :auth_user_registration => true,
           :auth_scheme            => 'oauth',
           :oauth_client_id        => 'oauth_client_id',
@@ -199,8 +197,6 @@ describe 'api::install' do
 
       it 'file /etc/tsuru/tsuru.conf must contain auth contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^auth:$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  token-expire-days: 8$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  hash-cost: 5$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  user-registration: true$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  scheme: oauth$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  oauth:$})
@@ -278,6 +274,18 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    max-time: 150$})
       end
 
+      context 'setting unknown auth type' do
+        before {
+          params.merge!(
+            :auth_scheme => 'whatever'
+          )
+        }
+
+        it 'rises unknown auth type' do
+          should raise_error(Puppet::Error, /Auth scheme unknown. Valid types are: native or oauth/)
+        end
+      end
+
       context 'setting routers hipache and galeb' do
         before {
             params.merge!(
@@ -342,6 +350,7 @@ routers:
           should raise_error(Puppet::Error, /Router type unknown. Valid types are: hipache or galeb/)
         end
       end
+
 
       context 'configuring iaas for cloudstack' do
         before {

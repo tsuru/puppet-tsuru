@@ -141,6 +141,9 @@ class api::install (
   $tsuru_use_tls = undef,
   $tsuru_tls_cert_file = undef,
   $tsuru_tls_key_file = undef,
+  $disable_index_page = false,
+  $index_page_template = undef,
+
 
   $mongodb_url = 'localhost:27017',
   $mongodb_database_name = 'tsuru',
@@ -160,10 +163,11 @@ class api::install (
   $git_rw_host = undef,
   $git_ro_host = undef,
 
+  $auth_scheme = 'native',
   $auth_token_expire_days = undef,
   $auth_hash_cost = undef,
+  $auth_max_simultaneous_sessions = undef,
   $auth_user_registration = true,
-  $auth_scheme = 'native',
   $oauth_client_id = undef,
   $oauth_client_secret = undef,
   $oauth_scope = undef,
