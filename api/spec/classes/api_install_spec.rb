@@ -62,8 +62,10 @@ describe 'api::install' do
 
       it 'file /etc/tsuru/tsuru.conf must contain docker contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^provisioner: docker$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  memory: 512$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  swap: 1024$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  bs:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    image: tsuru/bs$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    reporter-interval: 10$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    socker: /var/run/docker.sock$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  segregate: false$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  router: my_hipache$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  collection: docker$})
@@ -134,6 +136,9 @@ describe 'api::install' do
           :tsuru_units_per_app => 20,
 
           :tsuru_provisioner                         => 'docker',
+          :docker_bs_image                           => 'tsuru/custom_bs',
+          :docker_bs_reporter_interval               => 20,
+          :docker_bs_socket                          => '/tmp/docker.sock',
           :docker_segregate                          => true,
           :docker_registry                           => 'registry.tsuru.io',
           :docker_router                             => 'my_hipache',
@@ -246,8 +251,10 @@ describe 'api::install' do
 
       it 'file /etc/tsuru/tsuru.conf must contain docker contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^provisioner: docker$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  memory: 512$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  swap: 1024$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  bs:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    image: tsuru/custom_bs$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    reporter-interval: 20$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    socker: /tmp/docker.sock$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  segregate: true$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  registry: registry.tsuru.io$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  router: my_hipache$})

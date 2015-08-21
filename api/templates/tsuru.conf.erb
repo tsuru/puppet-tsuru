@@ -123,8 +123,10 @@ routers:
 provisioner: <%= @tsuru_provisioner %>
 <%- if @tsuru_provisioner.eql?('docker') -%>
 docker:
-  memory: 512
-  swap: 1024
+  bs:
+    image: <%= @docker_bs_image %>
+    reporter-interval: <%= @docker_bs_reporter_interval %>
+    socker: <%= @docker_bs_socket %>
   segregate: <%= @docker_segregate %>
   <%= @docker_registry ? "registry: #{@docker_registry}" : '' %>
   collection: <%= @docker_collection %>
