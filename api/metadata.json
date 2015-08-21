@@ -1,6 +1,6 @@
 {
   "name": "tsuru-api",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "author": "Tsuru",
   "license": "BSD-style license that can be found in the LICENSE file",
   "summary": "Puppet module to Tsuru PaaS API",
