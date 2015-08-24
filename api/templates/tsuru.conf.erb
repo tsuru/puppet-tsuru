@@ -126,7 +126,7 @@ docker:
   bs:
     image: <%= @docker_bs_image %>
     reporter-interval: <%= @docker_bs_reporter_interval %>
-    socker: <%= @docker_bs_socket %>
+    socket: <%= @docker_bs_socket %>
   segregate: <%= @docker_segregate %>
   <%= @docker_registry ? "registry: #{@docker_registry}" : '' %>
   collection: <%= @docker_collection %>
