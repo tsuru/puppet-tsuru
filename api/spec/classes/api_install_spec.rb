@@ -549,15 +549,15 @@ iaas:
 
         end
 
-        context 'set max-used-memory to 2.0' do
+        context 'set max-used-memory to -0.1' do
 
           before {
             params.merge!( :docker_scheduler_total_memory_metadata => 'memory',
-                           :docker_scheduler_max_used_memory => 2.0  )
+                           :docker_scheduler_max_used_memory => -0.1  )
           }
 
           it 'raises puppet error with invalid max-used-memory' do
-            should raise_error(Puppet::Error, /\$docker_scheduler_max_used_memory must be a value between 0.0 and 1.0/)
+            should raise_error(Puppet::Error, /\$docker_scheduler_max_used_memory must be a value greater than 0/)
           end
 
         end

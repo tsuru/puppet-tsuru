@@ -262,8 +262,8 @@ class api::install (
   }
 
   if ( $docker_scheduler_total_memory_metadata and $docker_scheduler_max_used_memory ) {
-    if ( $docker_scheduler_max_used_memory < 0 or $docker_scheduler_max_used_memory > 1 ) {
-      fail("\$docker_scheduler_max_used_memory must be a value between 0.0 and 1.0")
+    if ( $docker_scheduler_max_used_memory < 0 ) {
+      fail("\$docker_scheduler_max_used_memory must be a value greater than 0")
     }
     $docker_scheduler_memory = true
   }
