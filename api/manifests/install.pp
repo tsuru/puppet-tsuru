@@ -122,6 +122,7 @@
 # [cloudstack_secretkey]      secret-key to authenticate on IaaS
 # [cloudstack_api_url]        endpoint API to use the IaaS
 # [cloudstack_collection]     collection to handle machine data on database.
+# [cloudstack_wait_timeout]   seconds to wait for machine to become up (defaults to 300s)
 # [ec2_key_id]                AWS key id
 # [ec2_secret_key]            AWS secret key
 # [ec2_wait_timeout]          seconds to wait for machine to become up (defaults to 300s)
@@ -237,6 +238,7 @@ class api::install (
   $cloudstack_secretkey = undef,
   $cloudstack_api_url = undef,
   $cloudstack_user_data = undef,
+  $cloudstack_wait_timeout = 300,
   $iaas_node_protocol = undef,
   $iaas_node_port = undef,
   $custom_iaas = {},

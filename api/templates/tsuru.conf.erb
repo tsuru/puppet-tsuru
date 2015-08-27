@@ -194,6 +194,7 @@ iaas:
     secret-key: <%= @cloudstack_secretkey %>
     url: <%= @cloudstack_api_url %>
     user-data: <%= @cloudstack_user_data %>
+    wait-timeout: <%= @cloudstack_wait_timeout %>
   <%- end -%>
   <%- if @ec2_key_id -%>
   ec2:
@@ -211,11 +212,12 @@ iaas:
       api-key: "<%= custom_iaas[custom_key]['cloudstack_apikey'] %>"
       secret-key: "<%= custom_iaas[custom_key]['cloudstack_secretkey'] %>"
       user-data: <%= custom_iaas[custom_key]['cloudstack_user_data'] %>
+      wait-timeout: <%= custom_iaas[custom_key]['cloudstack_wait_timeout'] ? custom_iaas[custom_key]['cloudstack_wait_timeout'] : 300 %>
       <%- else -%>
       key-id: "<%= custom_iaas[custom_key]['ec2_key_id'] %>"
       secret-key: "<%= custom_iaas[custom_key]['ec2_secret_key'] %>"
       user-data: <%= custom_iaas[custom_key]['ec2_user_data'] %>
-      wait-timeout: <%= custom_iaas[custom_key]['ec2_wait_timeout'] %>
+      wait-timeout: <%= custom_iaas[custom_key]['ec2_wait_timeout'] ? custom_iaas[custom_key]['ec2_wait_timeout'] : 300 %>
       <%- end -%>
   <%- end -%>
   node-protocol: <%= @iaas_node_protocol ? @iaas_node_protocol : 'http' %>

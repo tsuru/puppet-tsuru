@@ -371,7 +371,8 @@ routers:
             :cloudstack_apikey        => 'cloudstack_apikey',
             :cloudstack_secretkey     => 'cloudstack_secretkey',
             :cloudstack_api_url       => 'https://cloudstack.tsuru.io',
-            :cloudstack_user_data     => '/var/lib/user-data/docker_user_data.sh'
+            :cloudstack_user_data     => '/var/lib/user-data/docker_user_data.sh',
+            :cloudstack_wait_timeout  => '600'
           )
         }
         it 'file /etc/tsuru/tsuru.conf must contain iaas contiguration for cloudstack' do
@@ -382,6 +383,7 @@ routers:
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    secret-key: cloudstack_secretkey$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    url: https://cloudstack.tsuru.io$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    user-data: /var/lib/user-data/docker_user_data.sh$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    wait-timeout: 600$})
         end
       end
 
@@ -418,12 +420,14 @@ iaas:
       api-key: "cloudstack_api_key_1"
       secret-key: "cloudstack_secret_key_1"
       user-data: user_data_1
+      wait-timeout: 300
     test_cloudstack_2:
       provider: cloudstack
       url: https://cloudstack2.tsuru.io
       api-key: "cloudstack_api_key_2"
       secret-key: "cloudstack_secret_key_2"
       user-data: user_data_2
+      wait-timeout: 300
     test_ec2:
       provider: ec2
       key-id: "ec2_key_id_1"
