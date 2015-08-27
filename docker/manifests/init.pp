@@ -46,9 +46,9 @@ class docker (
     enable     => true,
     hasrestart => true,
     hasstatus  => true,
-    subscribe  => File['/etc/default/docker'],
+    subscribe  => [ File['/etc/default/docker'], File['/etc/init/docker.conf'] ],
     provider   => 'upstart',
-    require    => [ Package[$lxc_package_name], File['/etc/init/docker.conf'] ]
+    require    => [ Package[$lxc_package_name], File['/etc/default/docker'], File['/etc/init/docker.conf'] ]
   }
 
   file { '/etc/init/docker.conf':
@@ -74,8 +74,7 @@ class docker (
     content => template('docker/default-docker.erb'),
     mode    => '0644',
     owner   => root,
-    group   => root,
-    notify  => Service['docker']
+    group   => root
   }
 
 }

@@ -22,7 +22,7 @@ describe 'docker'  do
 
   it 'creates service docker requiries lxc-docker' do
     should contain_service('docker').with({
-      :require => ["Package[lxc-docker]", "File[/etc/init/docker.conf]"]
+      :require => ["Package[lxc-docker]", "File[/etc/init/docker.conf]", "File[/etc/default/docker]"]
     })
   end
 
