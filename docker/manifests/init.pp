@@ -31,15 +31,13 @@ class docker (
     $lxc_package_name = 'lxc-docker'
     package { 'lxc-docker' :
       ensure  => latest,
-      notify  => Service['docker'],
-      require => [ File['/etc/default/docker'], File['/etc/init/docker.conf'] ],
+      require => [ File['/etc/default/docker'], File['/etc/init/docker.conf'] ]
     }
   } else {
     $lxc_package_name = "lxc-docker-${lxc_docker_version}"
     package { "lxc-docker-${lxc_docker_version}":
       ensure => installed,
-      notify => Service['docker'],
-      require => [ File['/etc/default/docker'], File['/etc/init/docker.conf'] ],
+      require => [ File['/etc/default/docker'], File['/etc/init/docker.conf'] ]
     }
   }
 
