@@ -31,32 +31,16 @@ class docker (
     $lxc_package_name = 'lxc-docker'
     package { 'lxc-docker' :
       ensure  => latest,
-      notify  => Service['docker']
+      notify  => Service['docker'],
+      require => [ File['/etc/default/docker'], File['/etc/init/docker.conf'] ],
     }
   } else {
     $lxc_package_name = "lxc-docker-${lxc_docker_version}"
     package { "lxc-docker-${lxc_docker_version}":
       ensure => installed,
-      notify => Service['docker']
+      notify => Service['docker'],
+      require => [ File['/etc/default/docker'], File['/etc/init/docker.conf'] ],
     }
-  }
-
-  service { 'docker':
-    ensure     => running,
-    enable     => true,
-    hasrestart => true,
-    hasstatus  => true,
-    subscribe  => [ File['/etc/default/docker'], File['/etc/init/docker.conf'] ],
-    provider   => 'upstart',
-    require    => [ Package[$lxc_package_name], File['/etc/default/docker'], File['/etc/init/docker.conf'] ]
-  }
-
-  file { '/etc/init/docker.conf':
-    ensure  => present,
-    content => template('docker/init-docker.conf.erb'),
-    mode    => '0644',
-    owner   => root,
-    group   => root,
   }
 
   $docker_bind_join = join($docker_bind, ' -H ')
@@ -75,6 +59,14 @@ class docker (
     mode    => '0644',
     owner   => root,
     group   => root
+  }
+
+  file { '/etc/init/docker.conf':
+    ensure  => present,
+    content => template('docker/init-docker.conf.erb'),
+    mode    => '0644',
+    owner   => root,
+    group   => root,
   }
 
 }

@@ -10,19 +10,9 @@ describe 'docker'  do
     { :lxc_docker_version => 'latest' }
   end
 
-  it 'creates docker service, ensure running and notifies Package[lxc-docker], File[/etc/init/docker.conf] ' do
-    should contain_service('docker').with_ensure('running')
-    should contain_service('docker').that_subscribes_to('File[/etc/default/docker]')
-    should contain_service('docker').that_subscribes_to('Package[lxc-docker]')
-  end 
-
   it 'install lxc-docker package that notifies service docker' do
-    should contain_package('lxc-docker').that_notifies('Service[docker]')
-  end
-
-  it 'creates service docker requiries lxc-docker' do
-    should contain_service('docker').with({
-      :require => ["Package[lxc-docker]", "File[/etc/init/docker.conf]", "File[/etc/default/docker]"]
+    should contain_package('lxc-docker').with({
+      :require => ["File[/etc/default/docker]", "File[/etc/init/docker.conf]"]
     })
   end
 
@@ -31,12 +21,8 @@ describe 'docker'  do
     before { params.merge!( :lxc_docker_version => '1.2.0' ) }
 
     it 'install lxc-docker-1.2.0 package that notifies service docker' do
-      should contain_package('lxc-docker-1.2.0').that_notifies('Service[docker]')
-    end
-
-    it 'creates service docker requiries lxc-docker-1.2.0' do
-      should contain_service('docker').with({
-        :require => ["Package[lxc-docker-1.2.0]", "File[/etc/init/docker.conf]"]
+      should contain_package('lxc-docker-1.2.0').with({
+        :require => ["File[/etc/default/docker]", "File[/etc/init/docker.conf]"]
       })
     end
 
