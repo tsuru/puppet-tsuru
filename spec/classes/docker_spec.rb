@@ -11,7 +11,7 @@ describe 'docker'  do
   end
 
   it 'install lxc-docker package that notifies service docker' do
-    should contain_package('lxc-docker').with({
+    should contain_package('docker-engine').with({
       :require => ["File[/etc/default/docker]", "File[/etc/init/docker.conf]"]
     })
   end
@@ -20,8 +20,22 @@ describe 'docker'  do
 
     before { params.merge!( :lxc_docker_version => '1.2.0' ) }
 
-    it 'install lxc-docker-1.2.0 package that notifies service docker' do
+    it 'install lxc-docker-1.2.0 package' do
       should contain_package('lxc-docker-1.2.0').with({
+        :ensure => 'installed',
+        :require => ["File[/etc/default/docker]", "File[/etc/init/docker.conf]"]
+      })
+    end
+
+  end
+
+  context 'when seting docker version to 1.8.1' do
+
+    before { params.merge!( :lxc_docker_version => '1.8.1' ) }
+
+    it 'install docker-engine version 1.8.1 package' do
+      should contain_package('docker-engine').with({
+        :ensure => '1.8.1',
         :require => ["File[/etc/default/docker]", "File[/etc/init/docker.conf]"]
       })
     end

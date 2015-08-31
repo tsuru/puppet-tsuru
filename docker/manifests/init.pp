@@ -27,18 +27,20 @@ class docker (
     fail("\$docker_bind must be an array")
   }
 
-  if ( $lxc_docker_version == 'latest' ) {
-    $lxc_package_name = 'lxc-docker'
-    package { 'lxc-docker' :
-      ensure  => latest,
-      require => [ File['/etc/default/docker'], File['/etc/init/docker.conf'] ]
-    }
+  if ($lxc_docker_version == 'latest') {
+    $lxc_package_name = 'docker-engine'
+    $lxc_package_ensure = 'latest'
+  } elsif ($lxc_docker_version >= '1.8.0') {
+    $lxc_package_name = 'docker-engine'
+    $lxc_package_ensure = $lxc_docker_version
   } else {
     $lxc_package_name = "lxc-docker-${lxc_docker_version}"
-    package { "lxc-docker-${lxc_docker_version}":
-      ensure => installed,
-      require => [ File['/etc/default/docker'], File['/etc/init/docker.conf'] ]
-    }
+    $lxc_package_ensure = 'installed'
+  }
+
+  package { $lxc_package_name:
+    ensure => $lxc_package_ensure,
+    require => [ File['/etc/default/docker'], File['/etc/init/docker.conf'] ]
   }
 
   $docker_bind_join = join($docker_bind, ' -H ')
