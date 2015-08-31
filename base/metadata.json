@@ -1,6 +1,6 @@
 {
   "name": "tsuru-base",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "author": "Tsuru",
   "license": "BSD-style license that can be found in the LICENSE file",
   "summary": "Puppet module to Tsuru PaaS base",

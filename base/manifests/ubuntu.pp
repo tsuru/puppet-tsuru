@@ -22,6 +22,11 @@ class base::ubuntu inherits base {
     key_content => $base::docker_pub_key
   }
 
+  apt::key {'docker_project':
+    key         => '2C52609D',
+    key_content => $base::docker_project_pub_key
+  }
+
   apt::key { 'nginx_dev':
     key         => 'C300EE8C',
     key_content => $base::nginx_dev_pub_key
@@ -63,7 +68,7 @@ class base::ubuntu inherits base {
       include_src => false,
       repos       => 'main',
       release     => $base::docker_release,
-      require     => Apt::Key['docker']
+      require     => [Apt::Key['docker'], Apt::Key['docker_project']]
     }
   } else {
     apt::source { 'docker' :
@@ -71,7 +76,7 @@ class base::ubuntu inherits base {
       include_src => false,
       repos       => 'main',
       release     => 'docker',
-      require     => Apt::Key['docker']
+      require     => [Apt::Key['docker'], Apt::Key['docker_project']]
     }
   }
 
