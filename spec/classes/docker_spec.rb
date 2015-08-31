@@ -10,7 +10,7 @@ describe 'docker'  do
     { :lxc_docker_version => 'latest' }
   end
 
-  it 'install lxc-docker package that notifies service docker' do
+  it 'install docker-engine package with latest version' do
     should contain_package('docker-engine').with({
       :require => ["File[/etc/default/docker]", "File[/etc/init/docker.conf]"]
     })
