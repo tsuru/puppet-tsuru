@@ -62,6 +62,24 @@ class base::ubuntu inherits base {
     }
   }
 
+  # Tsuru RC
+  if ($base::tsuru_rc_source_list or $base::enable_tsuru_rc) {
+    if ($base::tsuru_rc_source_list) {
+      apt::source { 'tsuru_rc':
+        location    => $base::tsuru_rc_source_list,
+        include_src => false,
+        repos       => 'main',
+        release     => $base::tsuru_rc_release,
+        require     => Apt::Key['tsuru']
+      }
+    } else {
+      apt::ppa { 'ppa:tsuru/rc':
+        release     => $base::tsuru_rc_release,
+        require     => Apt::Key['tsuru']
+      }
+    }
+  }
+
   if ($base::docker_source_list) {
     apt::source { 'docker' :
       location    => $base::docker_source_list,
