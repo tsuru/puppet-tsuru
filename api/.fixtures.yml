@@ -2,7 +2,7 @@ fixtures:
     forge_modules:
         base:
             repo: "tsuru/base"
-            ref: 0.0.5
+            ref: 0.0.8
         sudo:
             repo: "saz/sudo"
             ref: 3.0.6
