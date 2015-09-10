@@ -51,7 +51,7 @@ class base::ubuntu inherits base {
     apt::source { 'tsuru':
       location    => $base::tsuru_source_list,
       include_src => false,
-      repos       => 'main',
+      repos       => $base::tsuru_repos,
       release     => $base::tsuru_release,
       require     => Apt::Key['tsuru']
     }
@@ -68,7 +68,7 @@ class base::ubuntu inherits base {
       apt::source { 'tsuru_rc':
         location    => $base::tsuru_rc_source_list,
         include_src => false,
-        repos       => 'main',
+        repos       => $base::tsuru_rc_repos,
         release     => $base::tsuru_rc_release,
         require     => Apt::Key['tsuru']
       }
@@ -84,7 +84,7 @@ class base::ubuntu inherits base {
     apt::source { 'docker' :
       location    => $base::docker_source_list,
       include_src => false,
-      repos       => 'main',
+      repos       => $base::docker_repos,
       release     => $base::docker_release,
       require     => [Apt::Key['docker'], Apt::Key['docker_project']]
     }
