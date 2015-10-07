@@ -23,6 +23,12 @@ http {
 
     access_log /var/log/nginx/access.log main;
     error_log  /var/log/nginx/error.log;
+
+<% if @nginx_syslog_server -%>
+    access_log syslog:server=<%= @nginx_syslog_server %>,facility=local6,tag=<%= @nginx_syslog_tag ? @nginx_syslog_tag : 'rpaas' %> main
+    error_log syslog:server=<%= @nginx_syslog_server %>,facility=local7,tag=<%= @nginx_syslog_tag ? @nginx_syslog_tag : 'rpaas' %>
+<% end -%>
+
 <% @nginx_custom_error_codes.each do |file, codes| -%>
     error_page <%= codes.join(" ") %> /_nginx_errordocument/<%= file %>;
 <% end -%>

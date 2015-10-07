@@ -93,7 +93,9 @@ describe 'rpaas::install' do
           :nginx_allow_dav_list => ['10.0.0.1', '10.0.2.3'],
           :nginx_custom_error_codes => {'404.html' => ['404', '403'], '500.html' => [ '500', '502', '503', '504' ]},
           :nginx_custom_error_dir => "/mnt/error_pages",
-          :nginx_intercept_errors => true
+          :nginx_intercept_errors => true,
+          :nginx_syslog_server => '127.0.0.1',
+          :nginx_syslog_tag => 'rpaas01'
         }
       end
 
@@ -113,6 +115,11 @@ describe 'rpaas::install' do
 
       it 'custom error location' do
         should contain_file('/etc/nginx/nginx.conf').with_content(/\s+location\ ~\ \^\/_nginx_errordocument\/\(.\+\) \{\n\s+internal;\n\s+alias \/mnt\/error_pages\/\$1;\n\s+\}/)
+      end
+
+      it 'custom syslog server' do
+        should contain_file('/etc/nginx/nginx.conf').with_content(/\s+access_log\ syslog:server=127.0.0.1,facility=local6,tag=rpaas01\ main/)
+        should contain_file('/etc/nginx/nginx.conf').with_content(/\s+error_log\ syslog:server=127.0.0.1,facility=local7,tag=rpaas01/)
       end
 
     end
