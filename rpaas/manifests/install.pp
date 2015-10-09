@@ -19,7 +19,9 @@ class rpaas::install (
 ) inherits rpaas {
 
   include base
-  include sudo
+  class { 'sudo':
+    purge => false
+  }
 
   if ($nginx_custom_error_codes != {} and !$nginx_custom_error_dir) {
     fail("nginx_custom_error_dir must be set with nginx_custom_error_codes")
@@ -81,7 +83,7 @@ class rpaas::install (
   }
 
   sudo::conf { $nginx_user:
-    content => "${nginx_user} ALL=(ALL) NOPASSWD: /usr/sbin/service nginx reload",
+    content => "${nginx_user} ALL=(ALL) NOPASSWD: /usr/sbin/service nginx reload"
   }
 
 }
