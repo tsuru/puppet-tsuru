@@ -44,6 +44,7 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^pubsub:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  redis-host: localhost$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  redis-port: 6379$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  pool-max-idle-conn: 0$})
         should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  redis-password:})
         should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  redis-db:$})
       end

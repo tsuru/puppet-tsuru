@@ -182,6 +182,7 @@ class api::install (
   $queue_mongo_database = 'tsuru',
   $redis_host = 'localhost',
   $redis_port = 6379,
+  $redis_max_idle_conn = 0,
   $redis_password = undef,
   $redis_db = undef,
 
