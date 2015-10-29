@@ -1,0 +1,3 @@
+{{range ls "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/locations"}}
+{{.Value}}
+{{end}}

@@ -49,6 +49,7 @@ http {
                         application/xml application/x-javascript
                         text/css text/javascript text/plain text/xml;
 
+<% if @nginx_mechanism == 'dav' -%>
     server {
         listen     <%= @nginx_admin_listen %>;
         server_name  _tsuru_nginx_admin;
@@ -72,13 +73,19 @@ http {
             dav_access      group:rw all:r;
         }
     }
+<% end -%>
 
     server {
         listen <%= @nginx_listen %>;
         listen <%= @nginx_ssl_listen %> ssl spdy;
 
+<% if @nginx_mechanism == 'dav' -%>
         ssl_certificate /etc/nginx/sites-enabled/dav/ssl/nginx.crt;
         ssl_certificate_key /etc/nginx/sites-enabled/dav/ssl/nginx.key;
+<% else -%>
+        ssl_certificate /etc/nginx/certs/nginx.crt;
+        ssl_certificate_key /etc/nginx/certs/nginx.key;
+<% end -%>
         ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
         spdy_headers_comp 1;
@@ -112,6 +119,10 @@ http {
         }
 <% end -%>
 
+<% if @nginx_mechanism == 'dav' -%>
         include sites-enabled/dav/*.conf;
+<% else -%>
+        include sites-enabled/consul/*.conf;
+<% end -%>
     }
 }

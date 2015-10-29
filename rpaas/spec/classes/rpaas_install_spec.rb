@@ -2,17 +2,18 @@ require 'spec_helper'
 
 describe 'rpaas::install' do
 
+  let :facts do
+    {
+      :osfamily                  => 'Debian',
+      :operatingsystem           => 'Ubuntu',
+      :lsbdistid                 => 'Ubuntu',
+      :lsbdistcodename           => 'trusty',
+      :hostname                  => 'foo.bar',
+      :zabbix_enable             => true,
+    }
+  end
+
   context "on a Ubuntu OS with default params" do
-    let :facts do
-      {
-        :osfamily                  => 'Debian',
-        :operatingsystem           => 'Ubuntu',
-        :lsbdistid                 => 'Ubuntu',
-        :lsbdistcodename           => 'trusty',
-        :hostname                  => 'foo.bar',
-        :zabbix_enable             => true,
-      }
-    end
 
     it do
       should contain_anchor('apt::ppa::ppa:tsuru/ppa')
@@ -133,4 +134,44 @@ describe 'rpaas::install' do
     end
 
   end
+
+  context 'using consul backend' do
+    let :params do
+      {
+        :nginx_mechanism      => 'consul',
+        :consul_server        => 'foo.bar:8500',
+        :consul_acl_token     => '0000-1111',
+        :rpaas_service_name   => 'rpaas_fe',
+        :rpaas_instance_name  => 'foo_instance'
+      }
+    end
+
+    it 'generate crt template file for consul' do
+      should contain_file('/etc/consul-template.d/templates/nginx.crt.tpl').with_content(<<EOF
+{{ key "rpaas_fe/foo_instance/ssl/cert" | plugin "check_nginx_ssl_data.sh" crt }}
+EOF
+    )
+    end
+
+    it 'generate key template file for consul' do
+      should contain_file('/etc/consul-template.d/templates/nginx.key.tpl').with_content(<<EOF
+{{ key "rpaas_fe/foo_instance/ssl/key" | plugin "check_nginx_ssl_data.sh" key }}
+EOF
+    )
+    end
+
+    it 'creates /etc/consul-template.d/consul.conf' do
+      should contain_file('/etc/consul-template.d/consul.conf').with_content(<<EOF
+consul = "foo.bar:8500"
+token = "0000-1111"
+
+syslog {
+    enabled = true
+    facility = LOCAL0
+}
+EOF
+    )
+    end
+  end
+
 end
