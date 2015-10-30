@@ -298,11 +298,11 @@ describe 'api::install' do
         before {
             params.merge!(
               :routers => { 'bar_galeb' => {'router_type' => 'galeb', 'galeb_api_url' => 'galeb2.endpoint.com', 'galeb_username' => 'bilbo', 'galeb_password' => 'secret2',
-                                            'galeb_domain' => 'cloud3.test.com', 'galeb_environment' => 'prod', 'galeb_farm_type' => 'bleh', 'galeb_plan' => 'small',
-                                            'galeb_project' => 'Y', 'galeb_load_balance_policy' => 'ip-hash', 'galeb_rule_type' => '2'},
+                                            'galeb_domain' => 'cloud3.test.com', 'galeb_environment' => 'prod', 'galeb_project' => 'Y',
+                                            'galeb_balance_policy' => 'ip-hash', 'galeb_rule_type' => '2', 'galeb_debug' => 'true' },
                             'foo_galeb' => {'router_type' => 'galeb', 'galeb_api_url' => 'galeb1.endpoint.com', 'galeb_username' => 'foobar', 'galeb_password' => 'secret',
-                                           'galeb_domain' => 'cloud2.test.com', 'galeb_environment' => 'dev', 'galeb_farm_type' => 'blah', 'galeb_plan' => 'large',
-                                           'galeb_project' => 'X', 'galeb_load_balance_policy' => 'round-robin', 'galeb_rule_type' => '1'},
+                                            'galeb_domain' => 'cloud2.test.com', 'galeb_environment' => 'dev', 'galeb_project' => 'X',
+                                            'galeb_balance_policy' => 'round-robin', 'galeb_rule_type' => '1'},
                             'foo_hipache' => {'router_type' => 'hipache', 'hipache_domain' => 'cloud.test.com', 'hipache_redis_server' => '10.10.10.10:6379' },
                             'foo_vulcand' => {'router_type' => 'vulcand', 'vulcand_api_url' => 'http://localhost:8009', 'vulcand_domain' => 'cloud4.test.com'}
                           }
@@ -319,11 +319,10 @@ routers:
     password: secret2
     domain: cloud3.test.com
     environment: prod
-    farm-type: bleh
-    plan: small
     project: Y
-    load-balance-policy: ip-hash
+    balance-policy: ip-hash
     rule-type: 2
+    debug: true
   foo_galeb:
     type: galeb
     api-url: galeb1.endpoint.com
@@ -331,11 +330,10 @@ routers:
     password: secret
     domain: cloud2.test.com
     environment: dev
-    farm-type: blah
-    plan: large
     project: X
-    load-balance-policy: round-robin
+    balance-policy: round-robin
     rule-type: 1
+    debug: false
   foo_hipache:
     type: hipache
     domain: cloud.test.com

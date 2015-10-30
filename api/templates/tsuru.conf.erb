@@ -109,11 +109,10 @@ routers:
     password: <%= routers[router]['galeb_password'] %>
     domain: <%= routers[router]['galeb_domain'] %>
     environment: <%= routers[router]['galeb_environment'] %>
-    farm-type: <%= routers[router]['galeb_farm_type'] %>
-    plan: <%= routers[router]['galeb_plan'] %>
     project: <%= routers[router]['galeb_project'] %>
-    load-balance-policy: <%= routers[router]['galeb_load_balance_policy'] %>
+    balance-policy: <%= routers[router]['galeb_balance_policy'] %>
     rule-type: <%= routers[router]['galeb_rule_type'] %>
+    <%= @routers[router]['galeb_debug'] ? "debug: #{routers[router]['galeb_debug']}" : "debug: false" %>
 <%- else -%>
     <%- raise Puppet::Error, "Router type unknown. Valid types are: hipache, vulcand or galeb" -%>
 <%- end -%>
