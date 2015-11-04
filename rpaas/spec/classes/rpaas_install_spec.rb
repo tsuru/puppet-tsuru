@@ -160,17 +160,16 @@ EOF
     )
     end
 
-    it 'creates /etc/consul-template.d/consul.conf' do
-      should contain_file('/etc/consul-template.d/consul.conf').with_content(<<EOF
+    consul_conf_content = <<EOF
 consul = "foo.bar:8500"
 token = "0000-1111"
-
 syslog {
     enabled = true
     facility = LOCAL0
 }
 EOF
-    )
+    it 'creates /etc/consul-template.d/consul.conf' do
+      should contain_file('/etc/consul-template.d/consul.conf').with_content(/#{consul_conf_content}/m)
     end
   end
 
