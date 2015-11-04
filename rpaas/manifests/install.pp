@@ -28,9 +28,7 @@ class rpaas::install (
 ) inherits rpaas {
 
   include base
-  class { 'sudo':
-    purge => false
-  }
+  include sudo
 
   if ($nginx_custom_error_codes != {} and !$nginx_custom_error_dir) {
     fail("nginx_custom_error_dir must be set with nginx_custom_error_codes")
