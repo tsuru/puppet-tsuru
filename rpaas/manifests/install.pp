@@ -112,8 +112,9 @@ class rpaas::install (
   service { 'nginx':
     ensure   => running,
     enable   => true,
-    restart  => '/etc/init.d/nginx reload',
-    require  => Package['nginx-extras'],
+    provider => 'upstart',
+    restart  => '/usr/sbin/service nginx reload',
+    require  => Package['nginx-extras']
   }
 
   file { $rpaas::nginx_dirs:
