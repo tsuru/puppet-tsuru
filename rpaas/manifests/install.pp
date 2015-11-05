@@ -120,8 +120,7 @@ class rpaas::install (
     ensure  => directory,
     recurse => true,
     owner   => $nginx_user,
-    group   => $nginx_group,
-    require => File['/etc/nginx'],
+    group   => $nginx_group
   }
 
 
