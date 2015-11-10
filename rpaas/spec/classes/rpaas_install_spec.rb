@@ -82,7 +82,7 @@ describe 'rpaas::install' do
       should contain_file('10_www-data')
     end
 
-    context "generating nginx.conf with" do
+    context "generating nginx.conf with dav backend" do
       let :params do
         {
           :nginx_user => "foobar",
@@ -91,7 +91,7 @@ describe 'rpaas::install' do
           :nginx_admin_listen => 8081,
           :nginx_listen => 8080,
           :nginx_ssl_listen => 8082,
-          :nginx_allow_dav_list => ['10.0.0.1', '10.0.2.3'],
+          :nginx_allow_admin_list => ['10.0.0.1', '10.0.2.3'],
           :nginx_custom_error_codes => {'404.html' => ['404', '403'], '500.html' => [ '500', '502', '503', '504' ]},
           :nginx_custom_error_dir => "/mnt/error_pages",
           :nginx_intercept_errors => true,
@@ -100,12 +100,45 @@ describe 'rpaas::install' do
         }
       end
 
+      server_dav_purge_entry = <<"EOF"
+    server {
+        listen     8081;
+        server_name  _tsuru_nginx_admin;
+
+        location /healthcheck {
+            echo "WORKING";
+        }
+
+        location ~ ^/purge(/.+) {
+            allow           10.0.0.1;
+            allow           10.0.2.3;
+            deny            all;
+            proxy_cache_purge  rpaas $1$is_args$args;
+        }
+
+        location /reload {
+            content_by_lua "ngx.print(os.execute('sudo service nginx reload'))";
+        }
+
+        location /dav {
+            allow           10.0.0.1;
+            allow           10.0.2.3;
+            deny            all;
+            root            /etc/nginx/sites-enabled;
+            dav_methods     PUT DELETE;
+            create_full_put_path    on;
+            dav_access      group:rw all:r;
+        }
+    }
+EOF
+
       it 'custom user, worker_processes and worker_connections' do
         should contain_file('/etc/nginx/nginx.conf').with_content(/user foobar;\nworker_processes\s+10;\n\nevents \{\n\s+worker_connections\s+10;/)
       end
 
-      it 'dav allow ip list' do
-        should contain_file('/etc/nginx/nginx.conf').with_content(/\s+allow\s+10.0.0.1;\n\s+allow\s+10.0.2.3;/)
+
+      it 'dav and purge custom location with ip restriction' do
+        should contain_file('/etc/nginx/nginx.conf').with_content(/#{Regexp.escape(server_dav_purge_entry)}/)
       end
 
       it 'custom error pages for 40X and 50X errors with proxy_intercept errors' do
@@ -148,14 +181,14 @@ describe 'rpaas::install' do
 
     it 'generate crt template file for consul' do
       should contain_file('/etc/consul-template.d/templates/nginx.crt.tpl').with_content(<<EOF
-{{ key "rpaas_fe/foo_instance/ssl/cert" | plugin "check_nginx_ssl_data.sh" crt }}
+{{ key "rpaas_fe/foo_instance/ssl/cert" | plugin "check_nginx_ssl_data.sh" "crt" }}
 EOF
     )
     end
 
     it 'generate key template file for consul' do
       should contain_file('/etc/consul-template.d/templates/nginx.key.tpl').with_content(<<EOF
-{{ key "rpaas_fe/foo_instance/ssl/key" | plugin "check_nginx_ssl_data.sh" key }}
+{{ key "rpaas_fe/foo_instance/ssl/key" | plugin "check_nginx_ssl_data.sh" "key" }}
 EOF
     )
     end
@@ -165,7 +198,7 @@ consul = "foo.bar:8500"
 token = "0000-1111"
 syslog {
     enabled = true
-    facility = LOCAL0
+    facility = "LOCAL0"
 }
 EOF
     it 'creates /etc/consul-template.d/consul.conf' do

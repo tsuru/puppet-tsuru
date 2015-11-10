@@ -1,28 +1,28 @@
 consul = "<%= @consul_server %>"
-<%= @consul_acl_token ? "token = \"#{consul_acl_token}\"" : '' -%>
+<%= @consul_acl_token ? "token = \"#{consul_acl_token}\"" : "" -%>
 
 syslog {
     enabled = <%= @consul_syslog_enabled %>
-    facility = <%= @consul_syslog_facility %>
+    facility = "<%= @consul_syslog_facility %>"
 }
 
 template {
-    source = '/etc/consul-template.d/templates/locations.conf.tpl'
-    destination = '/etc/nginx/sites-enabled/locations.conf'
-    command = 'service nginx reload'
+    source = "/etc/consul-template.d/templates/locations.conf.tpl"
+    destination = "/etc/nginx/sites-enabled/consul/locations.conf"
+    command = "service nginx reload"
     perms = 0644
 }
 
 template {
-    source = '/etc/consul-template.d/templates/nginx.key.tpl'
-    destination = '/etc/nginx/certs/nginx.key'
-    command = 'service nginx reload'
+    source = "/etc/consul-template.d/templates/nginx.key.tpl"
+    destination = "/etc/nginx/certs/nginx.key"
+    command = "service nginx reload"
     perms = 0644
 }
 
 template {
-    source = '/etc/consul-template.d/templates/nginx.crt.tpl'
-    destination = '/etc/nginx/certs/nginx.crt'
-    command = 'service nginx reload'
+    source = "/etc/consul-template.d/templates/nginx.crt.tpl"
+    destination = "/etc/nginx/certs/nginx.crt"
+    command = "service nginx reload"
     perms = 0644
 }

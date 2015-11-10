@@ -3,3 +3,8 @@ pkg/*
 spec/fixtures
 */pkg/*
 */spec/fixtures
+local_modules
+*.tar.gz
+.vagrant
+*.zip
+consul
