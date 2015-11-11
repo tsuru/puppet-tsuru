@@ -63,7 +63,7 @@ http {
             allow           <%= ip %>;
 <% end -%>
             deny            all;
-            proxy_cache_purge  rpaas $1$is_args$args;
+            proxy_cache_purge  rpaas $scheme$1$is_args$args;
         }
 <% end -%>
 
@@ -116,7 +116,9 @@ http {
         proxy_connect_timeout 10s;
         proxy_send_timeout 20s;
         proxy_http_version 1.1;
+<% if @nginx_location_purge -%>
         proxy_cache_key $scheme$request_uri;
+<% end -%>
 <% if @nginx_custom_error_dir and @nginx_intercept_errors -%>
         proxy_intercept_errors on;
 <% end -%>
