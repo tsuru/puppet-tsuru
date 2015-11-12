@@ -62,11 +62,28 @@ describe 'router::install' do
         should contain_apt__key('docker')
 
       end
-
+hipache_conf = <<EOF
+{
+    "server": {
+        "accessLog": "/var/log/hipache/access_log",
+        "accessLogMode": "file",
+        "port": 80,
+        "workers": 5,
+        "maxSockets": 100,
+        "deadBackendTTL": 30,
+        "tcpTimeout": 30,
+        "httpKeepAlive": true
+    },
+    "redisHost": "127.0.0.1",
+    "redisPort": 6379,
+    "redisMasterHost": "127.0.0.1",
+    "redisMasterPort": 6379
+}
+EOF
       it 'required by hipache' do
         should contain_package('node-hipache')
         should contain_service('hipache')
-        should contain_file('/etc/hipache.conf')
+        should contain_file('/etc/hipache.conf').with_content(/#{hipache_conf}/m)
       end
 
       it 'required by hchecker' do
@@ -77,21 +94,37 @@ describe 'router::install' do
 
     end
 
-    context "with all parameters" do
+    context "using router planb" do
       let :params do
         {
-          # :tsuru_server_version => 'latest',
+          :router_mode => 'planb',
+          :router_access_log_mode => 'syslog'
         }
       end
 
-      it  do
-        #
+      it 'uninstall all packages related with hipache' do
+        should contain_package('node-hipache').with_ensure('purged')
+        should contain_service('hipache').with_ensure('stopped')
       end
 
-      it 'requires class base' do
-        should contain_class('base')
+      it 'install planb package' do
+        should contain_package('planb').with_ensure('latest')
+        should contain_service('planb').with_ensure('running')
+      end
+
+planb_conf = <<EOF
+PLANB_OPTS="--listen 0.0.0.0:80 --read-redis-host 127.0.0.1 --read-redis-port 6379
+            --write-redis-host 127.0.0.1 --write-redis-port 6379
+            --access-log syslog
+            --request-timeout  30  --dial-timeout 10
+            --dead-backend-time 30
+            "
+EOF
+      it "generates planb default" do
+        should contain_file('/etc/default/planb').with_content(/#{planb_conf}/)
       end
 
     end
+
   end
 end

@@ -1,0 +1,7 @@
+PLANB_OPTS="--listen 0.0.0.0:<%= @router_port %> --read-redis-host <%= @router_redis_host %> --read-redis-port <%= @router_redis_port %>
+            --write-redis-host <%= @router_redis_master_host %> --write-redis-port <%= @router_redis_master_port %>
+            --access-log <%= (['syslog'].include? @router_access_log_mode) ? 'syslog' : @router_access_log %>
+            --request-timeout  <%= @router_tcp_timeout %>  --dial-timeout <%= @router_planb_connect_timeout %>
+            --dead-backend-time <%= @router_dead_backend_ttl %>
+            "
+

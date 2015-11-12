@@ -3,11 +3,11 @@
         "accessLog": "<%= @router_access_log %>",
         "accessLogMode": "<%= @router_access_log_mode %>",
         "port": <%= @router_port %>,
-        "workers": <%= @router_workers %>,
-        "maxSockets": <%= @router_max_sockets %>,
+        "workers": <%= @router_hipache_workers %>,
+        "maxSockets": <%= @router_hipache_max_sockets %>,
         "deadBackendTTL": <%= @router_dead_backend_ttl %>,
         "tcpTimeout": <%= @router_tcp_timeout %>,
-        "httpKeepAlive": <%= @router_http_keep_alive %>
+        "httpKeepAlive": <%= @router_hipache_http_keep_alive %>
     },
     "redisHost": "<%= @router_redis_host %>",
     "redisPort": <%= @router_redis_port %>,
