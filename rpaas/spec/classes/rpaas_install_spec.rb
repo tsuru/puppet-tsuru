@@ -153,7 +153,7 @@ EOF
 
       it 'custom syslog server' do
         should contain_file('/etc/nginx/nginx.conf').with_content(/\s+access_log\ syslog:server=127.0.0.1,facility=local6,tag=rpaas01\ main/)
-        should contain_file('/etc/nginx/nginx.conf').with_content(/\s+error_log\ syslog:server=127.0.0.1,facility=local7,tag=rpaas01/)
+        should contain_file('/etc/nginx/nginx.conf').with_content(/\s+error_log\ syslog:server=127.0.0.1,facility=local6,tag=rpaas01/)
       end
 
     end
