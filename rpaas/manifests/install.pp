@@ -10,6 +10,8 @@ class rpaas::install (
   $nginx_ssl_listen         = 8443,
   $nginx_admin_listen       = 8089,
   $nginx_key_zone_size      = '10m',
+  $nginx_cache_inactive     = '3d',
+  $nginx_cache_size         = '3g',
   $nginx_location_purge     = true,
   $nginx_allow_admin_list   = ['127.0.0.0/24','127.1.0.0/24'],
   $nginx_custom_error_dir   = undef,
