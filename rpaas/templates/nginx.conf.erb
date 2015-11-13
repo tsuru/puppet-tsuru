@@ -26,14 +26,14 @@ http {
 
 <% if @nginx_syslog_server -%>
     access_log syslog:server=<%= @nginx_syslog_server %>,facility=local6,tag=<%= @nginx_syslog_tag ? @nginx_syslog_tag : 'rpaas' %> main
-    error_log syslog:server=<%= @nginx_syslog_server %>,facility=local7,tag=<%= @nginx_syslog_tag ? @nginx_syslog_tag : 'rpaas' %>
+    error_log syslog:server=<%= @nginx_syslog_server %>,facility=local6,tag=<%= @nginx_syslog_tag ? @nginx_syslog_tag : 'rpaas' %>
 <% end -%>
 
 <% @nginx_custom_error_codes.each do |file, codes| -%>
     error_page <%= codes.join(" ") %> /_nginx_errordocument/<%= file %>;
 <% end -%>
 
-proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=rpaas:<%= @nginx_key_zone_size %> inactive=<%= @nginx_cache_inactive %> max_size=<%= @nginx_cache_size %> loader_files=50;
+    proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=rpaas:<%= @nginx_key_zone_size %> inactive=<%= @nginx_cache_inactive %> max_size=<%= @nginx_cache_size %> loader_files=50;
     proxy_temp_path  /var/cache/nginx_temp 1 2;
 
     gzip                on;
