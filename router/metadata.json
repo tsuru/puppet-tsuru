@@ -1,6 +1,6 @@
 {
   "name": "tsuru-router",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "Tsuru",
   "license": "BSD-style license that can be found in the LICENSE file",
   "summary": "Puppet module to Tsuru PaaS Router",
