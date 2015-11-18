@@ -122,11 +122,13 @@ http {
 <% if @nginx_custom_error_dir and @nginx_intercept_errors -%>
         proxy_intercept_errors on;
 <% end -%>
+<% if @nginx_mechanism == 'dav' -%>
 
         location /_nginx_healthcheck/ {
             echo "WORKING";
         }
 
+<% end -%>
 <% if @nginx_custom_error_dir -%>
         location ~ ^/_nginx_errordocument/(.+) {
             internal;
