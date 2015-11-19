@@ -87,6 +87,13 @@ class rpaas::install (
       require => File['/etc/consul-template.d/plugins']
     }
 
+    file { '/etc/consul-template.d/plugins/check_and_reload_nginx.sh':
+      ensure  => file,
+      content => template('rpaas/consul/check_and_reload_nginx.sh.erb'),
+      require => File['/etc/consul-template.d/plugins'],
+      mode    => 0755
+    }
+
     service { 'consul-template':
       ensure    => running,
       require   => [  Package['consul-template'],
@@ -95,7 +102,8 @@ class rpaas::install (
                       File['/etc/consul-template.d/templates/nginx.key.tpl'],
                       File['/etc/consul-template.d/templates/nginx.crt.tpl'],
                       File['/etc/consul-template.d/plugins/check_nginx_ssl_data.sh'],
-                      File['/etc/nginx/certs'] ],
+                      File['/etc/nginx/certs'],
+                      File['/etc/consul-template.d/plugins/check_and_reload_nginx.sh'] ],
       subscribe => [  Package['consul-template'],
                       File['/etc/consul-template.d/consul.conf'],
                       File['/etc/consul-template.d/templates/locations.conf.tpl'],

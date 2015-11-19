@@ -9,20 +9,20 @@ syslog {
 template {
     source = "/etc/consul-template.d/templates/locations.conf.tpl"
     destination = "/etc/nginx/sites-enabled/consul/locations.conf"
-    command = "service nginx reload"
+    command = "/etc/consul-template.d/plugin/check_and_reload_nginx.sh"
     perms = 0644
 }
 
 template {
     source = "/etc/consul-template.d/templates/nginx.key.tpl"
     destination = "/etc/nginx/certs/nginx.key"
-    command = "service nginx reload"
+    command = "/etc/consul-template.d/plugin/check_and_reload_nginx.sh"
     perms = 0644
 }
 
 template {
     source = "/etc/consul-template.d/templates/nginx.crt.tpl"
     destination = "/etc/nginx/certs/nginx.crt"
-    command = "service nginx reload"
+    command = "/etc/consul-template.d/plugin/check_and_reload_nginx.sh"
     perms = 0644
 }

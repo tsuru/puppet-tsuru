@@ -204,6 +204,16 @@ EOF
     it 'creates /etc/consul-template.d/consul.conf' do
       should contain_file('/etc/consul-template.d/consul.conf').with_content(/#{consul_conf_content}/m)
     end
+
+check_and_reload_nginx_content = <<EOF
+nginx_error=$(nginx -t 2>&1 | grep emerg)
+consul_nginx_url='http://foo.bar:8500/v1/kv/rpaas_fe/foo_instance/status?token=0000-1111'
+EOF
+
+    it 'creates /etc/consul-template.d/plugins/check_and_reload_nginx.sh' do
+      should contain_file('/etc/consul-template.d/plugins/check_and_reload_nginx.sh').with_content(/#{Regexp.escape(check_and_reload_nginx_content)}/)
+    end
+
   end
 
 end

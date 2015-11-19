@@ -1,0 +1,17 @@
+#!/bin/bash
+
+nginx_error=$(nginx -t 2>&1 | grep emerg)
+<% 
+    consul_token = ''
+    if not @consul_acl_token.nil? 
+        consul_token = "?token=#{@consul_acl_token}"
+    end
+-%>
+consul_nginx_url='http://<%= @consul_server %>/v1/kv/<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/status<%= consul_token %>'
+
+if [ ! -z "$nginx_error" ]; then
+    echo $nginx_error | curl -XPUT -d @- $consul_nginx_url
+else
+    curl -XPUT -d 'Nginx reloaded successfully!' $consul_nginx_url
+    service nginx reload
+fi
