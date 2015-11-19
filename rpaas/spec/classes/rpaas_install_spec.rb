@@ -181,14 +181,14 @@ EOF
 
     it 'generate crt template file for consul' do
       should contain_file('/etc/consul-template.d/templates/nginx.crt.tpl').with_content(<<EOF
-{{ key "rpaas_fe/foo_instance/ssl/cert" | plugin "check_nginx_ssl_data.sh" "crt" }}
+{{ key_or_default "rpaas_fe/foo_instance/ssl/cert" "" | plugin "check_nginx_ssl_data.sh" "crt" }}
 EOF
     )
     end
 
     it 'generate key template file for consul' do
       should contain_file('/etc/consul-template.d/templates/nginx.key.tpl').with_content(<<EOF
-{{ key "rpaas_fe/foo_instance/ssl/key" | plugin "check_nginx_ssl_data.sh" "key" }}
+{{ key_or_default "rpaas_fe/foo_instance/ssl/key" "" | plugin "check_nginx_ssl_data.sh" "key" }}
 EOF
     )
     end
