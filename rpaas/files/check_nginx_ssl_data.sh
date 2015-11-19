@@ -3,7 +3,6 @@
 if [ -z "$2" ]; then
     cat /etc/nginx/certs/nginx.$1
 else
-    rm /etc/nginx/certs/nginx.$1 || true
     header_key_cert=""
     footer_key_cert=""
     for line in $2; do
@@ -29,7 +28,7 @@ else
             cert_line="${cert_line} ${line}"
             continue
         fi
-        echo $line >> /etc/nginx/certs/nginx.$1
+        echo $line
     done
 fi
 exit 0
