@@ -58,12 +58,12 @@ http {
         }
 <% if @nginx_location_purge -%>
 
-        location ~ ^/purge(/.+) {
+        location ~ ^/purge/(.+) {
 <% @nginx_allow_admin_list.each do |ip| -%>
             allow           <%= ip %>;
 <% end -%>
             deny            all;
-            proxy_cache_purge  rpaas $scheme$1$is_args$args;
+            proxy_cache_purge  rpaas $1$is_args$args;
         }
 <% end -%>
 
