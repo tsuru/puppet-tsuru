@@ -109,11 +109,11 @@ describe 'rpaas::install' do
             echo "WORKING";
         }
 
-        location ~ ^/purge(/.+) {
+        location ~ ^/purge/(.+) {
             allow           10.0.0.1;
             allow           10.0.2.3;
             deny            all;
-            proxy_cache_purge  rpaas $scheme$1$is_args$args;
+            proxy_cache_purge  rpaas $1$is_args$args;
         }
 
         location /reload {
