@@ -1,8 +1,12 @@
-{{if key "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/healthcheck" | parseBool }}
+{{ with key_or_default "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/healthcheck" "" }}
+{{ if eq . "true" }}
 location /_nginx_healthcheck/ {
     echo "WORKING";
 }
-{{end}}
+{{ end }}
 {{range ls "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/locations"}}
-{{.Value}}
-{{end}}
+{{ .Value }}
+{{ end }}
+{{ else }}
+{{ plugin "check_healthcheck.sh" }}
+{{ end }}

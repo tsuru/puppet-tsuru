@@ -87,6 +87,12 @@ class rpaas::install (
       require => File['/etc/consul-template.d/plugins']
     }
 
+    file { '/etc/consul-template.d/plugins/check_healthcheck.sh':
+      ensure  => file,
+      source  => 'puppet:///modules/rpaas/check_healthcheck.sh',
+      require => File['/etc/consul-template.d/plugins']
+    }
+
     file { '/etc/consul-template.d/plugins/check_and_reload_nginx.sh':
       ensure  => file,
       content => template('rpaas/consul/check_and_reload_nginx.sh.erb'),
