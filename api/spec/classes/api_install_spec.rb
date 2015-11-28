@@ -107,10 +107,7 @@ describe 'api::install' do
           :smtp_password => 'tsuru',
 
           :repo_manager   => 'gandalf',
-          :git_unit_repo  => '/home/application/current',
           :git_api_server => 'localhost:9090',
-          :git_rw_host    => 'rwhost.tsuru.io',
-          :git_ro_host    => 'rohost.tsuru.io',
 
           :auth_user_registration => true,
           :auth_scheme            => 'oauth',
