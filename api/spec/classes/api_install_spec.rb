@@ -27,11 +27,8 @@ describe 'api::install' do
 
       it 'file /etc/tsuru/tsuru.conf must contain git contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^repo-manager: none$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^git:$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  unit-repo: /home/application/current$})
+        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^git:$})
         should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  api-server:$})
-        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  rw-host:})
-        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  ro-host:})
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain auth contiguration' do
@@ -195,10 +192,7 @@ describe 'api::install' do
       it 'file /etc/tsuru/tsuru.conf must contain git contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^repo-manager: gandalf$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^git:$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  unit-repo: /home/application/current$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  api-server: localhost:9090$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  rw-host: rwhost.tsuru.io$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  ro-host: rohost.tsuru.io$})
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain auth contiguration' do
