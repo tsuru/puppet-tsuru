@@ -35,10 +35,7 @@ smtp:
 repo-manager: <%= @repo_manager %>
 <%- if @git_api_server %>
 git:
-  unit-repo: <%= @git_unit_repo %>
   api-server: <%= @git_api_server %>
-  <%= @git_rw_host ? "rw-host: #{@git_rw_host}" : "" %>
-  <%= @git_ro_host ? "ro-host: #{@git_ro_host}" : "" %>
 <%- end %>
 
 # - Authentication configuration
