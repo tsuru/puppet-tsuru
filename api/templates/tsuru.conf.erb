@@ -1,5 +1,5 @@
 # - HTTP Server
-# http://docs.tsuru.io/en/latest/reference/config.html#tsuru-configuration
+# http://docs.tsuru.io/en/stable/reference/config.html#tsuru-configuration
 listen: "<%= @tsuru_server_listen %>"
 host: "<%= @tsuru_host %>"
 <%- if @tsuru_use_tls %>
@@ -14,7 +14,7 @@ disable-index-page: <%= @disable_index_page %>
 <%= @index_page_template ? "index-page-template: #{@index_page_template}" : '' %>
 
 # - Database access
-# http://docs.tsuru.io/en/latest/reference/config.html#database-access
+# http://docs.tsuru.io/en/stable/reference/config.html#database-access
 database:
   url: <%= @mongodb_url %>
   name: <%= @mongodb_database_name %>
@@ -23,7 +23,7 @@ database:
 
 <%- if @smtp_server %>
 # - Email configuration
-# http://docs.tsuru.io/en/latest/reference/config.html#email-configuration
+# http://docs.tsuru.io/en/stable/reference/config.html#email-configuration
 smtp:
   server: <%= @smtp_server %>
   user: <%= @smtp_user %>
@@ -39,7 +39,7 @@ git:
 <%- end %>
 
 # - Authentication configuration
-# http://docs.tsuru.io/en/latest/reference/config.html#authentication-configuration
+# http://docs.tsuru.io/en/stable/reference/config.html#authentication-configuration
 auth:
   scheme: <%= @auth_scheme %>
   user-registration: <%= @auth_user_registration %>
@@ -63,7 +63,7 @@ auth:
   <%- end %>
 
 # Queue configuration
-# http://docs.tsuru.io/en/latest/reference/config.html#config-queue
+# http://docs.tsuru.io/en/stable/reference/config.html#config-queue
 queue:
   mongo-url: <%= @queue_mongo_url %>
   mongo-database: <%= @queue_mongo_database %>
@@ -76,19 +76,19 @@ pubsub:
 <%= @redis_db ? "  redis-db: #{@redis_db}" : ''  %>
 
 # - Admin users
-# http://docs.tsuru.io/en/latest/reference/config.html#admin-users
+# http://docs.tsuru.io/en/stable/reference/config.html#admin-users
 admin-team: <%= @tsuru_admin_team %>
 
 <%- if @tsuru_apps_per_user %>
 # - Quota management
-# http://docs.tsuru.io/en/latest/reference/config.html#quota-management
+# http://docs.tsuru.io/en/stable/reference/config.html#quota-management
 quota:
   apps-per-user: <%= @tsuru_apps_per_user %>
   units-per-app: <%= @tsuru_units_per_app %>
 <%- end %>
 
 # - Router configuration
-# http://docs.tsuru.io/en/latest/reference/config.html#config-routers
+# http://docs.tsuru.io/en/stable/reference/config.html#config-routers
 routers:
 <%- @routers.keys.sort.each do |router| -%>
   <%= router %>:
@@ -118,7 +118,7 @@ routers:
 <%- end -%>
 
 # - Provisioner configuration
-# http://docs.tsuru.io/en/latest/reference/config.html#provisioner
+# http://docs.tsuru.io/en/stable/reference/config.html#provisioner
 provisioner: <%= @tsuru_provisioner %>
 <%- if @tsuru_provisioner.eql?('docker') -%>
 docker:
@@ -183,7 +183,7 @@ docker:
 <%- end -%>
 
 # - Iaas configuration
-# http://docs.tsuru.io/en/latest/reference/config.html#iaas-configuration
+# http://docs.tsuru.io/en/stable/reference/config.html#iaas-configuration
 <%- if @iaas_enable -%>
 iaas:
   <%= @tsuru_iaas_default ? "default: #{tsuru_iaas_default}\n" : "default: ec2\n" -%>
@@ -223,5 +223,5 @@ iaas:
   node-port: <%= @iaas_node_port ? @iaas_node_port : '2375' %> 
 <% end %>
 # - Debug configuration
-# http://docs.tsuru.io/en/latest/reference/config.html#log-level
+# http://docs.tsuru.io/en/stable/reference/config.html#log-level
 debug: <%= @tsuru_debug %>
