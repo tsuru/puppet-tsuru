@@ -159,10 +159,7 @@ class api::install (
   $smtp_password = undef,
 
   $repo_manager = 'none',
-  $git_unit_repo = '/home/application/current',
-  $git_api_server = 'localhost:9090',
-  $git_rw_host = undef,
-  $git_ro_host = undef,
+  $git_api_server = undef,
 
   $auth_scheme = 'native',
   $auth_token_expire_days = undef,

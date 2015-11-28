@@ -47,7 +47,7 @@ auth:
   <%- case @auth_scheme -%>
   <%- when 'native' -%>
   token-expire-days: <%= @auth_token_expire_days %>
-  hash-cost: <%= @auth_hash_cost %> 
+  hash-cost: <%= @auth_hash_cost %>
   <%- when 'oauth' -%>
   oauth:
     client-id: <%= @oauth_client_id %>
@@ -220,7 +220,7 @@ iaas:
       <%- end -%>
   <%- end -%>
   node-protocol: <%= @iaas_node_protocol ? @iaas_node_protocol : 'http' %>
-  node-port: <%= @iaas_node_port ? @iaas_node_port : '2375' %> 
+  node-port: <%= @iaas_node_port ? @iaas_node_port : '2375' %>
 <% end %>
 # - Debug configuration
 # http://docs.tsuru.io/en/stable/reference/config.html#log-level

@@ -22,10 +22,10 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^database:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  url: localhost:27017$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  name: tsuru$})
-        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  passord: tsuru$})
+        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  password: tsuru$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain git contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain repository contiguration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^repo-manager: none$})
         should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^git:$})
         should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  api-server:$})
