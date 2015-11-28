@@ -263,13 +263,13 @@ class api::install (
 
   if ( $docker_scheduler_total_memory_metadata and $docker_scheduler_max_used_memory ) {
     if ( $docker_scheduler_max_used_memory < 0 ) {
-      fail("\$docker_scheduler_max_used_memory must be a value greater than 0")
+      fail('\$docker_scheduler_max_used_memory must be a value greater than 0')
     }
     $docker_scheduler_memory = true
   }
 
   if ( $docker_auto_scale_down_ratio < 1) {
-    fail("\$docker_auto_scale_down_ration should be greater than 1")
+    fail('\$docker_auto_scale_down_ration should be greater than 1')
   }
 
   package { 'tsuru-server' :

@@ -34,11 +34,11 @@ class rpaas::install (
   include sudo
 
   if ($nginx_custom_error_codes != {} and !$nginx_custom_error_dir) {
-    fail("nginx_custom_error_dir must be set with nginx_custom_error_codes")
+    fail('nginx_custom_error_dir must be set with nginx_custom_error_codes')
   }
 
   if ($nginx_custom_error_codes and !is_hash($nginx_custom_error_codes)) {
-    fail("nginx_custom_error_codes should be in hash format")
+    fail('nginx_custom_error_codes should be in hash format')
   }
 
   if ($nginx_mechanism == 'consul') {
@@ -97,7 +97,7 @@ class rpaas::install (
       ensure  => file,
       content => template('rpaas/consul/check_and_reload_nginx.sh.erb'),
       require => File['/etc/consul-template.d/plugins'],
-      mode    => 0755
+      mode    => '0755'
     }
 
     service { 'consul-template':
@@ -122,7 +122,7 @@ class rpaas::install (
   }
 
   package { 'nginx-extras':
-    ensure => $nginx_package,
+    ensure  => $nginx_package,
     require => [ Exec['apt_update'], File['/etc/nginx/nginx.conf'], Exec['ssl'] ]
   }
 

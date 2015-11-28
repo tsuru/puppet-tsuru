@@ -24,7 +24,7 @@ class docker (
 ) {
 
   if (!is_array($docker_bind)) {
-    fail("\$docker_bind must be an array")
+    fail('\$docker_bind must be an array')
   }
 
   if ($lxc_docker_version == 'latest') {
@@ -39,7 +39,7 @@ class docker (
   }
 
   package { $lxc_package_name:
-    ensure => $lxc_package_ensure,
+    ensure  => $lxc_package_ensure,
     require => [ File['/etc/default/docker'], File['/etc/init/docker.conf'] ]
   }
 

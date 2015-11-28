@@ -101,7 +101,7 @@ class router::install (
     file { '/etc/default/planb':
       ensure  => file,
       content => template('router/planb_conf.erb'),
-      notify => Service['planb'],
+      notify  => Service['planb'],
       require => Package['planb']
     }
 
