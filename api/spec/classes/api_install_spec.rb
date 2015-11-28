@@ -13,31 +13,31 @@ describe 'api::install' do
           :tsuru_server_version => 'latest',
         }
       end
-      it 'file /etc/tsuru/tsuru.conf must contain http contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain http configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^listen: "0.0.0.0:8080"$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^host: "http://0.0.0.0:8080"$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain database contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain database configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^database:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  url: localhost:27017$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  name: tsuru$})
         should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  password: tsuru$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain repository contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain repository configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^repo-manager: none$})
         should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^git:$})
         should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  api-server:$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain auth contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain auth configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^auth:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  scheme: native$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  user-registration: true$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain queue contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain queue configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^pubsub:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  redis-host: localhost$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  redis-port: 6379$})
@@ -46,11 +46,11 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  redis-db:$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain Admin users contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain Admin users configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^admin-team: admin$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain routers with hipache contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain routers with hipache configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^routers:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  my_hipache:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    type: hipache$})
@@ -58,7 +58,7 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    redis-server: localhost:6379$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain docker contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain docker configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^provisioner: docker$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  bs:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    image: tsuru/bs$})
@@ -81,7 +81,7 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  healing:})
       end
 
-      it 'file /etc/tsuru/tsuru.conf not contain iaas contiguration' do
+      it 'file /etc/tsuru/tsuru.conf not contain iaas configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^iaas:$})
       end
 
@@ -164,38 +164,38 @@ describe 'api::install' do
         }
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain http contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain http configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^listen: "0.0.0.0:8080"$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^host: "http://tsuru.io:8080"$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain tls contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain tls configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^use-tls: true$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  tls-cert-file: /var/lib/tsuru/cert_file.cert$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  tls-key-file: /var/lib/tsuru/key_file.key$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain database contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain database configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^database:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  url: localhost:27017$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  name: tsuru$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  password: tsuru$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain smtp contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain smtp configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^smtp:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  server: smtp.gmail.com$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  user: tsuru$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  password: tsuru$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain git contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain git configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^repo-manager: gandalf$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^git:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  api-server: localhost:9090$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain auth contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain auth configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^auth:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  user-registration: true$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  scheme: oauth$})
@@ -210,14 +210,14 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    callback-port: 37621$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain queue contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain queue configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^queue:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  mongo-url: localhost:27017$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  mongo-database: tsuru$})
       end
 
 
-      it 'file /etc/tsuru/tsuru.conf must contain pubsub contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain pubsub configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^pubsub:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  redis-host: localhost$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  redis-port: 6379$})
@@ -225,11 +225,11 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  redis-db: tsuru_redis_db$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain admin users contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain admin users configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^admin-team: admin$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain routers with hipache contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain routers with hipache configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^routers:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  my_hipache:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    type: hipache$})
@@ -237,14 +237,14 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    redis-server: localhost:6379$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain quota contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain quota configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^quota:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  apps-per-user: 8$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  units-per-app: 20$})
       end
 
 
-      it 'file /etc/tsuru/tsuru.conf must contain docker contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain docker configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^provisioner: docker$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  bs:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    image: tsuru/custom_bs$})
@@ -368,7 +368,7 @@ routers:
             :cloudstack_wait_timeout  => '600'
           )
         }
-        it 'file /etc/tsuru/tsuru.conf must contain iaas contiguration for cloudstack' do
+        it 'file /etc/tsuru/tsuru.conf must contain iaas configuration for cloudstack' do
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^iaas:$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  default: cloudstack$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  cloudstack:$})
@@ -390,7 +390,7 @@ routers:
             :ec2_user_data            => '/var/lib/user-data/docker_user_data.sh'
           )
         }
-        it 'file /etc/tsuru/tsuru.conf must contain iaas contiguration for ec2' do
+        it 'file /etc/tsuru/tsuru.conf must contain iaas configuration for ec2' do
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^iaas:$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  default: ec2$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  ec2:$})
@@ -561,7 +561,7 @@ iaas:
 
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain debug contiguration' do
+      it 'file /etc/tsuru/tsuru.conf must contain debug configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^debug: false$})
       end
 
