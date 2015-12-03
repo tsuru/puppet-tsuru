@@ -207,7 +207,7 @@ EOF
 
 check_and_reload_nginx_content = <<EOF
 nginx_error=$(nginx -t 2>&1 | grep emerg)
-consul_nginx_url='http://foo.bar:8500/v1/kv/rpaas_fe/foo_instance/status?token=0000-1111'
+consul_nginx_url='http://foo.bar:8500/v1/kv/rpaas_fe/foo_instance/status/foo.bar?token=0000-1111'
 EOF
 
     it 'creates /etc/consul-template.d/plugins/check_and_reload_nginx.sh' do
