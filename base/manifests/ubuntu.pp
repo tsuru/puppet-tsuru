@@ -90,10 +90,10 @@ class base::ubuntu inherits base {
     }
   } else {
     apt::source { 'docker' :
-      location    => 'https://get.docker.io/ubuntu',
+      location    => 'https://apt.dockerproject.org/repo',
       include_src => false,
       repos       => 'main',
-      release     => 'docker',
+      release     => 'ubuntu-trusty',
       require     => [Apt::Key['docker'], Apt::Key['docker_project']]
     }
   }

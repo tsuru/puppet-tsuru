@@ -26,13 +26,13 @@ describe 'base'  do
     [ 'ppa:tsuru/redis-server', 'ppa:tsuru/ppa' ].each do |tsuru_ppa|
       it { should contain_apt__ppa(tsuru_ppa) }
     end
-    it { should contain_apt__source('docker').with(:location => 'https://get.docker.io/ubuntu', :repos => 'main', :release => 'docker') }
+    it { should contain_apt__source('docker').with(:location => 'https://apt.dockerproject.org/repo', :repos => 'main', :release => 'ubuntu-trusty') }
   end
 
   context 'setting custom source list' do
 
-    let :params do { 
-      :tsuru_source_list  => 'tsuru_source_list_custom', 
+    let :params do {
+      :tsuru_source_list  => 'tsuru_source_list_custom',
       :redis_source_list  => 'redis_source_list_custom',
       :docker_source_list => 'docker_source_list_custom'
     }
