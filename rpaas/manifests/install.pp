@@ -26,7 +26,14 @@ class rpaas::install (
   $consul_syslog_facility   = 'LOCAL0',
   $consul_acl_token         = undef,
   $rpaas_service_name       = undef,
-  $rpaas_instance_name      = undef
+  $rpaas_instance_name      = undef,
+  $consul_agent_enable      = false,
+  $consul_agent_data_dir    = '/var/lib/consul',
+  $consul_agent_version     = latest,
+  $consul_agent_datacenter  = 'dc1',
+  $consul_agent_client_addr = '0.0.0.0',
+  $consul_agent_bind_addr   = '0.0.0.0',
+  $consul_members           = ['127.0.0.1']
 
 ) inherits rpaas {
 
@@ -39,6 +46,43 @@ class rpaas::install (
 
   if ($nginx_custom_error_codes and !is_hash($nginx_custom_error_codes)) {
     fail('nginx_custom_error_codes should be in hash format')
+  }
+
+  if ($consul_agent_enable) {
+
+    package { 'consul':
+      ensure => $consul_agent_version
+    }
+
+    file { $consul_agent_data_dir:
+      ensure  => directory,
+      owner   => 'consul',
+      group   => 'consul',
+      require => Package['consul']
+    }
+
+    service { 'consul':
+      ensure  => running,
+      enable  => true,
+      require => [ Package['consul'], File[$consul_agent_data_dir] ]
+    }
+
+    file { '/etc/consul.d/config.json':
+      ensure  => file,
+      mode    => '0644',
+      content => template('rpaas/consul/agent_config.json.erb'),
+      require => Package['consul'],
+      notify  => Service['consul']
+    }
+
+    file { '/etc/consul.d/service.json':
+      ensure  => file,
+      mode    => '0644',
+      content => template('rpaas/consul/nginx_service.json.erb'),
+      require => Package['consul'],
+      notify  => Service['consul']
+    }
+
   }
 
   if ($nginx_mechanism == 'consul') {

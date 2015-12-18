@@ -1,5 +1,5 @@
 consul = "<%= @consul_server %>"
-<%= @consul_acl_token ? "token = \"#{consul_acl_token}\"" : "" -%>
+<%= @consul_acl_token ? "token = \"#{@consul_acl_token}\"" : "" -%>
 
 syslog {
     enabled = <%= @consul_syslog_enabled %>

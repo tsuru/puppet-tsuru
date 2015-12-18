@@ -1,0 +1,9 @@
+{
+  "service": {
+    "name": "nginx",
+    "tags": ["<%= @rpaas_service_name %>", "<%= @rpaas_instance_name %>"],
+    "address": "127.0.0.1",
+    "port": <%= @nginx_listen.to_i %>,
+    "enableTagOverride": true
+  }
+}
