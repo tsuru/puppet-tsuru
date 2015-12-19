@@ -1,4 +1,4 @@
-require 'rspec-puppet' 
+require 'rspec-puppet'
 require 'spec_helper'
 # require 'fileutils'
 
@@ -81,24 +81,6 @@ describe 'gandalf'  do
     })
   end
 
-  context 'enabling git-daemon' do
-    before {  params.merge!( :gandalf_git_daemon => true ) }
-
-    it 'runs git-daemon service' do
-      should contain_service('git-daemon').with({
-        :ensure => 'running',
-        :subscribe => 'File[/etc/init/git-daemon.conf]'
-      })
-    end
-
-    it 'creates file /etc/init/git-daemon.conf' do
-      should contain_file('/etc/init/git-daemon.conf').with ({
-        :content => /setuid gand_user\nsetgid gand_group\nexec .+git daemon --base-path=\/foo\/bar\/repos/,
-        :notify => 'Service[git-daemon]'
-      })
-    end
-  end
-
   context 'using pre_receive with s3 storage' do
 
     before { params.merge!( :gandalf_storage_type => 's3', :gandalf_storage_bucket => 'foobar',
@@ -138,17 +120,6 @@ describe 'gandalf'  do
                                                                        ^export[ ]AUTH_PARAMS="-x[ ]foo[ ]-y[ ]bar"}x)
     end
 
-  end
-
-  context 'using post_receive hook' do
-
-    before { params.merge!( :gandalf_post_receive_template => 'true' )  }
-
-    it { should contain_file('/foo/bar/bare/hooks/post-receive') }
-    it "generate .profile " do
-      should contain_file('/var/lib/gandalf/.profile').with_content(%r{^export[ ]TSURU_HOST=api_host\n
-                                                                       ^export[ ]TSURU_TOKEN=api_token\n}x)
-    end
   end
 
 end

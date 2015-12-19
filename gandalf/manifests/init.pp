@@ -16,14 +16,12 @@
 # [gandalf_user] Gandalf running user
 # [gandalf_group] Gandalf running group
 # [gandalf_version] Gandalf server package version
-# [gandalf_git_daemon]     Install git daemon - usefull if using post-receive
 # [gandalf_storage_type]   Storage type [archive, swift, s3]
 # [gandalf_storage_venv]   Virtualenv location for swift or s3 storage
 # [gandalf_storage_bucket] Bucket or container for swift / s3
 # [gandalf_cdn_url]        CDN URL for swift / s3
 # [gandalf_auth_params]    Auth params for swift / s3
 # [gandalf_pre_receive_template]   Use pre_receive or location for custom template
-# [gandalf_post_receive_template]  Use post_receive or location for custom template
 # [tsuru_api_host] Tsuru Server API Host
 # [tsuru_api_token] Tsuru API Token
 
@@ -41,14 +39,12 @@ class gandalf (
   $gandalf_group          = 'git',
   $gandalf_user_home      = '/var/lib/gandalf',
   $gandalf_version        = 'latest',
-  $gandalf_git_daemon     = false,
   $gandalf_storage_type   = 'archive',
   $gandalf_storage_venv   = '/var/lib/gandalf/virtualenv',
   $gandalf_storage_bucket = undef,
   $gandalf_cdn_url        = undef,
   $gandalf_auth_params    = undef,
   $gandalf_pre_receive_template   = undef,
-  $gandalf_post_receive_template  = undef,
   $tsuru_api_host         = 'localhost:8081',
   $tsuru_api_token        = undef
 
@@ -78,25 +74,6 @@ class gandalf (
     group   => root,
     notify  => Service['gandalf-server'],
     require => File['/etc/gandalf.conf']
-  }
-
-  if ($gandalf_git_daemon) {
-    file { '/etc/init/git-daemon.conf':
-      ensure  => present,
-      content => template('gandalf/git-daemon.conf.erb'),
-      mode    => '0644',
-      owner   => root,
-      group   => root,
-      notify  => Service['git-daemon'],
-    }
-
-    service { 'git-daemon':
-      ensure    => running,
-      enable    => true,
-      provider  => 'upstart',
-      subscribe => File['/etc/init/git-daemon.conf'],
-      require   => File['/etc/init/git-daemon.conf']
-    }
   }
 
   service { 'gandalf-server':
@@ -194,19 +171,6 @@ class gandalf (
                                 "gandalf/pre-receive-${gandalf_storage_type}.erb"),
       require => File[$gandalf_bare_template_path]
       }
-  }
-
-  if ($gandalf_post_receive_template) {
-    file { "${gandalf_bare_template_path}/hooks/post-receive":
-      ensure  => file,
-      recurse => true,
-      mode    => '0755',
-      owner   => $gandalf_user,
-      group   => $gandalf_group,
-      content => multitemplate($gandalf_post_receive_template,
-                                'gandalf/post-receive.erb'),
-      require => File[$gandalf_bare_template_path]
-    }
   }
 
   file { "${gandalf_user_home}/.profile":
