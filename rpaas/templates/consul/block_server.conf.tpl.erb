@@ -1,0 +1,5 @@
+{{ with key_or_default "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/healthcheck" "" }}
+  {{ key_or_default "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/blocks/server/ROOT" "" }}
+{{ else }}
+  {{ plugin "check_file.sh" "/etc/consul-template.d/templates/block_server.conf.tpl" }}
+{{ end }}
