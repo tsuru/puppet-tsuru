@@ -8,5 +8,5 @@ location /_nginx_healthcheck/ {
 {{ .Value }}
 {{ end }}
 {{ else }}
-{{ plugin "check_healthcheck.sh" }}
+{{ plugin "check_file.sh" "/etc/nginx/sites-enabled/consul/locations.conf" }}
 {{ end }}

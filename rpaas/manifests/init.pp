@@ -21,6 +21,7 @@ class rpaas {
                   '/etc/nginx/sites-enabled',
                   '/etc/nginx/sites-enabled/dav',
                   '/etc/nginx/sites-enabled/consul',
+                  '/etc/nginx/sites-enabled/consul/blocks',
                   $dav_ssl_dir,
                   $consul_ssl_dir ]
 }

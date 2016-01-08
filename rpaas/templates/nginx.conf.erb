@@ -85,6 +85,10 @@ http {
 <% end -%>
     }
 
+<% if @nginx_mechanism == 'consul' -%>
+    include sites-enabled/consul/blocks/http.conf;
+<% end -%>
+
     server {
         listen <%= @nginx_listen %>;
         listen <%= @nginx_ssl_listen %> ssl spdy;
@@ -140,6 +144,7 @@ http {
         include sites-enabled/dav/*.conf;
 <% else -%>
         include sites-enabled/consul/*.conf;
+        include sites-enabled/consul/blocks/server.conf;
 <% end -%>
     }
 }

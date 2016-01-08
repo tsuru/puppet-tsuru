@@ -193,6 +193,31 @@ EOF
     )
     end
 
+    it 'generate block templates file for consul' do
+      should contain_file('/etc/consul-template.d/templates/block_http.conf.tpl').with_content(<<EOF
+{{ with key_or_default "rpaas_fe/foo_instance/healthcheck" "" }}
+  {{ key_or_default "rpaas_fe/foo_instance/blocks/http/ROOT" "" }}
+{{ else }}
+  {{ plugin "check_file.sh" "/etc/consul-template.d/templates/block_http.conf.tpl" }}
+{{ end }}
+EOF
+      )
+
+      should contain_file('/etc/consul-template.d/templates/block_server.conf.tpl').with_content(<<EOF
+{{ with key_or_default "rpaas_fe/foo_instance/healthcheck" "" }}
+  {{ key_or_default "rpaas_fe/foo_instance/blocks/server/ROOT" "" }}
+{{ else }}
+  {{ plugin "check_file.sh" "/etc/consul-template.d/templates/block_server.conf.tpl" }}
+{{ end }}
+EOF
+      )
+    end
+
+    it 'generate initial empty block files' do
+      should contain_file('/etc/nginx/sites-enabled/consul/blocks/http.conf')
+      should contain_file('/etc/nginx/sites-enabled/consul/blocks/server.conf')
+    end
+
     consul_conf_content = <<EOF
 consul = "foo.bar:8500"
 token = "0000-1111"

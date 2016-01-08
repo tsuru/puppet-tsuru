@@ -125,15 +125,27 @@ class rpaas::install (
       require => File['/etc/consul-template.d/templates']
     }
 
+    file { '/etc/consul-template.d/templates/block_http.conf.tpl':
+      ensure  => file,
+      content => template('rpaas/consul/block_http.conf.tpl.erb'),
+      require => File['/etc/consul-template.d/templates']
+    }
+
+    file { '/etc/consul-template.d/templates/block_server.conf.tpl':
+      ensure  => file,
+      content => template('rpaas/consul/block_server.conf.tpl.erb'),
+      require => File['/etc/consul-template.d/templates']
+    }
+
     file { '/etc/consul-template.d/plugins/check_nginx_ssl_data.sh':
       ensure  => file,
       source  => 'puppet:///modules/rpaas/check_nginx_ssl_data.sh',
       require => File['/etc/consul-template.d/plugins']
     }
 
-    file { '/etc/consul-template.d/plugins/check_healthcheck.sh':
+    file { '/etc/consul-template.d/plugins/check_file.sh':
       ensure  => file,
-      source  => 'puppet:///modules/rpaas/check_healthcheck.sh',
+      source  => 'puppet:///modules/rpaas/check_file.sh',
       require => File['/etc/consul-template.d/plugins']
     }
 
@@ -151,6 +163,8 @@ class rpaas::install (
                       File['/etc/consul-template.d/templates/locations.conf.tpl'],
                       File['/etc/consul-template.d/templates/nginx.key.tpl'],
                       File['/etc/consul-template.d/templates/nginx.crt.tpl'],
+                      File['/etc/consul-template.d/templates/block_http.conf.tpl'],
+                      File['/etc/consul-template.d/templates/block_server.conf.tpl'],
                       File['/etc/consul-template.d/plugins/check_nginx_ssl_data.sh'],
                       File['/etc/nginx/certs'],
                       File['/etc/consul-template.d/plugins/check_and_reload_nginx.sh'] ],
@@ -159,10 +173,23 @@ class rpaas::install (
                       File['/etc/consul-template.d/templates/locations.conf.tpl'],
                       File['/etc/consul-template.d/templates/nginx.key.tpl'],
                       File['/etc/consul-template.d/templates/nginx.crt.tpl'],
+                      File['/etc/consul-template.d/templates/block_http.conf.tpl'],
+                      File['/etc/consul-template.d/templates/block_server.conf.tpl'],
                       File['/etc/consul-template.d/plugins/check_nginx_ssl_data.sh'],
                       File['/etc/nginx/certs'] ]
     }
 
+    file { '/etc/nginx/sites-enabled/consul/blocks/http.conf':
+      ensure  => file,
+      replace => false,
+      require => File['/etc/nginx/sites-enabled/consul/blocks']
+    }
+
+    file { '/etc/nginx/sites-enabled/consul/blocks/server.conf':
+      ensure  => file,
+      replace => false,
+      require => File['/etc/nginx/sites-enabled/consul/blocks']
+    }
   }
 
   package { 'nginx-extras':

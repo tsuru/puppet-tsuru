@@ -7,4 +7,3 @@ local_modules
 *.tar.gz
 .vagrant
 *.zip
-consul
