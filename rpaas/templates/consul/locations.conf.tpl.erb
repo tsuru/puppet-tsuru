@@ -1,12 +1,16 @@
-{{ with key_or_default "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/healthcheck" "" }}
-{{ if eq . "true" }}
+{{ with $healthcheck_value := key_or_default "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/healthcheck" "" }}
+    {{ with $locations := ls "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/locations" }}
+        {{ if eq $healthcheck_value "true" }}
 location /_nginx_healthcheck/ {
     echo "WORKING";
 }
-{{ end }}
-{{range ls "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/locations"}}
+        {{ end }}
+        {{ range $locations }}
 {{ .Value }}
-{{ end }}
+        {{ end }}
+    {{ else }}
+{{ plugin "check_file.sh" "/etc/nginx/sites-enabled/consul/locations.conf" }}
+    {{ end }}
 {{ else }}
 {{ plugin "check_file.sh" "/etc/nginx/sites-enabled/consul/locations.conf" }}
 {{ end }}
