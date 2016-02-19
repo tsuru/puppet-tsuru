@@ -6,7 +6,7 @@ describe 'docker'  do
     { :osfamily => 'Debian', :operatingsystem => 'Ubuntu', :lsbdistid => 'Ubuntu', :lsbdistcodename => 'precise' }
   end
 
-  let :params do 
+  let :params do
     { :lxc_docker_version => 'latest' }
   end
 
@@ -14,19 +14,6 @@ describe 'docker'  do
     should contain_package('docker-engine').with({
       :require => ["File[/etc/default/docker]", "File[/etc/init/docker.conf]"]
     })
-  end
-
-  context 'when seting docker version to 1.2.0' do
-
-    before { params.merge!( :lxc_docker_version => '1.2.0' ) }
-
-    it 'install lxc-docker-1.2.0 package' do
-      should contain_package('lxc-docker-1.2.0').with({
-        :ensure => 'installed',
-        :require => ["File[/etc/default/docker]", "File[/etc/init/docker.conf]"]
-      })
-    end
-
   end
 
   context 'when seting docker version to 1.8.1' do
