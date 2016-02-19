@@ -195,19 +195,27 @@ EOF
 
     it 'generate block templates file for consul' do
       should contain_file('/etc/consul-template.d/templates/block_http.conf.tpl').with_content(<<EOF
-{{ with key_or_default "rpaas_fe/foo_instance/healthcheck" "" }}
-  {{ key_or_default "rpaas_fe/foo_instance/blocks/http/ROOT" "" }}
+{{ with $custom_block := key_or_default "rpaas_fe/foo_instance/blocks/http/ROOT" "" }}
+  {{ if $custom_block | regexMatch "(?ms)## Begin custom RpaaS http block ##.+## End custom RpaaS http block ##"  }}
+{{ $custom_block }}
+  {{ else }}
+{{ plugin "check_file.sh" "/etc/nginx/sites-enabled/consul/blocks/http.conf" }}
+  {{ end }}
 {{ else }}
-  {{ plugin "check_file.sh" "/etc/consul-template.d/templates/block_http.conf.tpl" }}
+{{ plugin "check_file.sh" "/etc/nginx/sites-enabled/consul/blocks/http.conf" }}
 {{ end }}
 EOF
       )
 
       should contain_file('/etc/consul-template.d/templates/block_server.conf.tpl').with_content(<<EOF
-{{ with key_or_default "rpaas_fe/foo_instance/healthcheck" "" }}
-  {{ key_or_default "rpaas_fe/foo_instance/blocks/server/ROOT" "" }}
+{{ with $custom_block := key_or_default "rpaas_fe/foo_instance/blocks/server/ROOT" "" }}
+  {{ if $custom_block | regexMatch "(?ms)## Begin custom RpaaS server block ##.+## End custom RpaaS server block ##"  }}
+{{ $custom_block }}
+  {{ else }}
+{{ plugin "check_file.sh" "/etc/nginx/sites-enabled/consul/blocks/server.conf" }}
+  {{ end }}
 {{ else }}
-  {{ plugin "check_file.sh" "/etc/consul-template.d/templates/block_server.conf.tpl" }}
+{{ plugin "check_file.sh" "/etc/nginx/sites-enabled/consul/blocks/server.conf" }}
 {{ end }}
 EOF
       )

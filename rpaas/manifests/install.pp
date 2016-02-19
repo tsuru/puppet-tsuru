@@ -83,6 +83,12 @@ class rpaas::install (
       notify  => Service['consul']
     }
 
+    file { '/usr/local/bin/check_ro_fs.sh':
+      ensure  => file,
+      mode    => '0755',
+      source  => 'puppet:///modules/rpaas/check_ro_fs.sh'
+    }
+
   }
 
   if ($nginx_mechanism == 'consul') {
@@ -125,16 +131,12 @@ class rpaas::install (
       require => File['/etc/consul-template.d/templates']
     }
 
-    file { '/etc/consul-template.d/templates/block_http.conf.tpl':
-      ensure  => file,
-      content => template('rpaas/consul/block_http.conf.tpl.erb'),
-      require => File['/etc/consul-template.d/templates']
+    block_file { "server":
+      block_type => 'server'
     }
 
-    file { '/etc/consul-template.d/templates/block_server.conf.tpl':
-      ensure  => file,
-      content => template('rpaas/consul/block_server.conf.tpl.erb'),
-      require => File['/etc/consul-template.d/templates']
+    block_file { "http":
+      block_type => 'http'
     }
 
     file { '/etc/consul-template.d/plugins/check_nginx_ssl_data.sh':

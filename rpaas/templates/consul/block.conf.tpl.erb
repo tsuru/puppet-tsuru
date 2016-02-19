@@ -1,0 +1,9 @@
+{{ with $custom_block := key_or_default "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/blocks/<%= name %>/ROOT" "" }}
+  {{ if $custom_block | regexMatch "(?ms)## Begin custom RpaaS <%= name %> block ##.+## End custom RpaaS <%= name %> block ##"  }}
+{{ $custom_block }}
+  {{ else }}
+{{ plugin "check_file.sh" "/etc/nginx/sites-enabled/consul/blocks/<%= name %>.conf" }}
+  {{ end }}
+{{ else }}
+{{ plugin "check_file.sh" "/etc/nginx/sites-enabled/consul/blocks/<%= name %>.conf" }}
+{{ end }}

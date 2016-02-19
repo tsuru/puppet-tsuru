@@ -7,8 +7,14 @@
     "enableTagOverride": true,
     "checks": [
       {
+        "name": "nginx_admin",
         "http": "http://127.0.0.1:8089/healthcheck",
         "interval": "10s"
+      },
+      {
+        "name": "check_ro_fs",
+        "script": "/usr/local/bin/check_ro_fs.sh",
+        "interval": 30s
       }
     ]
   }
