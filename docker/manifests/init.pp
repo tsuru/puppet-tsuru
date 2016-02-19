@@ -7,7 +7,6 @@
 #
 # [lxc_docker_version] LXC docker package version
 # [docker_graph_dir] Docker root directory where all files are located
-# [docker_exec_driver] Choose between native(default) or lxc
 # [docker_bind] Docker bind array options. Eg ['tcp://0.0.0.0:4243', 'unix:///var/run/docker.sock']
 # [docker_extra_opts] Extra opts to docker daemon
 # [log_to_syslog] Log output and stderr also to syslog
@@ -16,7 +15,6 @@
 class docker (
   $lxc_docker_version           = latest,
   $docker_graph_dir             = '/var/lib/docker',
-  $docker_exec_driver           = 'native',
   $docker_bind                  = [],
   $docker_extra_opts            = '',
   $log_to_syslog                = true,
@@ -39,7 +37,7 @@ class docker (
     $docker_bind_opts = ''
   }
 
-  $docker_opts = join(["-g ${docker_graph_dir}", "-e ${docker_exec_driver}", $docker_bind_opts, $docker_extra_opts ],' ')
+  $docker_opts = join(["-g ${docker_graph_dir}", $docker_bind_opts, $docker_extra_opts ],' ')
 
   file { '/etc/default/docker':
     ensure  => present,

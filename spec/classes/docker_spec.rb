@@ -32,16 +32,15 @@ describe 'docker'  do
   context 'setting all docker options' do
     let (:params) { { :docker_graph_dir => '/foo/bar',
                       :docker_bind => ['tcp:///0.0.0.0:4243', 'unix:///var/run/docker.sock'],
-                      :docker_exec_driver => 'lxc',
                       :docker_extra_opts => '--extra-opts foo=bar' } }
     it 'creates docker default file /etc/default/docker' do
-      should contain_file('/etc/default/docker').with_content(/^DOCKER_OPTS="-g \/foo\/bar -e lxc -H tcp:\/\/\/0.0.0.0:4243 -H unix:\/\/\/var\/run\/docker.sock --extra-opts foo=bar"/m)
+      should contain_file('/etc/default/docker').with_content(/^DOCKER_OPTS="-g \/foo\/bar -H tcp:\/\/\/0.0.0.0:4243 -H unix:\/\/\/var\/run\/docker.sock --extra-opts foo=bar"/m)
     end
   end
 
   context 'default docker options' do
     it 'creates docker default file /etc/default/docker' do
-      should contain_file('/etc/default/docker').with_content(/^DOCKER_OPTS="-g \/var\/lib\/docker -e native  "/m)
+      should contain_file('/etc/default/docker').with_content(/^DOCKER_OPTS="-g \/var\/lib\/docker  "/m)
     end
   end
 
