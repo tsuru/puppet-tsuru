@@ -12,7 +12,7 @@ describe 'docker'  do
 
   it 'install docker-engine package with latest version' do
     should contain_package('docker-engine').with({
-      :require => ["File[/etc/default/docker]", "File[/etc/init/docker.conf]"]
+      :require => "File[/etc/default/docker]"
     })
   end
 
@@ -23,14 +23,10 @@ describe 'docker'  do
     it 'install docker-engine version 1.8.1 package' do
       should contain_package('docker-engine').with({
         :ensure => '1.8.1',
-        :require => ["File[/etc/default/docker]", "File[/etc/init/docker.conf]"]
+        :require => "File[/etc/default/docker]"
       })
     end
 
-  end
-
-  it 'creates service docker file /etc/init/docker.conf' do
-    should contain_file('/etc/init/docker.conf')
   end
 
   context 'setting all docker options' do
