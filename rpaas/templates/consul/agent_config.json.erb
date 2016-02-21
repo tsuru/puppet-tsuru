@@ -4,9 +4,11 @@
   "bind_addr": "<%= @consul_agent_bind_addr %>",
   "datacenter": "<%= @consul_agent_datacenter %>",
   "data_dir": "<%= @consul_agent_data_dir %>",
+  <%= @consul_agent_encrypt ? "\"encrypt\":\"#{consul_agent_encrypt}\"" : '' %>
   "rejoin_after_leave": true,
   "log_level": "INFO",
   "enable_syslog": true,
   "acl_token":"<%= @consul_acl_token %>",
-  "start_join": <%= @consul_members.to_json %> 
+  "start_join": <%= @consul_members.to_json %>,
+  "disable_update_check": true
 }

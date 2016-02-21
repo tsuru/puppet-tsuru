@@ -28,6 +28,7 @@ class rpaas::install (
   $rpaas_service_name       = undef,
   $rpaas_instance_name      = undef,
   $consul_agent_enable      = false,
+  $consul_agent_encrypt     = undef,
   $consul_agent_data_dir    = '/var/lib/consul',
   $consul_agent_version     = latest,
   $consul_agent_datacenter  = 'dc1',
