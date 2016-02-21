@@ -25,8 +25,9 @@ describe 'gandalf'  do
       :gandalf_user => 'gand_user',
       :gandalf_group => 'gand_group',
       :gandalf_version => '0.1.0',
+      :gandalf_authorized_keys_path => '/my/authorized_keys',
       :tsuru_api_host  => 'api_host',
-      :tsuru_api_token => 'api_token'
+      :tsuru_api_token => 'api_token',
     }
   end
 
@@ -42,7 +43,7 @@ describe 'gandalf'  do
 
   it 'creates file /etc/gandalf.conf' do
     should contain_file('/etc/gandalf.conf').with({
-      :content => /url: foobar:27017.+name: gandalf_db.+location: \/foo\/bar\/repos.+template: \/foo\/bar\/bare.+host: foo.bar.+bind: 0.0.0.0:9000.+uid: gand_user\n/m,
+      :content => /url: foobar:27017.+name: gandalf_db.+location: \/foo\/bar\/repos.+template: \/foo\/bar\/bare.+host: foo.bar.+bind: 0.0.0.0:9000.+uid: gand_user\n\nauthorized-keys-path: \/my\/authorized_keys\n/m,
       :notify => 'Service[gandalf-server]'
     })
   end

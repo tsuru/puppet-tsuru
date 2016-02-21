@@ -15,6 +15,7 @@
 # [gandalf_create_bare_template] Create bare template dir
 # [gandalf_user] Gandalf running user
 # [gandalf_group] Gandalf running group
+# [gandalf_authorized_keys_path] Path to the authorized_keys file
 # [gandalf_version] Gandalf server package version
 # [gandalf_storage_type]   Storage type [archive, swift, s3]
 # [gandalf_storage_venv]   Virtualenv location for swift or s3 storage
@@ -38,6 +39,7 @@ class gandalf (
   $gandalf_user           = 'git',
   $gandalf_group          = 'git',
   $gandalf_user_home      = '/var/lib/gandalf',
+  $gandalf_authorized_keys_path = '/var/lib/gandalf/.ssh/authorized_keys',
   $gandalf_version        = 'latest',
   $gandalf_storage_type   = 'archive',
   $gandalf_storage_venv   = '/var/lib/gandalf/virtualenv',
