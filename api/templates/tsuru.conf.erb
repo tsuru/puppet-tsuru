@@ -128,6 +128,7 @@ docker:
     socket: <%= @docker_bs_socket %>
   segregate: <%= @docker_segregate %>
   <%= @docker_registry ? "registry: #{@docker_registry}" : '' %>
+  <%= @docker_max_layers ? "max-layers: #{@docker_max_layers}" : '' %>
   <%= @docker_port_allocator ? "port-allocator: #{@docker_port_allocator}" : '' %>
   collection: <%= @docker_collection %>
   repository-namespace: <%= @docker_repository_namespace %>

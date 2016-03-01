@@ -97,6 +97,7 @@
 # [docker_deploy_cmd]                          the command that will be called in your platform when a new deploy happens
 # [docker_segregate]                           enable segregate scheduler
 # [docker_registry]                            for tsuru to work with multiple docker nodes, you will need a docker-registry
+# [docker_max_layers]                          number of layers, interval between deployments to use the platform image
 # [docker_port_allocator]                      port allocator to use when running containers
 # [docker_cluster_mongo_url]                   connection URL to the mongodb server used to store information about the docker cluster
 # [docker_mongo_database]                      database name to be used to store information about the docker cluster
@@ -194,6 +195,7 @@ class api::install (
   $tsuru_provisioner = 'docker',
   $docker_segregate = false,
   $docker_registry = undef,
+  $docker_max_layers = undef,
   $docker_port_allocator = undef,
   $docker_bs_image = 'tsuru/bs',
   $docker_bs_reporter_interval = 10,

@@ -136,6 +136,7 @@ describe 'api::install' do
           :docker_bs_socket                          => '/tmp/docker.sock',
           :docker_segregate                          => true,
           :docker_registry                           => 'registry.tsuru.io',
+          :docker_max_layers                         => 42,
           :docker_port_allocator                     => 'tsuru',
           :docker_router                             => 'my_hipache',
           :docker_collection                         => 'docker',
@@ -250,6 +251,7 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    socket: /tmp/docker.sock$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  segregate: true$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  registry: registry.tsuru.io$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  max-layers: 42$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  port-allocator: tsuru$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  router: my_hipache$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  collection: docker$})
