@@ -1,3 +1,3 @@
 #!/bin/bash
 
-touch /tmp/check_fs && rm /tmp/check_fs
+CHECK_RO_FILE=$(mktemp) && rm $CHECK_RO_FILE
