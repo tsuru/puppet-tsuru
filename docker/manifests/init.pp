@@ -18,6 +18,7 @@ class docker (
   $docker_bind                  = [],
   $docker_extra_opts            = '',
   $log_to_syslog                = true,
+  $proxy_url                    = undef
 ) {
 
   if (!is_array($docker_bind)) {
@@ -26,7 +27,7 @@ class docker (
 
   package { 'docker-engine':
     ensure  => $lxc_docker_version,
-    require => File['/etc/default/docker'],
+    require => [ File['/etc/default/docker'], File['/etc/init/docker.conf'] ]
   }
 
   $docker_bind_join = join($docker_bind, ' -H ')
@@ -45,6 +46,14 @@ class docker (
     mode    => '0644',
     owner   => root,
     group   => root
+  }
+
+  file { '/etc/init/docker.conf':
+    ensure  => present,
+    content => template('docker/init-docker.conf.erb'),
+    mode    => '0644',
+    owner   => root,
+    group   => root,
   }
 
 }
