@@ -16,8 +16,7 @@ describe 'docker'  do
     })
   end
 
-  context 'when seting docker version to 1.8.1' do
-
+  context 'when setting docker version to 1.8.1' do
     before { params.merge!( :lxc_docker_version => '1.8.1' ) }
 
     it 'install docker-engine version 1.8.1 package' do
@@ -27,9 +26,36 @@ describe 'docker'  do
       })
     end
 
+    it 'uses -d flag for docker_engine' do
+      should contain_file('/etc/init/docker.conf').with_content(
+        %r{exec "$DOCKER" -d $DOCKER_OPTS 2>&1 | logger -t docker -s}m
+      )
+    end
+  end
+
+  context 'when setting docker version to latest' do
+    before { params.merge!( :lxc_docker_version => 'latest' ) }
+
+    it 'uses daemon flag for docker_engine' do
+      should contain_file('/etc/init/docker.conf').with_content(
+        %r{exec "$DOCKER" daemon $DOCKER_OPTS 2>&1 | logger -t docker -s}m
+      )
+    end
+  end
+
+
+  context 'when setting docker version to 1.10.2' do
+    before { params.merge!( :lxc_docker_version => '1.10.2' ) }
+
+    it 'uses daemon flag for docker_engine' do
+      should contain_file('/etc/init/docker.conf').with_content(
+        %r{exec "$DOCKER" daemon $DOCKER_OPTS 2>&1 | logger -t docker -s}m
+      )
+    end
   end
 
   it 'creates service docker file /etc/init/docker.conf' do
+
     should contain_file('/etc/init/docker.conf')
   end
 

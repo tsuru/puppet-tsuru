@@ -25,6 +25,12 @@ class docker (
     fail('\$docker_bind must be an array')
   }
 
+  if (versioncmp($lxc_docker_version, '1.9.1') <= 0 and $lxc_docker_version != latest){
+    $docker_daemon = '-d'
+  } else {
+    $docker_daemon = 'daemon'
+  }
+
   package { 'docker-engine':
     ensure  => $lxc_docker_version,
     require => [ File['/etc/default/docker'], File['/etc/init/docker.conf'] ]
