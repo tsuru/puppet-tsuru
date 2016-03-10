@@ -10,10 +10,18 @@ describe 'docker'  do
     { :lxc_docker_version => 'latest' }
   end
 
-  it 'install docker-engine package with latest version' do
+  context 'when setting docker version to latest' do
+    it 'install docker-engine package with latest version' do
     should contain_package('docker-engine').with({
       :require => ["File[/etc/default/docker]", "File[/etc/init/docker.conf]"]
     })
+    end
+
+    it 'uses daemon flag for docker_engine' do
+      should contain_file('/etc/init/docker.conf').with_content(
+        %r{exec "$DOCKER" daemon $DOCKER_OPTS 2>&1 | logger -t docker -s}m
+      )
+    end
   end
 
   context 'when setting docker version to 1.8.1' do
@@ -32,17 +40,6 @@ describe 'docker'  do
       )
     end
   end
-
-  context 'when setting docker version to latest' do
-    before { params.merge!( :lxc_docker_version => 'latest' ) }
-
-    it 'uses daemon flag for docker_engine' do
-      should contain_file('/etc/init/docker.conf').with_content(
-        %r{exec "$DOCKER" daemon $DOCKER_OPTS 2>&1 | logger -t docker -s}m
-      )
-    end
-  end
-
 
   context 'when setting docker version to 1.10.2' do
     before { params.merge!( :lxc_docker_version => '1.10.2' ) }
