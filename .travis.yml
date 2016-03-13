@@ -1,5 +1,6 @@
 sudo: false
 language: ruby
+bundler_args: --without development
 rvm:
   - 2.0.0
 script: bundle exec rake spec SPEC_OPTS='--color --format documentation'
