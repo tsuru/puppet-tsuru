@@ -23,11 +23,11 @@ class registry (
   ){
 
   class { 'docker':
-    lxc_docker_version           => $lxc_docker_version,
-    docker_graph_dir             => $docker_graph_dir,
-    docker_bind                  => $docker_bind,
-    docker_extra_opts            => $docker_extra_opts,
-    proxy_url                    => $proxy_url,
+    lxc_docker_version => $lxc_docker_version,
+    docker_graph_dir   => $docker_graph_dir,
+    docker_bind        => $docker_bind,
+    docker_extra_opts  => $docker_extra_opts,
+    proxy_url          => $proxy_url,
   }
 
   exec { 'install registry':

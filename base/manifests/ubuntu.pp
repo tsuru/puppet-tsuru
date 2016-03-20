@@ -34,16 +34,16 @@ class base::ubuntu inherits base {
 
   if ($base::redis_source_list) {
     apt::source { 'redis':
-      location      => $base::redis_source_list,
-      include_src   => false,
-      repos         => 'main',
-      release       => $base::redis_release,
-      require       => Apt::Key['tsuru']
+      location    => $base::redis_source_list,
+      include_src => false,
+      repos       => 'main',
+      release     => $base::redis_release,
+      require     => Apt::Key['tsuru']
     }
   } else {
     apt::ppa { 'ppa:tsuru/redis-server':
-      release     => $base::redis_release,
-      require     => Apt::Key['tsuru']
+      release => $base::redis_release,
+      require => Apt::Key['tsuru']
     }
   }
 
@@ -57,8 +57,8 @@ class base::ubuntu inherits base {
     }
   } else {
     apt::ppa { 'ppa:tsuru/ppa':
-      release     => $base::tsuru_release,
-      require     => Apt::Key['tsuru']
+      release => $base::tsuru_release,
+      require => Apt::Key['tsuru']
     }
   }
 
@@ -74,8 +74,8 @@ class base::ubuntu inherits base {
       }
     } else {
       apt::ppa { 'ppa:tsuru/rc':
-        release     => $base::tsuru_rc_release,
-        require     => Apt::Key['tsuru']
+        release => $base::tsuru_rc_release,
+        require => Apt::Key['tsuru']
       }
     }
   }

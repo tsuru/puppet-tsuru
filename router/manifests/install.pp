@@ -59,8 +59,8 @@ class router::install (
     }
 
     package { 'node-hipache' :
-      ensure  => $router_hipache_package_version,
-      notify  => Service['hipache']
+      ensure => $router_hipache_package_version,
+      notify => Service['hipache']
     }
 
     service { 'hipache':
@@ -119,8 +119,8 @@ class router::install (
   if ($router_service_hchecker_enable) {
 
     package { 'hipache-hchecker' :
-      ensure  => $router_hchecker_package_version,
-      notify  => Service['hipache-hchecker']
+      ensure => $router_hchecker_package_version,
+      notify => Service['hipache-hchecker']
     }
 
     service { 'hipache-hchecker':

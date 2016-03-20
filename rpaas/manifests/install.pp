@@ -85,9 +85,9 @@ class rpaas::install (
     }
 
     file { '/usr/local/bin/check_ro_fs.sh':
-      ensure  => file,
-      mode    => '0755',
-      source  => 'puppet:///modules/rpaas/check_ro_fs.sh'
+      ensure => file,
+      mode   => '0755',
+      source => 'puppet:///modules/rpaas/check_ro_fs.sh'
     }
 
   }
@@ -132,11 +132,11 @@ class rpaas::install (
       require => File['/etc/consul-template.d/templates']
     }
 
-    block_file { "server":
+    block_file { 'server':
       block_type => 'server'
     }
 
-    block_file { "http":
+    block_file { 'http':
       block_type => 'http'
     }
 

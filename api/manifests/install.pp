@@ -74,7 +74,8 @@
 #
 # - Router configuration
 #
-# [routers]                       hash params for desired router. Format: { 'router_name' => { 'type' => <galeb|hipache>, <galeb|hipache params as follow> }}
+# [routers]                       hash params for desired router. Format:
+#                                 { 'router_name' => { 'type' => <galeb|hipache>, <galeb|hipache params as # follow> }}
 # [hipache_redis_server]          redis server used by Hipache router
 # [hipache_domain]                the domain of the server running your Hipache server
 # [galeb_api_url]                 the url for the Galeb manager api.
@@ -104,12 +105,14 @@
 # [docker_run_cmd_bin]                         the command that will be called on the application image to start the application
 # [docker_run_cmd_port]                        the tcp port that will be exported by the container to the node network
 # [docker_user]                                the user which runs processes on containers
-# [docker_healing_heal_nodes]                  boolean value that indicates whether tsuru should try to heal nodes that have failed a specified number of times
+# [docker_healing_heal_nodes]                  boolean value that indicates whether tsuru should try to heal nodes that have failed a 
+#                                              specified number of times
 # [docker_healing_active_monitoring_interval]  number of seconds between calls to <server>/_ping in each one of the docker nodes
 # [docker_healing_disabled_time]               number of seconds tsuru disables a node after a failure
 # [docker_healing_max_failures]                number of consecutive failures a node should have before triggering a healing operation
 # [docker_healing_wait_new_time]               number of seconds tsuru should wait for the creation of a new node during the healing process
-# [docker_healing_heal_containers_timeout]     number of seconds a container should be unresponsive before triggering the recreation of the container
+# [docker_healing_heal_containers_timeout]     number of seconds a container should be unresponsive before triggering the recreation of 
+#                                              the container
 # [docker_healing_events_collection]           collection name in mongodb used to store information about triggered healing events
 # [docker_healthcheck_max_time]                maximum time in seconds to wait for deployment time health check to be successful
 # [docker_image_history_size]                  number of images available for rollback using tsuru app-deploy-rollback
@@ -129,7 +132,8 @@
 # [ec2_secret_key]            AWS secret key
 # [ec2_wait_timeout]          seconds to wait for machine to become up (defaults to 300s)
 # [ec2_user_data]             custom url for ec2 userdata (defaults to script on tsuru now installation)
-# [custom_iaas]               hash params to custom iaas with custom name as key. Format: { custom_iaas_id => { provider => <ec2|cloudstack>, <ec2|cloudstack params> }}
+# [custom_iaas]               hash params to custom iaas with custom name as key. Format: 
+#                             { custom_iaas_id => { provider => <ec2|cloudstack>, <ec2|cloudstack params> }}
 #
 # - Debug configuration
 #
@@ -190,7 +194,8 @@ class api::install (
   $tsuru_apps_per_user = undef,
   $tsuru_units_per_app = undef,
 
-  $routers = { 'my_hipache' => { 'router_type' => 'hipache', 'hipache_domain' => 'cloud.tsuru.io', 'hipache_redis_server' => 'localhost:6379' }},
+  $routers = { 'my_hipache' => { 'router_type' => 'hipache', 'hipache_domain' => 'cloud.tsuru.io',
+                                  'hipache_redis_server' => 'localhost:6379' }},
 
   $tsuru_provisioner = 'docker',
   $docker_segregate = false,
@@ -298,11 +303,11 @@ class api::install (
 
   # Services
   service { 'tsuru-server-api' :
-    ensure     => running,
-    enable     => true,
-    provider   => $api::service_provider,
-    subscribe  => [ File['/etc/tsuru/tsuru.conf'], File[$api::init_file_name], Package['tsuru-server'] ],
-    require    => Package['tsuru-server']
+    ensure    => running,
+    enable    => true,
+    provider  => $api::service_provider,
+    subscribe => [ File['/etc/tsuru/tsuru.conf'], File[$api::init_file_name], Package['tsuru-server'] ],
+    require   => Package['tsuru-server']
   }
 
 }
