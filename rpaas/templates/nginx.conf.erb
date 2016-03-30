@@ -90,8 +90,8 @@ http {
 <% end -%>
 
     server {
-        listen <%= @nginx_listen %>;
-        listen <%= @nginx_ssl_listen %> ssl spdy;
+        listen <%= @nginx_listen %> default_server;
+        listen <%= @nginx_ssl_listen %> ssl http2 default_server;
 
 <% if @nginx_mechanism == 'dav' -%>
         ssl_certificate /etc/nginx/sites-enabled/dav/ssl/nginx.crt;
