@@ -32,9 +32,6 @@ describe 'rpaas::install' do
       should contain_class('base')
       should contain_class('rpaas::install')
       should contain_class('rpaas')
-      should contain_class('sudo::package')
-      should contain_class('sudo::params')
-      should contain_class('sudo')
     end
 
     it do
@@ -45,7 +42,6 @@ describe 'rpaas::install' do
       should contain_apt__source('docker')
       should contain_apt_key('docker')
       should contain_apt_key('tsuru')
-      should contain_sudo__conf('www-data')
     end
 
     it do
@@ -56,7 +52,6 @@ describe 'rpaas::install' do
     it do
       should contain_package('nginx-extras')
       should contain_package('software-properties-common')
-      should contain_package('sudo')
     end
 
     # test files
@@ -64,7 +59,6 @@ describe 'rpaas::install' do
       should contain_file('/etc/apt/apt.conf.d/15update-stamp')
       should contain_file('/etc/apt/sources.list.d/tsuru-ppa-trusty.list')
       should contain_file('/etc/apt/sources.list.d/tsuru-redis-server-trusty.list')
-      should contain_file('/etc/nginx/sites-enabled/dav/ssl')
       should contain_file('/etc/nginx/sites-enabled/default')
       should contain_file('/etc/nginx/sites-enabled')
       should contain_file('01proxy')
@@ -74,15 +68,9 @@ describe 'rpaas::install' do
       should contain_file('preferences.d')
       should contain_file('sources.list.d')
       should contain_file('sources.list')
-      should contain_file('/etc/nginx/sites-enabled/dav/ssl/nginx.crt')
-      should contain_file('/etc/nginx/sites-enabled/dav/ssl/nginx.key')
-      should contain_file('/etc/nginx/sites-enabled/dav')
-      should contain_file('/etc/sudoers.d/')
-      should contain_file('/etc/sudoers')
-      should contain_file('10_www-data')
     end
 
-    context "generating nginx.conf with dav backend" do
+    context "generating nginx.conf" do
       let :params do
         {
           :nginx_user => "foobar",
@@ -100,7 +88,7 @@ describe 'rpaas::install' do
         }
       end
 
-      server_dav_purge_entry = <<"EOF"
+      server_purge_entry = <<"EOF"
     server {
         listen     8081;
         server_name  _tsuru_nginx_admin;
@@ -116,19 +104,6 @@ describe 'rpaas::install' do
             proxy_cache_purge  rpaas $1$is_args$args;
         }
 
-        location /reload {
-            content_by_lua "ngx.print(os.execute('sudo service nginx reload'))";
-        }
-
-        location /dav {
-            allow           10.0.0.1;
-            allow           10.0.2.3;
-            deny            all;
-            root            /etc/nginx/sites-enabled;
-            dav_methods     PUT DELETE;
-            create_full_put_path    on;
-            dav_access      group:rw all:r;
-        }
     }
 EOF
 
@@ -137,8 +112,8 @@ EOF
       end
 
 
-      it 'dav and purge custom location with ip restriction' do
-        should contain_file('/etc/nginx/nginx.conf').with_content(/#{Regexp.escape(server_dav_purge_entry)}/)
+      it 'purge custom location with ip restriction' do
+        should contain_file('/etc/nginx/nginx.conf').with_content(/#{Regexp.escape(server_purge_entry)}/)
       end
 
       it 'custom error pages for 40X and 50X errors with proxy_intercept errors' do
@@ -163,7 +138,6 @@ EOF
       should contain_exec('ssl')
       should contain_exec('add-apt-repository-ppa:tsuru/ppa')
       should contain_exec('add-apt-repository-ppa:tsuru/redis-server')
-      should contain_exec('sudo-syntax-check for file /etc/sudoers.d/10_www-data')
     end
 
   end
@@ -171,7 +145,6 @@ EOF
   context 'using consul backend' do
     let :params do
       {
-        :nginx_mechanism      => 'consul',
         :consul_server        => 'foo.bar:8500',
         :consul_acl_token     => '0000-1111',
         :rpaas_service_name   => 'rpaas_fe',
