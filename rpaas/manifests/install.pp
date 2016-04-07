@@ -17,6 +17,7 @@ class rpaas::install (
   $nginx_custom_error_dir   = undef,
   $nginx_custom_error_codes = {},
   $nginx_intercept_errors   = false,
+  $nginx_local_log          = true,
   $nginx_syslog_server      = undef,
   $nginx_syslog_tag         = undef,
   $nginx_mechanism          = 'dav',

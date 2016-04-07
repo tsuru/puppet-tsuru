@@ -21,8 +21,10 @@ http {
       'Agent:\t$http_user_agent\t'
       'Fwd:\t$http_x_forwarded_for';
 
+<% if @nginx_local_log -%>
     access_log /var/log/nginx/access.log main;
     error_log  /var/log/nginx/error.log;
+<% end -%>
 
 <% if @nginx_syslog_server -%>
     access_log syslog:server=<%= @nginx_syslog_server %>,facility=local6,tag=<%= @nginx_syslog_tag ? @nginx_syslog_tag : 'rpaas' %> main;
