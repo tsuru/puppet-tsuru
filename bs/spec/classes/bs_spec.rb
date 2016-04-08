@@ -1,0 +1,57 @@
+require 'spec_helper'
+
+describe 'bs'  do
+
+  let :facts do
+    { :osfamily => 'Debian', :operatingsystem => 'Ubuntu', :lsbdistid => 'Ubuntu', :lsbdistcodename => 'precise' }
+  end
+
+  let :params do
+    {}
+  end
+
+	it do
+	  should contain_class('bs')
+	end
+
+	context 'when not setting bs version' do
+		it 'pull latest image' do
+			should contain_exec('install bs').with({
+				:command => '/usr/bin/docker pull tsuru/bs:latest'
+			})
+		end
+
+		it 'starts the latest image' do
+			should contain_exec('start bs').with({
+				:command => "/usr/bin/docker run -d --restart='always' --name='big-sibling'  tsuru/bs:latest"
+			})
+		end
+
+	end
+
+	context 'when setting bs version to v1' do
+		before { params.merge!( :version => 'v1' ) }
+		it 'pull image v1' do
+			should contain_exec('install bs').with({
+				:command => '/usr/bin/docker pull tsuru/bs:v1'
+			})
+		end
+
+		it 'starts the v1 image' do
+			should contain_exec('start bs').with({
+				:command => "/usr/bin/docker run -d --restart='always' --name='big-sibling'  tsuru/bs:v1"
+			})
+		end
+	end
+
+	context 'when setting configurations' do
+		before {params.merge!( :log_backends => 'tsuru', :metrics_backend => 'logstash')}
+		it 'runs bs with the environment configuration' do
+			should contain_exec('start bs').with({
+				:command => "/usr/bin/docker run -d --restart='always' --name='big-sibling' \
+-e LOG_BACKENDS=tsuru -e METRICS_BACKEND=logstash tsuru/bs:latest"
+			})
+		end
+	end
+
+end

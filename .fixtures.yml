@@ -23,3 +23,4 @@ fixtures:
         "registry": "#{source_dir}/registry"
         "router": "#{source_dir}/router"
         "rpaas": "#{source_dir}/rpaas"
+        "bs": "#{source_dir}/bs"
