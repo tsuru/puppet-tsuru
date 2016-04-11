@@ -86,8 +86,21 @@ describe 'bs'  do
 		it 'should not stop the container' do
 			should_not contain_exec('stop')
 		end
-		it 'should not remove the container' do 
-			should_not contain_exec('remove')
+	end
+
+	context 'when is already running and envs are different' do
+		before {
+			facts.merge!( :bs_is_running => true, 
+			:bs_envs_hash => { 
+				'DOCKER_ENDPOINT' => 'unix:///var/run/docker.sock', 
+				'HOST_PROC' => ''
+			},
+			:bs_image => "tsuru/bs:v2"
+			)
+			params.merge!(:image => 'tsuru/bs:v2', :host_proc => '/prochost')
+		}
+		it 'should not stop the container' do
+			should contain_exec('stop')
 		end
 	end
 end

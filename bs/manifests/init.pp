@@ -73,26 +73,25 @@ class bs (
     path    => '/usr/bin',
     require => Class['docker']
   }
-  
-  $should_restart = ($image != $::bs_image) and $::bs_is_running
 
-  if $should_restart {
+  $should_restart = ($image != $::bs_image) or (values($env_map) != values($::bs_envs_hash))
+  if $should_restart and $::bs_is_running {
     exec { 'stop':
       command => '/usr/bin/docker stop big-sibling',
       path    => '/usr/bin',
       require => Exec['pull image']
     }
   }
-  
-  if !$::bs_is_running {
-    exec { 'remove':
-      command => '/usr/bin/docker rm big-sibling',
-      path    => '/usr/bin',
-    }
+    
+  exec { 'remove':
+    command => '/usr/bin/docker rm big-sibling',
+    path    => '/usr/bin',
+    unless  => '/usr/bin/docker inspect --format="{{ .State.Running }}" big-sibling'
+  }
 
-    exec { 'run':
-      command => "/usr/bin/docker run -d --restart='always' --name='big-sibling' ${proc_volume} ${env} ${image}",
-      path    =>  '/usr/bin',
-    }
+  exec { 'run':
+    command => "/usr/bin/docker run -d --restart='always' --name='big-sibling' ${proc_volume} ${env} ${image}",
+    path    =>  '/usr/bin',
+    unless  => '/usr/bin/docker inspect --format="{{ .State.Running }}" big-sibling'
   }
 }
