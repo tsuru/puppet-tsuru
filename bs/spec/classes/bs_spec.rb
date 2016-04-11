@@ -14,7 +14,7 @@ describe 'bs'  do
 	  should contain_class('bs')
 	end
 
-	context 'when not setting bs version' do
+	context 'without version' do
 		it 'pull latest image' do
 			should contain_exec('pull image').with({
 				:command => '/usr/bin/docker pull tsuru/bs:latest'
@@ -57,17 +57,37 @@ describe 'bs'  do
 		end
 	end
 
-	context 'when bs is already running' do
-		before {facts.merge!( :bs_is_running => true)}
+	context 'when is already running and images are different' do
+		before {facts.merge!( :bs_is_running => true, :bs_image => 'tsuru/bs:v0')}
 		it 'stops bs' do
 			should contain_exec('stop')
 		end
 	end
 
-	context 'when bs is not already running' do
+	context 'when is not already running' do
 		before {facts.merge!( :bs_is_running => false)}
 		it 'shouldnt try to stop bs' do
 			should_not contain_exec('stop')
+		end
+	end
+
+	context 'when is already running and images are equal' do
+		before {
+			facts.merge!( :bs_is_running => true, 
+			:bs_envs_hash => { 
+				'DOCKER_ENDPOINT' => 'unix:///var/run/docker.sock', 
+				'HOST_PROC' => '/prochost'
+			},
+			:bs_image => "tsuru/bs:v2"
+			)
+			params.merge!(:image => 'tsuru/bs:v2')
+		}
+
+		it 'should not stop the container' do
+			should_not contain_exec('stop')
+		end
+		it 'should not remove the container' do 
+			should_not contain_exec('remove')
 		end
 	end
 end

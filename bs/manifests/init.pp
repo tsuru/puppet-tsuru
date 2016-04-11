@@ -34,7 +34,7 @@ class bs (
   $host_proc                        = '/prochost',
   ){
 
-  $envMap = {
+  $env_map = delete_undef_values({
     'LOG_BACKENDS'                  => $log_backends,
     'LOG_TSURU_BUFFER_SIZE'         => $log_tsuru_buffer_size,
     'LOG_TSURU_PING_INTERVAL'       => $log_tsuru_ping_interval,
@@ -58,9 +58,9 @@ class bs (
     'DOCKER_ENDPOINT'               => $docker_endpoint,
     'SYSLOG_LISTEN_ADDRESS'         => $syslog_listen_address,
     'HOST_PROC'                     => $host_proc,
-  }
+  })
 
-  $env = join(prefix(join_keys_to_values(delete_undef_values($envMap), '='), '-e '), ' ')
+  $env = join(prefix(join_keys_to_values($env_map, '='), '-e '), ' ')
 
   if $host_proc {
     $proc_volume = "-v /proc:${host_proc}:ro"
@@ -73,27 +73,26 @@ class bs (
     path    => '/usr/bin',
     require => Class['docker']
   }
+  
+  $should_restart = ($image != $::bs_image) and $::bs_is_running
 
-  if $::bs_is_running {
+  if $should_restart {
     exec { 'stop':
-        command => '/usr/bin/docker stop big-sibling',
-        path    => '/usr/bin',
-        require => Exec['pull image'],
-        before  => Exec['remove']
-      }
+      command => '/usr/bin/docker stop big-sibling',
+      path    => '/usr/bin',
+      require => Exec['pull image']
+    }
   }
+  
+  if !$::bs_is_running {
+    exec { 'remove':
+      command => '/usr/bin/docker rm big-sibling',
+      path    => '/usr/bin',
+    }
 
-  exec { 'remove':
-    command => '/usr/bin/docker rm big-sibling',
-    path    => '/usr/bin',
-    onlyif  => '/usr/bin/docker inspect big-sibling',
-    require => Exec['pull image']
+    exec { 'run':
+      command => "/usr/bin/docker run -d --restart='always' --name='big-sibling' ${proc_volume} ${env} ${image}",
+      path    =>  '/usr/bin',
+    }
   }
-
-  exec { 'run':
-    command => "/usr/bin/docker run -d --restart='always' --name='big-sibling' ${proc_volume} ${env} ${image}",
-    path    =>  '/usr/bin',
-    require => Exec['install']
-  }
-
 }
