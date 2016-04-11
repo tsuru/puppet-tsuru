@@ -68,17 +68,32 @@ class bs (
     $proc_volume = ''
   }
 
-  exec { 'install bs':
+  exec { 'pull image':
     command => "/usr/bin/docker pull ${image}",
     path    => '/usr/bin',
     require => Class['docker']
   }
 
-  exec { 'start bs':
+  if $::bs_is_running {
+    exec { 'stop':
+        command => '/usr/bin/docker stop big-sibling',
+        path    => '/usr/bin',
+        require => Exec['pull image'],
+        before  => Exec['remove']
+      }
+  }
+
+  exec { 'remove':
+    command => '/usr/bin/docker rm big-sibling',
+    path    => '/usr/bin',
+    onlyif  => '/usr/bin/docker inspect big-sibling',
+    require => Exec['pull image']
+  }
+
+  exec { 'run':
     command => "/usr/bin/docker run -d --restart='always' --name='big-sibling' ${proc_volume} ${env} ${image}",
     path    =>  '/usr/bin',
-    unless  =>  '/usr/bin/docker inspect --format="{{ .State.Running }}" $(docker ps -q)',
-    require => Exec['install bs']
+    require => Exec['install']
   }
 
 }

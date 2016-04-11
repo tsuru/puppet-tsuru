@@ -16,13 +16,13 @@ describe 'bs'  do
 
 	context 'when not setting bs version' do
 		it 'pull latest image' do
-			should contain_exec('install bs').with({
+			should contain_exec('pull image').with({
 				:command => '/usr/bin/docker pull tsuru/bs:latest'
 			})
 		end
 
 		it 'starts the latest image' do
-			should contain_exec('start bs').with({
+			should contain_exec('run').with({
 				:command => "/usr/bin/docker run -d --restart='always' --name='big-sibling' -v /proc:/prochost:ro -e DOCKER_ENDPOINT=unix:///var/run/docker.sock \
 -e HOST_PROC=/prochost tsuru/bs:latest"
 			})
@@ -33,13 +33,13 @@ describe 'bs'  do
 	context 'when setting bs image to v1' do
 		before { params.merge!( :image => 'tsuru/bs:v1' ) }
 		it 'pull v1 image' do
-			should contain_exec('install bs').with({
+			should contain_exec('pull image').with({
 				:command => '/usr/bin/docker pull tsuru/bs:v1'
 			})
 		end
 
 		it 'starts the v1 image' do
-			should contain_exec('start bs').with({
+			should contain_exec('run').with({
 				:command => "/usr/bin/docker run -d --restart='always' --name='big-sibling' -v /proc:/prochost:ro -e DOCKER_ENDPOINT=unix:///var/run/docker.sock \
 -e HOST_PROC=/prochost tsuru/bs:v1"
 			})
@@ -49,7 +49,7 @@ describe 'bs'  do
 	context 'when setting configurations' do
 		before {params.merge!( :log_backends => 'tsuru', :metrics_backend => 'logstash')}
 		it 'runs bs with the environment configuration' do
-			should contain_exec('start bs').with({
+			should contain_exec('run').with({
 				:command => "/usr/bin/docker run -d --restart='always' --name='big-sibling' \
 -v /proc:/prochost:ro -e LOG_BACKENDS=tsuru -e METRICS_BACKEND=logstash -e DOCKER_ENDPOINT=unix:///var/run/docker.sock \
 -e HOST_PROC=/prochost tsuru/bs:latest"
@@ -57,4 +57,17 @@ describe 'bs'  do
 		end
 	end
 
+	context 'when bs is already running' do
+		before {facts.merge!( :bs_is_running => true)}
+		it 'stops bs' do
+			should contain_exec('stop')
+		end
+	end
+
+	context 'when bs is not already running' do
+		before {facts.merge!( :bs_is_running => false)}
+		it 'shouldnt try to stop bs' do
+			should_not contain_exec('stop')
+		end
+	end
 end
