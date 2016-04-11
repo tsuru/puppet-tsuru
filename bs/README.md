@@ -13,3 +13,5 @@ Puppet module for big-sibling installation
 
 # Full Parameters list
 
+For details on each of those parameters, check https://github.com/tsuru/bs#environment-variables.
+

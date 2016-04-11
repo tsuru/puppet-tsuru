@@ -23,7 +23,7 @@ describe 'bs'  do
 
 		it 'starts the latest image' do
 			should contain_exec('start bs').with({
-				:command => "/usr/bin/docker run -d --restart='always' --name='big-sibling' -e DOCKER_ENDPOINT=unix:///var/run/docker.sock \
+				:command => "/usr/bin/docker run -d --restart='always' --name='big-sibling' -v /proc:/prochost:ro -e DOCKER_ENDPOINT=unix:///var/run/docker.sock \
 -e HOST_PROC=/prochost tsuru/bs:latest"
 			})
 		end
@@ -40,7 +40,7 @@ describe 'bs'  do
 
 		it 'starts the v1 image' do
 			should contain_exec('start bs').with({
-				:command => "/usr/bin/docker run -d --restart='always' --name='big-sibling' -e DOCKER_ENDPOINT=unix:///var/run/docker.sock \
+				:command => "/usr/bin/docker run -d --restart='always' --name='big-sibling' -v /proc:/prochost:ro -e DOCKER_ENDPOINT=unix:///var/run/docker.sock \
 -e HOST_PROC=/prochost tsuru/bs:v1"
 			})
 		end
@@ -51,7 +51,7 @@ describe 'bs'  do
 		it 'runs bs with the environment configuration' do
 			should contain_exec('start bs').with({
 				:command => "/usr/bin/docker run -d --restart='always' --name='big-sibling' \
--e LOG_BACKENDS=tsuru -e METRICS_BACKEND=logstash -e DOCKER_ENDPOINT=unix:///var/run/docker.sock \
+-v /proc:/prochost:ro -e LOG_BACKENDS=tsuru -e METRICS_BACKEND=logstash -e DOCKER_ENDPOINT=unix:///var/run/docker.sock \
 -e HOST_PROC=/prochost tsuru/bs:latest"
 			})
 		end

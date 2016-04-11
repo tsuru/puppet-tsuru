@@ -5,8 +5,7 @@
 #
 # === Parameters
 #
-# [log_backends] comma separated list of enabled log backends Eg 'tsuru,syslog'
-# [metrics_backend]
+# https://github.com/tsuru/bs#environment-variables
 
 class bs (
   $image                            = 'tsuru/bs:latest',
@@ -63,6 +62,12 @@ class bs (
 
   $env = join(prefix(join_keys_to_values(delete_undef_values($envMap), '='), '-e '), ' ')
 
+  if $host_proc {
+    $proc_volume = "-v /proc:${host_proc}:ro"
+  } else {
+    $proc_volume = ''
+  }
+
   exec { 'install bs':
     command => "/usr/bin/docker pull ${image}",
     path    => '/usr/bin',
@@ -70,7 +75,7 @@ class bs (
   }
 
   exec { 'start bs':
-    command => "/usr/bin/docker run -d --restart='always' --name='big-sibling' ${env} ${image}",
+    command => "/usr/bin/docker run -d --restart='always' --name='big-sibling' ${proc_volume} ${env} ${image}",
     path    =>  '/usr/bin',
     unless  =>  '/usr/bin/docker inspect --format="{{ .State.Running }}" $(docker ps -q)',
     require => Exec['install bs']
