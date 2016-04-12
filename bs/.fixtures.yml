@@ -1,19 +1,10 @@
 fixtures:
   forge_modules:
-    base:
-      repo: "tsuru/base"
-      ref: 0.0.9
     docker:
       repo: "tsuru/docker"
       ref: 0.0.21
-    sudo:
-      repo: "saz/sudo"
-      ref: 3.0.6
     stdlib:
       repo: "puppetlabs/stdlib"
       ref: 4.3.2
-    apt:
-      repo: "puppetlabs/apt"
-      ref: 1.7.0
   symlinks:
     "bs": "#{source_dir}"
