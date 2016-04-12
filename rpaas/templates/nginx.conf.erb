@@ -75,7 +75,7 @@ http {
 
     server {
         listen <%= @nginx_listen %> default_server;
-        listen <%= @nginx_ssl_listen %> ssl http2 default_server;
+        listen <%= @nginx_ssl_listen %> ssl default_server;
 
         ssl_certificate /etc/nginx/certs/nginx.crt;
         ssl_certificate_key /etc/nginx/certs/nginx.key;
