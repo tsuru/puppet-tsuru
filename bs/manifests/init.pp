@@ -78,23 +78,23 @@ class bs (
   $inspect_bs = 'docker inspect --format="{{range .Config.Env}}{{println .}}{{end}}{{.Config.Image}}" big-sibling'
   $conf_changed = "${inspect_bs} 2> /dev/null | grep -v 'PATH' | grep -v -e '^\$' | xargs | grep -c -v '${env_st} ${image}'"
 
-  exec { 'pull image':
+  exec { 'pull bs image':
     command => "docker pull ${image}",
     path    => '/usr/bin',
     require => Class['docker']
   } ->
-  exec { 'stop':
+  exec { 'stop bs container':
     command => 'docker stop big-sibling',
     path    => ['/usr/bin', '/bin'],
     onlyif  => [$conf_changed, $bs_running],
   } ->
-  exec { 'remove':
+  exec { 'remove bs container':
     command => 'docker rm big-sibling',
     path    => ['/usr/bin', '/bin'],
     onlyif  => $inspect_bs,
     unless  => $bs_running,
   } ->
-  exec { 'run':
+  exec { 'run bs container':
     command => "docker run -d --privileged --net='host' --restart='always' --name='big-sibling' \
 ${socket_volume} ${proc_volume} ${env} ${image}",
     path    =>  ['/usr/bin', '/bin'],

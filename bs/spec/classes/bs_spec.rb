@@ -16,13 +16,13 @@ describe 'bs'  do
 
 	context 'without version' do
 		it 'pull latest image' do
-			should contain_exec('pull image').with({
+			should contain_exec('pull bs image').with({
 				:command => 'docker pull tsuru/bs:latest'
 			})
 		end
 
 		it 'starts the latest image' do
-			should contain_exec('run').with({
+			should contain_exec('run bs container').with({
 				:command => "docker run -d --privileged --net='host' --restart='always' --name='big-sibling' \
 -v /var/run/docker.sock:/var/run/docker.sock:rw -v /proc:/prochost:ro \
 -e DOCKER_ENDPOINT=unix:///var/run/docker.sock -e HOST_PROC=/prochost tsuru/bs:latest"
@@ -34,13 +34,13 @@ describe 'bs'  do
 	context 'when setting bs image to v1' do
 		before { params.merge!( :image => 'tsuru/bs:v1' ) }
 		it 'pull v1 image' do
-			should contain_exec('pull image').with({
+			should contain_exec('pull bs image').with({
 				:command => 'docker pull tsuru/bs:v1'
 			})
 		end
 
 		it 'starts the v1 image' do
-			should contain_exec('run').with({
+			should contain_exec('run bs container').with({
 				:command => "docker run -d --privileged --net='host' --restart='always' --name='big-sibling' \
 -v /var/run/docker.sock:/var/run/docker.sock:rw -v /proc:/prochost:ro \
 -e DOCKER_ENDPOINT=unix:///var/run/docker.sock -e HOST_PROC=/prochost tsuru/bs:v1"
@@ -51,7 +51,7 @@ describe 'bs'  do
 	context 'when setting configurations' do
 		before {params.merge!( :log_backends => 'tsuru', :metrics_backend => 'logstash')}
 		it 'runs bs with the environment configuration' do
-			should contain_exec('run').with({
+			should contain_exec('run bs container').with({
 				:command => "docker run -d --privileged --net='host' --restart='always' --name='big-sibling' \
 -v /var/run/docker.sock:/var/run/docker.sock:rw -v /proc:/prochost:ro \
 -e LOG_BACKENDS=tsuru -e METRICS_BACKEND=logstash -e DOCKER_ENDPOINT=unix:///var/run/docker.sock \
