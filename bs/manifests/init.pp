@@ -35,7 +35,7 @@ class bs (
 
   $docker_socket = '/var/run/docker.sock'
   $socket_volume = "-v ${docker_socket}:/var/run/docker.sock:rw"
-  
+
   $env_map = delete_undef_values({
     'LOG_BACKENDS'                  => $log_backends,
     'LOG_TSURU_BUFFER_SIZE'         => $log_tsuru_buffer_size,
@@ -73,7 +73,7 @@ class bs (
 
   # returns 0 if bs is running
   $bs_running = 'docker ps -f name=big-sibling --format="{{.Names}}" | grep -c big-sibling'
-  
+
   # returns 0 if bs is running with diferent envs or image
   $inspect_bs = 'docker inspect --format="{{range .Config.Env}}{{println .}}{{end}}{{.Config.Image}}" big-sibling'
   $conf_changed = "${inspect_bs} 2> /dev/null | grep -v 'PATH' | grep -v -e '^\$' | xargs | grep -c -v '${env_st} ${image}'"
