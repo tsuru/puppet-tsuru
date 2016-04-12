@@ -1,0 +1,10 @@
+fixtures:
+  forge_modules:
+    docker:
+      repo: "tsuru/docker"
+      ref: 0.0.21
+    stdlib:
+      repo: "puppetlabs/stdlib"
+      ref: 4.3.2
+  symlinks:
+    "bs": "#{source_dir}"
