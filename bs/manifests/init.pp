@@ -29,10 +29,11 @@ class bs (
   $hostcheck_extra_paths            = undef,
   $tsuru_endpoint                   = undef,
   $tsuru_token                      = undef,
-  $docker_endpoint                  = 'unix:///var/run/docker.sock',
   $syslog_listen_address            = undef,
   $host_proc                        = '/prochost',
   ){
+
+  $docker_socket = '/var/run/docker.sock'
 
   $env_map = delete_undef_values({
     'LOG_BACKENDS'                  => $log_backends,
@@ -55,7 +56,7 @@ class bs (
     'HOSTCHECK_EXTRA_PATHS'         => $hostcheck_extra_paths,
     'TSURU_ENDPOINT'                => $tsuru_endpoint,
     'TSURU_TOKEN'                   => $tsuru_token,
-    'DOCKER_ENDPOINT'               => $docker_endpoint,
+    'DOCKER_ENDPOINT'               => "unix://${docker_socket}",
     'SYSLOG_LISTEN_ADDRESS'         => $syslog_listen_address,
     'HOST_PROC'                     => $host_proc,
   })
@@ -67,6 +68,12 @@ class bs (
     $proc_volume = "-v /proc:${host_proc}:ro"
   } else {
     $proc_volume = ''
+  }
+
+  if $docker_socket {
+    $socket_volume = "-v ${docker_socket}:/var/run/docker.sock:rw"
+  } else {
+    $socket_volume = ''
   }
 
   # returns 0 if bs is running
@@ -93,7 +100,8 @@ class bs (
     unless  => $bs_running,
   } ->
   exec { 'run':
-    command => "docker run -d --restart='always' --name='big-sibling' ${proc_volume} ${env} ${image}",
+    command => "docker run -d --privileged --net='host' --restart='always' --name='big-sibling' \
+${socket_volume} ${proc_volume} ${env} ${image}",
     path    =>  ['/usr/bin', '/bin'],
     unless  => $bs_running,
   }

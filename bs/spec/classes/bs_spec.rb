@@ -23,8 +23,9 @@ describe 'bs'  do
 
 		it 'starts the latest image' do
 			should contain_exec('run').with({
-				:command => "docker run -d --restart='always' --name='big-sibling' -v /proc:/prochost:ro -e DOCKER_ENDPOINT=unix:///var/run/docker.sock \
--e HOST_PROC=/prochost tsuru/bs:latest"
+				:command => "docker run -d --privileged --net='host' --restart='always' --name='big-sibling' \
+-v /var/run/docker.sock:/var/run/docker.sock:rw -v /proc:/prochost:ro \
+-e DOCKER_ENDPOINT=unix:///var/run/docker.sock -e HOST_PROC=/prochost tsuru/bs:latest"
 			})
 		end
 
@@ -40,8 +41,9 @@ describe 'bs'  do
 
 		it 'starts the v1 image' do
 			should contain_exec('run').with({
-				:command => "docker run -d --restart='always' --name='big-sibling' -v /proc:/prochost:ro -e DOCKER_ENDPOINT=unix:///var/run/docker.sock \
--e HOST_PROC=/prochost tsuru/bs:v1"
+				:command => "docker run -d --privileged --net='host' --restart='always' --name='big-sibling' \
+-v /var/run/docker.sock:/var/run/docker.sock:rw -v /proc:/prochost:ro \
+-e DOCKER_ENDPOINT=unix:///var/run/docker.sock -e HOST_PROC=/prochost tsuru/bs:v1"
 			})
 		end
 	end
@@ -50,8 +52,9 @@ describe 'bs'  do
 		before {params.merge!( :log_backends => 'tsuru', :metrics_backend => 'logstash')}
 		it 'runs bs with the environment configuration' do
 			should contain_exec('run').with({
-				:command => "docker run -d --restart='always' --name='big-sibling' \
--v /proc:/prochost:ro -e LOG_BACKENDS=tsuru -e METRICS_BACKEND=logstash -e DOCKER_ENDPOINT=unix:///var/run/docker.sock \
+				:command => "docker run -d --privileged --net='host' --restart='always' --name='big-sibling' \
+-v /var/run/docker.sock:/var/run/docker.sock:rw -v /proc:/prochost:ro \
+-e LOG_BACKENDS=tsuru -e METRICS_BACKEND=logstash -e DOCKER_ENDPOINT=unix:///var/run/docker.sock \
 -e HOST_PROC=/prochost tsuru/bs:latest"
 			})
 		end
