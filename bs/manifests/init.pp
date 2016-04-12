@@ -60,6 +60,7 @@ class bs (
     'HOST_PROC'                     => $host_proc,
   })
 
+  $env_st = join(join_keys_to_values($env_map, '='), ' ')
   $env = join(prefix(join_keys_to_values($env_map, '='), '-e '), ' ')
 
   if $host_proc {
@@ -68,30 +69,32 @@ class bs (
     $proc_volume = ''
   }
 
+  # returns 0 if bs is running
+  $bs_running = 'docker ps -f name=big-sibling --format="{{.Names}}" | grep -c big-sibling'
+  
+  # returns 0 if bs is running with diferent envs or image
+  $inspect_bs = 'docker inspect --format="{{range .Config.Env}}{{println .}}{{end}}{{.Config.Image}}" big-sibling'
+  $conf_changed = "${inspect_bs} 2> /dev/null | grep -v 'PATH' | grep -v -e '^\$' | xargs | grep -c -v '${env_st} ${image}'"
+
   exec { 'pull image':
-    command => "/usr/bin/docker pull ${image}",
+    command => "docker pull ${image}",
     path    => '/usr/bin',
     require => Class['docker']
-  }
-
-  $should_restart = ($image != $::bs_image) or (values($env_map) != values($::bs_envs_hash))
-  if $should_restart and $::bs_is_running {
-    exec { 'stop':
-      command => '/usr/bin/docker stop big-sibling',
-      path    => '/usr/bin',
-      require => Exec['pull image']
-    }
-  }
-    
+  } ->
+  exec { 'stop':
+    command => 'docker stop big-sibling',
+    path    => ['/usr/bin', '/bin'],
+    onlyif  => [$conf_changed, $bs_running],
+  } ->
   exec { 'remove':
-    command => '/usr/bin/docker rm big-sibling',
-    path    => '/usr/bin',
-    unless  => '/usr/bin/docker inspect --format="{{ .State.Running }}" big-sibling'
-  }
-
+    command => 'docker rm big-sibling',
+    path    => ['/usr/bin', '/bin'],
+    onlyif  => $inspect_bs,
+    unless  => $bs_running,
+  } ->
   exec { 'run':
-    command => "/usr/bin/docker run -d --restart='always' --name='big-sibling' ${proc_volume} ${env} ${image}",
-    path    =>  '/usr/bin',
-    unless  => '/usr/bin/docker inspect --format="{{ .State.Running }}" big-sibling'
+    command => "docker run -d --restart='always' --name='big-sibling' ${proc_volume} ${env} ${image}",
+    path    =>  ['/usr/bin', '/bin'],
+    unless  => $bs_running,
   }
 }

@@ -6,8 +6,11 @@ Puppet module for big-sibling installation
 
 ```puppet
   class { 'bs':
-    log_backends      => 'tsuru,syslog',
-    metric_backends   => 'logstash',
+	image => 'tsuru/bs:v1',
+	log_backends => 'none',
+	metrics_backend => 'logstash',
+	metrics_logstash_host => 'localhost',
+	metrics_logstash_port => '1984',
   }
 ```
 
