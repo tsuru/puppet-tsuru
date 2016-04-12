@@ -34,7 +34,8 @@ class bs (
   ){
 
   $docker_socket = '/var/run/docker.sock'
-
+  $socket_volume = "-v ${docker_socket}:/var/run/docker.sock:rw"
+  
   $env_map = delete_undef_values({
     'LOG_BACKENDS'                  => $log_backends,
     'LOG_TSURU_BUFFER_SIZE'         => $log_tsuru_buffer_size,
@@ -68,12 +69,6 @@ class bs (
     $proc_volume = "-v /proc:${host_proc}:ro"
   } else {
     $proc_volume = ''
-  }
-
-  if $docker_socket {
-    $socket_volume = "-v ${docker_socket}:/var/run/docker.sock:rw"
-  } else {
-    $socket_volume = ''
   }
 
   # returns 0 if bs is running
