@@ -1,0 +1,1 @@
+../../bs/spec/classes/bs_spec.rb
