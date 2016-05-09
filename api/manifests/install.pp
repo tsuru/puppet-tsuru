@@ -228,13 +228,6 @@ class api::install (
   $docker_scheduler_max_used_memory = undef,
   $docker_use_auto_scale = false,
   $docker_auto_scale_enabled = false,
-  $docker_auto_scale_wait_time = 300,
-  $docker_auto_scale_groupby_metadata = undef,
-  $docker_auto_scale_metadata_filter = undef,
-  $docker_auto_scale_max_container_count = undef,
-  $docker_auto_scale_prevent_rebalance = false,
-  $docker_auto_scale_run_interval = 3600,
-  $docker_auto_scale_down_ratio = 1.1,
 
   $tsuru_iaas_default = undef,
   $ec2_key_id = undef,
