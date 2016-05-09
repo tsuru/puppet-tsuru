@@ -71,12 +71,14 @@ class bs (
     $proc_volume = ''
   }
 
+  $image_id = "docker images --no-trunc --format='{{.ID}}' ${image}"
+
   # returns 0 if bs is running
   $bs_running = 'docker ps -f name=big-sibling --format="{{.Names}}" | grep -c big-sibling'
 
-  # returns 0 if bs is running with diferent envs or image
-  $inspect_bs = 'docker inspect --format="{{range .Config.Env}}{{println .}}{{end}}{{.Config.Image}}" big-sibling'
-  $conf_changed = "${inspect_bs} 2> /dev/null | grep -v 'PATH' | grep -v -e '^\$' | xargs | grep -c -v '${env_st} ${image}'"
+  # returns 0 if bs is running with diferent envs or image id
+  $inspect_bs = 'docker inspect --format="{{range .Config.Env}}{{println .}}{{end}}{{.Image}}" big-sibling'
+  $changed = "${inspect_bs} 2> /dev/null | grep -v 'PATH' | xargs | grep -c -v \"${env_st} \$(${image_id})\""
 
   exec { 'pull bs image':
     command => "docker pull ${image}",
@@ -86,7 +88,7 @@ class bs (
   exec { 'stop bs container':
     command => 'docker stop big-sibling',
     path    => ['/usr/bin', '/bin'],
-    onlyif  => [$conf_changed, $bs_running],
+    onlyif  => [$changed, $bs_running],
   } ->
   exec { 'remove bs container':
     command => 'docker rm big-sibling',
