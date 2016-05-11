@@ -269,7 +269,6 @@ class api::install (
     }
     $docker_scheduler_memory = true
   }
-  
   package { 'tsuru-server' :
     ensure => $tsuru_server_version
   }
