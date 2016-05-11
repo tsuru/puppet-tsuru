@@ -503,22 +503,11 @@ iaas:
 '
   auto-scale:
     enabled: false
-    wait-new-time: 300
-    group-by-metadata: pool
-    metadata-filter: fallback
-    max-container-count: 10
-    scale-down-ratio: 1.1
-    prevent-rebalance: false
-    run-interval: 3600
 
 '
           end
           before {
-            params.merge!( :docker_use_auto_scale => true,
-                           :docker_auto_scale_groupby_metadata => 'pool',
-                           :docker_auto_scale_metadata_filter => 'fallback',
-                           :docker_auto_scale_max_container_count => 10
-                         )
+            params.merge!( :docker_use_auto_scale => true)
           }
 
           it 'set auto-scale with disabled status' do
