@@ -46,12 +46,19 @@ class docker (
 
   $docker_opts = join(["-g ${docker_graph_dir}", $docker_bind_opts, $docker_extra_opts ],' ')
 
+  service { 'docker':
+    ensure  => running,
+    enable  => true,
+    require => Package['docker-engine']
+  }
+
   file { '/etc/default/docker':
     ensure  => present,
     content => template('docker/default-docker.erb'),
     mode    => '0644',
     owner   => root,
-    group   => root
+    group   => root,
+    notify  => Service['docker']
   }
 
   file { '/etc/init/docker.conf':
@@ -59,7 +66,7 @@ class docker (
     content => template('docker/init-docker.conf.erb'),
     mode    => '0644',
     owner   => root,
-    group   => root,
+    group   => root
   }
 
 }
