@@ -126,5 +126,30 @@ EOF
 
     end
 
+    context "using router planb-docker" do
+      let :params do
+        {
+          :router_mode => 'planb-docker'
+        }
+      end
+
+      it 'uninstall all packages related with hipache' do
+        should contain_package('node-hipache').with_ensure('purged')
+        should contain_service('hipache').with_ensure('stopped')
+        should contain_package('planb').with_ensure('purged')
+        should contain_service('planb').with_ensure('stopped')
+      end
+
+      it 'install docker package' do
+        should contain_package('docker-engine').with_ensure('latest')
+      end
+
+      it 'exec planb commands' do
+        should contain_exec('pull planb').with_command('/usr/bin/docker pull tsuru/planb:v1')
+        should contain_exec('start planb').with_command('/usr/bin/docker run -d --restart=always --net=host --name=planb tsuru/planb:v1                                       --listen :80                                       --request-timeout 30                                       --dial-timeout 10                                       --dead-backend-time 30                                       --access-log /var/log/hipache/access_log')
+      end
+
+    end
+
   end
 end

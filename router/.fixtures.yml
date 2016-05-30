@@ -12,5 +12,8 @@ fixtures:
     apt:
       repo: "puppetlabs/apt"
       ref: 1.7.0
+    docker:
+      repo: "tsuru/docker"
+      ref: 0.0.21
   symlinks:
     "router": "#{source_dir}"

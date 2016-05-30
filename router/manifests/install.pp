@@ -43,6 +43,18 @@ class router::install (
   $hchecker_connect_timeout        = 3,
   $hchecker_redis_idle_timeout     = 120,
   $hchecker_redis_max_idle         = 3,
+  $lxc_docker_version              = 'latest',
+  $docker_graph_dir                = undef,
+  $docker_bind                     = undef,
+  $docker_extra_opts               = undef,
+  $proxy_url                       = undef,
+  $planb_pull_command              = '/usr/bin/docker pull tsuru/planb:v1',
+  $planb_start_command             = "/usr/bin/docker run -d --restart=always --net=host --name=planb tsuru/planb:v1 \
+                                      --listen :80 \
+                                      --request-timeout 30 \
+                                      --dial-timeout 10 \
+                                      --dead-backend-time 30 \
+                                      --access-log /var/log/hipache/access_log",
 
 ) inherits router {
 
@@ -112,6 +124,43 @@ class router::install (
       hasstatus  => true,
       provider   => $router::service_provider,
       require    => [ Package['planb'], File['/etc/default/planb'] ]
+    }
+
+  }
+
+  if ($router_mode == 'planb-docker') {
+
+    package { 'planb':
+      ensure => purged,
+    }
+
+    service { 'planb':
+      ensure => stopped
+    }
+
+    package { 'node-hipache' :
+      ensure  => purged
+    }
+
+    service { 'hipache':
+      ensure => stopped
+    }
+
+    class { 'docker':
+      lxc_docker_version => $lxc_docker_version,
+      docker_graph_dir   => $docker_graph_dir,
+      docker_bind        => $docker_bind,
+      docker_extra_opts  => $docker_extra_opts,
+      proxy_url          => $proxy_url,
+    } ->
+    exec { 'pull planb':
+      command => $planb_pull_command,
+      path    => '/usr/bin',
+    } ->
+    exec { 'start planb':
+      command => $planb_start_command,
+      path    => '/usr/bin',
+      unless  => '/usr/bin/docker inspect --format="{{ .State.Running }}" planb',
     }
 
   }
