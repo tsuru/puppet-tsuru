@@ -58,7 +58,6 @@ class docker (
     mode    => '0644',
     owner   => root,
     group   => root,
-    notify  => Service['docker']
   }
 
   file { '/etc/init/docker.conf':
