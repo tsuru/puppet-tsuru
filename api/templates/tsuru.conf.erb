@@ -69,10 +69,15 @@ queue:
   mongo-database: <%= @queue_mongo_database %>
 
 pubsub:
+<%- if @redis_sentinel_hosts -%>
+  redis-sentinel-addrs: <%= @redis_sentinel_hosts %>
+  redis-sentinel-master: <%= @redis_sentinel_master %>
+<%- else -%>
   redis-host: <%= @redis_host %>
+<%- end -%>
+<%= @redis_password ? "  redis-password: #{@redis_password}" : ''  %>
   redis-port: <%= @redis_port %>
   pool-max-idle-conn: <%= @redis_max_idle_conn %>
-<%= @redis_password ? "  redis-password: #{@redis_password}" : ''  %>
 <%= @redis_db ? "  redis-db: #{@redis_db}" : ''  %>
 
 # - Admin users
@@ -96,7 +101,13 @@ routers:
 <%- when 'hipache' -%>
     type: hipache
     domain: <%= routers[router]['hipache_domain'] %>
+    <%- if routers[router]['hipache_redis_server'] -%>
     redis-server: <%= routers[router]['hipache_redis_server'] %>
+    <%- else -%>
+    redis-sentinel-addrs: <%= routers[router]['hipache_redis_sentinel_addrs'] %>
+    redis-sentinel-master: <%= routers[router]['hipache_redis_sentinel_master'] %>
+<%= @routers[router]['hipache_redis_password'] ? "    redis-password: #{@routers[router]['hipache_redis_password']}" : '' %>
+    <%- end -%>
 <%- when 'vulcand' -%>
     type: vulcand
     api-url: <%= routers[router]['vulcand_api_url'] %>

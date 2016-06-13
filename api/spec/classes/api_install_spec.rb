@@ -277,6 +277,30 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    max-time: 150$})
       end
 
+      context 'using sentinel as pubsub' do
+        before {
+          params.merge!(
+            :redis_sentinel_hosts => '10.10.10.10:26379, 10.20.20.20:26379',
+            :redis_sentinel_master => 'master_sentinel',
+            :redis_password => 'secret'
+          )
+        }
+        let :match_string do
+'
+pubsub:
+  redis-sentinel-addrs: 10.10.10.10:26379, 10.20.20.20:26379
+  redis-sentinel-master: master_sentinel
+  redis-password: secret
+  redis-port: 6379
+  pool-max-idle-conn: 20
+  redis-db: tsuru_redis_db'
+        end
+
+        it 'file /etc/tsuru/tsuru.conf must contain sentinel config for pubsub' do
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(/.+#{match_string}/m)
+        end
+      end
+
       context 'setting unknown auth type' do
         before {
           params.merge!(
@@ -299,6 +323,8 @@ describe 'api::install' do
                                             'galeb_domain' => 'cloud2.test.com', 'galeb_environment' => 'dev', 'galeb_project' => 'X',
                                             'galeb_balance_policy' => 'round-robin', 'galeb_rule_type' => '1'},
                             'foo_hipache' => {'router_type' => 'hipache', 'hipache_domain' => 'cloud.test.com', 'hipache_redis_server' => '10.10.10.10:6379' },
+                            'foo_hipache_sentinel' => {'router_type' => 'hipache', 'hipache_domain' => 'cloud5.test.com', 'hipache_redis_sentinel_addrs' => '10.10.10.10:26379, 10.20.30.40:26379',
+                                                       'hipache_redis_sentinel_master' => 'master_sentinel', 'hipache_redis_password' => 'secret'},
                             'foo_vulcand' => {'router_type' => 'vulcand', 'vulcand_api_url' => 'http://localhost:8009', 'vulcand_domain' => 'cloud4.test.com'}
                           }
             )
@@ -333,6 +359,12 @@ routers:
     type: hipache
     domain: cloud.test.com
     redis-server: 10.10.10.10:6379
+  foo_hipache_sentinel:
+    type: hipache
+    domain: cloud5.test.com
+    redis-sentinel-addrs: 10.10.10.10:26379, 10.20.30.40:26379
+    redis-sentinel-master: master_sentinel
+    redis-password: secret
   foo_vulcand:
     type: vulcand
     api-url: http://localhost:8009
