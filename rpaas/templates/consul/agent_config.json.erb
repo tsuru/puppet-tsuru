@@ -6,6 +6,7 @@
   "data_dir": "<%= @consul_agent_data_dir %>",
   <%= @consul_agent_encrypt ? "\"encrypt\": \"#{consul_agent_encrypt}\"" : '' %>,
   "rejoin_after_leave": true,
+  "skip_leave_on_interrupt": true,
   "log_level": "INFO",
   "enable_syslog": true,
   "acl_token":"<%= @consul_acl_token %>",
