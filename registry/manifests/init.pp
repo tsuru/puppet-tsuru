@@ -39,7 +39,7 @@ class registry (
   exec { 'start registry':
     command => $registry_start_command,
     path    =>  '/usr/bin',
-    unless  =>  '/usr/bin/docker inspect --format="{{ .State.Running }}" $(docker ps -q)',
+    unless  =>  '/usr/bin/docker inspect --format="{{ .State.Running }}" $(docker ps -f name=registry -q)',
     require => Exec['install registry']
   }
 
