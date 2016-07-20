@@ -17,7 +17,6 @@ describe 'rpaas::install' do
 
     it do
       should contain_anchor('apt::ppa::ppa:tsuru/ppa')
-      should contain_anchor('apt::ppa::ppa:tsuru/redis-server')
       should contain_anchor('apt::source::docker')
       should contain_anchor('apt::update')
       should contain_anchor('apt_key 383F073D present')
@@ -38,7 +37,6 @@ describe 'rpaas::install' do
       should contain_apt__key('docker')
       should contain_apt__key('tsuru')
       should contain_apt__ppa('ppa:tsuru/ppa')
-      should contain_apt__ppa('ppa:tsuru/redis-server')
       should contain_apt__source('docker')
       should contain_apt_key('docker')
       should contain_apt_key('tsuru')
@@ -58,7 +56,6 @@ describe 'rpaas::install' do
     it do
       should contain_file('/etc/apt/apt.conf.d/15update-stamp')
       should contain_file('/etc/apt/sources.list.d/tsuru-ppa-trusty.list')
-      should contain_file('/etc/apt/sources.list.d/tsuru-redis-server-trusty.list')
       should contain_file('/etc/nginx/sites-enabled/default')
       should contain_file('/etc/nginx/sites-enabled')
       should contain_file('01proxy')
@@ -137,7 +134,6 @@ EOF
       should contain_exec('apt_update')
       should contain_exec('ssl')
       should contain_exec('add-apt-repository-ppa:tsuru/ppa')
-      should contain_exec('add-apt-repository-ppa:tsuru/redis-server')
     end
 
   end

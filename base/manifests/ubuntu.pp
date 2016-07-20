@@ -27,26 +27,6 @@ class base::ubuntu inherits base {
     key_content => $base::docker_project_pub_key
   }
 
-  apt::key { 'nginx_dev':
-    key         => 'C300EE8C',
-    key_content => $base::nginx_dev_pub_key
-  }
-
-  if ($base::redis_source_list) {
-    apt::source { 'redis':
-      location    => $base::redis_source_list,
-      include_src => false,
-      repos       => 'main',
-      release     => $base::redis_release,
-      require     => Apt::Key['tsuru']
-    }
-  } else {
-    apt::ppa { 'ppa:tsuru/redis-server':
-      release => $base::redis_release,
-      require => Apt::Key['tsuru']
-    }
-  }
-
   if ($base::tsuru_source_list) {
     apt::source { 'tsuru':
       location    => $base::tsuru_source_list,
@@ -95,24 +75,6 @@ class base::ubuntu inherits base {
       repos       => 'main',
       release     => 'ubuntu-trusty',
       require     => [Apt::Key['docker'], Apt::Key['docker_project']]
-    }
-  }
-
-  if ($base::nginx_dev_source_list) {
-    apt::source { 'nginx_dev' :
-      location    => $base::nginx_dev_source_list,
-      include_src => false,
-      repos       => 'main',
-      release     => $base::nginx_dev_release,
-      require     => Apt::Key['nginx_dev']
-    }
-  } else {
-    apt::source { 'nginx_dev' :
-      location    => 'http://ppa.launchpad.net/nginx/development/ubuntu/',
-      include_src => false,
-      repos       => 'main',
-      release     => $base::nginx_dev_release,
-      require     => Apt::Key['nginx_dev']
     }
   }
 

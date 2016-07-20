@@ -29,7 +29,6 @@ describe 'router::install' do
         should contain_class('apt::update')
 
         should contain_exec('apt_update')
-        should contain_exec('add-apt-repository-ppa:tsuru/redis-server')
         should contain_exec('add-apt-repository-ppa:tsuru/ppa')
 
         should contain_file('docker.list')
@@ -40,17 +39,14 @@ describe 'router::install' do
         should contain_file('01proxy')
         should contain_file('old-proxy-file')
         should contain_file('/etc/apt/apt.conf.d/15update-stamp')
-        should contain_file('/etc/apt/sources.list.d/tsuru-redis-server-precise.list')
         should contain_file('/etc/apt/sources.list.d/tsuru-ppa-precise.list')
 
         should contain_anchor('apt::update')
         should contain_anchor('apt::source::docker')
-        should contain_anchor('apt::ppa::ppa:tsuru/redis-server')
         should contain_anchor('apt::ppa::ppa:tsuru/ppa')
         should contain_anchor('apt_key 383F073D present')
         should contain_anchor('apt_key A88D21E9 present')
 
-        should contain_apt__ppa('ppa:tsuru/redis-server')
         should contain_apt__ppa('ppa:tsuru/ppa')
 
         should contain_apt__source('docker')

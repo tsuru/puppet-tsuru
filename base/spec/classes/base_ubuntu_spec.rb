@@ -23,9 +23,7 @@ describe 'base'  do
   end
 
   context 'with default base' do
-    [ 'ppa:tsuru/redis-server', 'ppa:tsuru/ppa' ].each do |tsuru_ppa|
-      it { should contain_apt__ppa(tsuru_ppa) }
-    end
+    it { should contain_apt__ppa('ppa:tsuru/ppa') }
     it { should contain_apt__source('docker').with(:location => 'https://apt.dockerproject.org/repo', :repos => 'main', :release => 'ubuntu-trusty') }
   end
 
@@ -33,12 +31,10 @@ describe 'base'  do
 
     let :params do {
       :tsuru_source_list  => 'tsuru_source_list_custom',
-      :redis_source_list  => 'redis_source_list_custom',
       :docker_source_list => 'docker_source_list_custom'
     }
     end
 
-    it { should contain_apt__source('redis').with(:location => 'redis_source_list_custom') }
     it { should contain_apt__source('tsuru').with(:location => 'tsuru_source_list_custom') }
     it { should contain_apt__source('docker').with(:location => 'docker_source_list_custom') }
     context 'using custom release' do
@@ -47,7 +43,6 @@ describe 'base'  do
         params.merge!( :docker_release => 'docker' )
       end
 
-      it { should contain_apt__source('redis').with(:location => 'redis_source_list_custom', :release => 'precise') }
       it { should contain_apt__source('tsuru').with(:location => 'tsuru_source_list_custom', :release => 'precise') }
       it { should contain_apt__source('docker').with(:location => 'docker_source_list_custom', :release => 'docker') }
 
