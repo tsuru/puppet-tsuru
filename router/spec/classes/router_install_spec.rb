@@ -58,35 +58,6 @@ describe 'router::install' do
         should contain_apt__key('docker')
 
       end
-hipache_conf = <<EOF
-{
-    "server": {
-        "accessLog": "/var/log/hipache/access_log",
-        "accessLogMode": "file",
-        "port": 80,
-        "workers": 5,
-        "maxSockets": 100,
-        "deadBackendTTL": 30,
-        "tcpTimeout": 30,
-        "httpKeepAlive": true
-    },
-    "redisHost": "127.0.0.1",
-    "redisPort": 6379,
-    "redisMasterHost": "127.0.0.1",
-    "redisMasterPort": 6379
-}
-EOF
-      it 'required by hipache' do
-        should contain_package('node-hipache')
-        should contain_service('hipache')
-        should contain_file('/etc/hipache.conf').with_content(/#{hipache_conf}/m)
-      end
-
-      it 'required by hchecker' do
-        should contain_package('hipache-hchecker')
-        should contain_service('hipache-hchecker')
-        should contain_file('/etc/default/hipache-hchecker')
-      end
 
     end
 
@@ -96,11 +67,6 @@ EOF
           :router_mode => 'planb',
           :router_access_log_mode => 'syslog'
         }
-      end
-
-      it 'uninstall all packages related with hipache' do
-        should contain_package('node-hipache').with_ensure('purged')
-        should contain_service('hipache').with_ensure('stopped')
       end
 
       it 'install planb package' do
@@ -127,13 +93,6 @@ EOF
         {
           :router_mode => 'planb-docker'
         }
-      end
-
-      it 'uninstall all packages related with hipache' do
-        should contain_package('node-hipache').with_ensure('purged')
-        should contain_service('hipache').with_ensure('stopped')
-        should contain_package('planb').with_ensure('purged')
-        should contain_service('planb').with_ensure('stopped')
       end
 
       it 'install docker package' do

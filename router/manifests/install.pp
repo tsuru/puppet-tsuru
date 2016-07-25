@@ -29,20 +29,8 @@ class router::install (
   $router_service_hipache_ensure   = 'running',
   $router_service_hchecker_enable  = true,
   $router_service_hchecker_ensure  = 'running',
-  $router_mode                     = 'hipache',
+  $router_mode                     = 'planb-docker',
   $router_planb_package_version    = 'latest',
-  $router_hipache_package_version  = 'latest',
-  $router_hchecker_package_version = 'latest',
-  $hchecker_enabled                = true,
-  $hckecher_uri                    = '/',
-  $hchecker_redis_server           = 'localhost:6379',
-  $hchecker_redis_key_suffix       = 'localhost',
-  $hchecker_http_method            = 'head',
-  $hchecker_io_timeout             = 3,
-  $hchecker_check_interval         = 3,
-  $hchecker_connect_timeout        = 3,
-  $hchecker_redis_idle_timeout     = 120,
-  $hchecker_redis_max_idle         = 3,
   $lxc_docker_version              = 'latest',
   $docker_graph_dir                = undef,
   $docker_bind                     = undef,
@@ -60,54 +48,11 @@ class router::install (
 
   require base
 
-  if ($router_mode == 'hipache') {
-
-    package { 'planb':
-      ensure => purged
-    }
-
-    service { 'planb':
-      ensure => stopped,
-    }
-
-    package { 'node-hipache' :
-      ensure => $router_hipache_package_version,
-      notify => Service['hipache']
-    }
-
-    service { 'hipache':
-      ensure     => $router_service_hipache_ensure,
-      enable     => $router_service_hipache_enable,
-      hasrestart => true,
-      hasstatus  => true,
-      provider   => $router::service_provider,
-      require    => [ Package['node-hipache'], File['/etc/hipache.conf'] ]
-    }
-
-    file { '/etc/hipache.conf':
-      content => template('router/hipache.conf.erb'),
-      owner   => root,
-      group   => root,
-      mode    => '0600',
-      require => Package['node-hipache'],
-      notify  => Service['hipache']
-    }
-
-  }
-
   if ($router_mode == 'planb') {
 
     package { 'planb':
       ensure => $router_planb_package_version,
       notify => Service['planb']
-    }
-
-    package { 'node-hipache' :
-      ensure  => purged
-    }
-
-    service { 'hipache':
-      ensure => stopped
     }
 
     file { '/etc/default/planb':
@@ -130,22 +75,6 @@ class router::install (
 
   if ($router_mode == 'planb-docker') {
 
-    package { 'planb':
-      ensure => purged,
-    }
-
-    service { 'planb':
-      ensure => stopped
-    }
-
-    package { 'node-hipache' :
-      ensure  => purged
-    }
-
-    service { 'hipache':
-      ensure => stopped
-    }
-
     class { 'docker':
       lxc_docker_version => $lxc_docker_version,
       docker_graph_dir   => $docker_graph_dir,
@@ -164,34 +93,6 @@ class router::install (
     }
 
   }
-
-  if ($router_service_hchecker_enable) {
-
-    package { 'hipache-hchecker' :
-      ensure => $router_hchecker_package_version,
-      notify => Service['hipache-hchecker']
-    }
-
-    service { 'hipache-hchecker':
-      ensure     => $router_service_hchecker_ensure,
-      enable     => $router_service_hchecker_enable,
-      hasrestart => true,
-      hasstatus  => true,
-      provider   => $router::service_provider,
-      require    => [ Package['hipache-hchecker'],
-                      File['/etc/default/hipache-hchecker'] ]
-    }
-
-    file { '/etc/default/hipache-hchecker':
-      content => template('router/hipache-hchecker.conf.erb'),
-      owner   => root,
-      group   => root,
-      mode    => '0600',
-      require => Package['hipache-hchecker'],
-      notify  => Service['hipache-hchecker']
-    }
-  }
-
 
 
 }
