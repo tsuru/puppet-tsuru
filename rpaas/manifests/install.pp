@@ -19,6 +19,7 @@ class rpaas::install (
   $nginx_intercept_errors   = false,
   $nginx_local_log          = true,
   $nginx_syslog_server      = undef,
+  $extra_syslog_server      = undef,
   $nginx_syslog_tag         = undef,
   $consul_template_version  = latest,
   $consul_server            = undef,

@@ -31,6 +31,20 @@ http {
     error_log syslog:server=<%= @nginx_syslog_server %>,facility=local6,tag=<%= @nginx_syslog_tag ? @nginx_syslog_tag : 'rpaas' %>;
 <% end -%>
 
+<% if @extra_syslog_server -%>
+    log_format new_main
+      '${remote_addr}\t${host}\t${request_method}\t${request_uri}\t${server_protocol}\t'
+      '${http_referer}\t${http_x_mobile_group}\t'
+      'Local:\t${status}\t*${connection}\t${body_bytes_sent}\t${request_time}\t'
+      'Proxy:\t${upstream_status}\t${upstream_cache_status}\t'
+      '${upstream_response_length}\t${upstream_response_time}\t${request_uri}\t'
+      'Agent:\t${http_user_agent}\t'
+      'Fwd:\t${http_x_forwarded_for}';
+
+    access_log syslog:server=<%= @extra_syslog_server %>,facility=local7,tag=<%= @nginx_syslog_tag ? @nginx_syslog_tag : 'rpaas' %> new_main;
+    error_log syslog:server=<%= @extra_syslog_server %>,facility=local7,tag=<%= @nginx_syslog_tag ? @nginx_syslog_tag : 'rpaas' %>;
+<% end -%>
+
 <% @nginx_custom_error_codes.each do |file, codes| -%>
     error_page <%= codes.join(" ") %> /_nginx_errordocument/<%= file %>;
 <% end -%>
