@@ -1,5 +1,6 @@
 user <%= @nginx_user %>;
 worker_processes  <%= @nginx_worker_processes %>;
+include /etc/nginx/modules-enabled/*.conf;
 
 events {
     worker_connections  <%= @nginx_worker_connections %>;
