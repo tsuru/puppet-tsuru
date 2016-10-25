@@ -103,9 +103,18 @@ describe 'rpaas::install' do
 
     }
 EOF
+      custom_worker_process = <<"EOF"
+user foobar;
+worker_processes  10;
+include /etc/nginx/modules-enabled/*.conf;
+
+events {
+    worker_connections  10;
+}
+EOF
 
       it 'custom user, worker_processes and worker_connections' do
-        should contain_file('/etc/nginx/nginx.conf').with_content(/user foobar;\nworker_processes\s+10;\n\nevents \{\n\s+worker_connections\s+10;/)
+        should contain_file('/etc/nginx/nginx.conf').with_content(/#{Regexp.escape(custom_worker_process)}/m)
       end
 
 
