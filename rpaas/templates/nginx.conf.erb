@@ -99,7 +99,9 @@ http {
         ssl_prefer_server_ciphers on;
         ssl_session_cache shared:SSL:200m;
         ssl_session_timeout 1h;
-
+<% if @nginx_dhparams -%>
+        ssl_dhparam <%= @nginx_dhparams %>;
+<% end -%>
 
         server_name  _tsuru_nginx_app;
         port_in_redirect off;
