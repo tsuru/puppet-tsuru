@@ -81,7 +81,8 @@ describe 'rpaas::install' do
           :nginx_custom_error_dir => "/mnt/error_pages",
           :nginx_intercept_errors => true,
           :nginx_syslog_server => '127.0.0.1',
-          :nginx_syslog_tag => 'rpaas01'
+          :nginx_syslog_tag => 'rpaas01',
+          :nginx_dhparams => '/etc/nginx/dh_params.pem'
         }
       end
 

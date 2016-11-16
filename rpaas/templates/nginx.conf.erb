@@ -37,7 +37,7 @@ http {
       '${remote_addr}\t${host}\t${request_method}\t${request_uri}\t${server_protocol}\t'
       '${http_referer}\t${http_x_mobile_group}\t'
       'Local:\t${status}\t*${connection}\t${body_bytes_sent}\t${request_time}\t'
-      'Proxy:\t${upstream_status}\t${upstream_cache_status}\t'
+      'Proxy:\t${upstream_addr}\t${upstream_status}\t${upstream_cache_status}\t'
       '${upstream_response_length}\t${upstream_response_time}\t${request_uri}\t'
       'Agent:\t${http_user_agent}\t'
       'Fwd:\t${http_x_forwarded_for}';
