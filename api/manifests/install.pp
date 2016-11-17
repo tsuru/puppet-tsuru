@@ -75,7 +75,7 @@
 # - Router configuration
 #
 # [routers]                       hash params for desired router. Format:
-#                                 { 'router_name' => { 'type' => <galeb|hipache|planb|vulcand>, <galeb|hipache|planb|vulcand params as # follow> }}
+#                                 { 'router_name' => { 'type' => <galeb|hipache|planb|vulcand>, <galeb|hipache|planb|vulcand> params }}
 # [planb_redis_server or hipache_redis_server] redis server used by Hipache/PlanB router
 # [planb_domain or hipache_domain] the domain of the server running your Hipache/PlanB server
 # [galeb_api_url]                 the url for the Galeb manager api.
