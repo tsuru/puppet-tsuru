@@ -98,15 +98,15 @@ routers:
 <%- @routers.keys.sort.each do |router| -%>
   <%= router %>:
 <%- case routers[router]['router_type'] -%>
-<%- when 'hipache' -%>
-    type: hipache
-    domain: <%= routers[router]['hipache_domain'] %>
-    <%- if routers[router]['hipache_redis_server'] -%>
-    redis-server: <%= routers[router]['hipache_redis_server'] %>
+<%- when /(hipache|planb)/ -%>
+    type: <%= $1 %>
+    domain: <%= routers[router]["#{$1}_domain"] %>
+    <%- if routers[router]["#{$1}_redis_server"] -%>
+    redis-server: <%= routers[router]["#{$1}_redis_server"] %>
     <%- else -%>
-    redis-sentinel-addrs: <%= routers[router]['hipache_redis_sentinel_addrs'] %>
-    redis-sentinel-master: <%= routers[router]['hipache_redis_sentinel_master'] %>
-<%= @routers[router]['hipache_redis_password'] ? "    redis-password: #{@routers[router]['hipache_redis_password']}" : '' %>
+    redis-sentinel-addrs: <%= routers[router]["#{$1}_redis_sentinel_addrs"] %>
+    redis-sentinel-master: <%= routers[router]["#{$1}_redis_sentinel_master"] %>
+<%= @routers[router]["#{$1}_redis_password"] ? "    redis-password: #{@routers[router][$1 + '_redis_password']}" : '' %>
     <%- end -%>
 <%- when 'vulcand' -%>
     type: vulcand
@@ -124,7 +124,7 @@ routers:
     rule-type: <%= routers[router]['galeb_rule_type'] %>
     <%= @routers[router]['galeb_debug'] ? "debug: #{routers[router]['galeb_debug']}" : "debug: false" %>
 <%- else -%>
-    <%- raise Puppet::Error, "Router type unknown. Valid types are: hipache, vulcand or galeb" -%>
+    <%- raise Puppet::Error, "Router type unknown. Valid types are: hipache, planb, vulcand or galeb" -%>
 <%- end -%>
 <%- end -%>
 

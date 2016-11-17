@@ -75,9 +75,9 @@
 # - Router configuration
 #
 # [routers]                       hash params for desired router. Format:
-#                                 { 'router_name' => { 'type' => <galeb|hipache>, <galeb|hipache params as # follow> }}
-# [hipache_redis_server]          redis server used by Hipache router
-# [hipache_domain]                the domain of the server running your Hipache server
+#                                 { 'router_name' => { 'type' => <galeb|hipache|planb|vulcand>, <galeb|hipache|planb|vulcand params as # follow> }}
+# [planb_redis_server or hipache_redis_server] redis server used by Hipache/PlanB router
+# [planb_domain or hipache_domain] the domain of the server running your Hipache/PlanB server
 # [galeb_api_url]                 the url for the Galeb manager api.
 # [galeb_username]                Galeb manager username
 # [galeb_password]                Galeb manager password
@@ -88,6 +88,8 @@
 # [galeb_project]                 Galeb manager project used to create virtual hosts, backend pools and pools.
 # [galeb_load_balance_policy]     Galeb manager load balancing policy used to create backend pools.
 # [galeb_rule_type]               Galeb manager rule type used to create rules.
+# [vulcand_api_url]               Vulcand API URL
+# [vulcand_domain]                Vulcand Domain
 #
 # - Provisioner configuration
 #
@@ -196,8 +198,8 @@ class api::install (
   $tsuru_apps_per_user = undef,
   $tsuru_units_per_app = undef,
 
-  $routers = { 'my_hipache' => { 'router_type' => 'hipache', 'hipache_domain' => 'cloud.tsuru.io',
-                                  'hipache_redis_server' => 'localhost:6379' }},
+  $routers = { 'my_planb' => { 'router_type' => 'planb', 'planb_domain' => 'cloud.tsuru.io',
+                                  'planb_redis_server' => 'localhost:6379' }},
 
   $tsuru_provisioner = 'docker',
   $docker_segregate = false,
@@ -207,7 +209,7 @@ class api::install (
   $docker_bs_image = 'tsuru/bs',
   $docker_bs_reporter_interval = 10,
   $docker_bs_socket = '/var/run/docker.sock',
-  $docker_router = 'my_hipache',
+  $docker_router = 'my_planb',
   $docker_collection = 'docker',
   $docker_repository_namespace = 'tsuru',
   $docker_deploy_cmd = '/var/lib/tsuru/deploy',

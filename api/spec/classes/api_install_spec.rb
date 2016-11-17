@@ -50,10 +50,10 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^admin-team: admin$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain routers with hipache configuration' do
+      it 'file /etc/tsuru/tsuru.conf must contain routers with planb configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^routers:$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  my_hipache:$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    type: hipache$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  my_planb:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    type: planb$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    domain: cloud.tsuru.io$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    redis-server: localhost:6379$})
       end
@@ -65,7 +65,7 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    reporter-interval: 10$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    socket: /var/run/docker.sock$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  segregate: false$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  router: my_hipache$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  router: my_planb$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  collection: docker$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  repository-namespace: tsuru$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  deploy-cmd: /var/lib/tsuru/deploy$})
@@ -138,7 +138,7 @@ describe 'api::install' do
           :docker_registry                           => 'registry.tsuru.io',
           :docker_max_layers                         => 42,
           :docker_port_allocator                     => 'tsuru',
-          :docker_router                             => 'my_hipache',
+          :docker_router                             => 'my_planb',
           :docker_collection                         => 'docker',
           :docker_repository_namespace               => 'tsuru',
           :docker_deploy_cmd                         => '/var/lib/tsuru/deploy',
@@ -228,10 +228,10 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^admin-team: admin$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain routers with hipache configuration' do
+      it 'file /etc/tsuru/tsuru.conf must contain routers with planb configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^routers:$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  my_hipache:$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    type: hipache$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  my_planb:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    type: planb$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    domain: cloud.tsuru.io$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    redis-server: localhost:6379$})
       end
@@ -253,7 +253,7 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  registry: registry.tsuru.io$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  max-layers: 42$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  port-allocator: tsuru$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  router: my_hipache$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  router: my_planb$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  collection: docker$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  repository-namespace: tsuru$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  deploy-cmd: /var/lib/tsuru/deploy$})
@@ -313,7 +313,7 @@ pubsub:
         end
       end
 
-      context 'setting routers hipache and galeb' do
+      context 'setting routers hipache, planb, galeb and vulcand' do
         before {
             params.merge!(
               :routers => { 'bar_galeb' => {'router_type' => 'galeb', 'galeb_api_url' => 'galeb2.endpoint.com', 'galeb_username' => 'bilbo', 'galeb_password' => 'secret2',
@@ -325,7 +325,8 @@ pubsub:
                             'foo_hipache' => {'router_type' => 'hipache', 'hipache_domain' => 'cloud.test.com', 'hipache_redis_server' => '10.10.10.10:6379' },
                             'foo_hipache_sentinel' => {'router_type' => 'hipache', 'hipache_domain' => 'cloud5.test.com', 'hipache_redis_sentinel_addrs' => '10.10.10.10:26379, 10.20.30.40:26379',
                                                        'hipache_redis_sentinel_master' => 'master_sentinel', 'hipache_redis_password' => 'secret'},
-                            'foo_vulcand' => {'router_type' => 'vulcand', 'vulcand_api_url' => 'http://localhost:8009', 'vulcand_domain' => 'cloud4.test.com'}
+                            'foo_vulcand' => {'router_type' => 'vulcand', 'vulcand_api_url' => 'http://localhost:8009', 'vulcand_domain' => 'cloud4.test.com'},
+                            'foo_planb' => {'router_type' => 'planb', 'planb_domain' => 'cloud.test.com', 'planb_redis_server' => '10.10.10.10:6379' }
                           }
             )
         }
@@ -365,6 +366,10 @@ routers:
     redis-sentinel-addrs: 10.10.10.10:26379, 10.20.30.40:26379
     redis-sentinel-master: master_sentinel
     redis-password: secret
+  foo_planb:
+    type: planb
+    domain: cloud.test.com
+    redis-server: 10.10.10.10:6379
   foo_vulcand:
     type: vulcand
     api-url: http://localhost:8009
@@ -372,7 +377,7 @@ routers:
 '
         end
 
-        it 'file /etc/tsuru/tsuru.conf must contain routers foo_hipache, foo_galeb and bar_galeb' do
+        it 'file /etc/tsuru/tsuru.conf must contain routers foo_hipache, foo_galeb, foo_planb and bar_galeb' do
           should contain_file('/etc/tsuru/tsuru.conf').with_content(/.+#{match_string}$/)
         end
       end
@@ -385,7 +390,7 @@ routers:
         }
 
         it 'rises unknown router type' do
-          should raise_error(Puppet::Error, /Router type unknown. Valid types are: hipache, vulcand or galeb/)
+          should raise_error(Puppet::Error, /Router type unknown. Valid types are: hipache, planb, vulcand or galeb/)
         end
       end
 
