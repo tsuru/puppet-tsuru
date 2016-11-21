@@ -135,7 +135,7 @@
 # [ec2_wait_timeout]          seconds to wait for machine to become up (defaults to 300s)
 # [ec2_user_data]             custom url for ec2 userdata (defaults to script on tsuru now installation)
 # [custom_iaas]               hash params to custom iaas with custom name as key. Format:
-#                             { custom_iaas_id => { provider => <ec2|cloudstack>, <ec2|cloudstack params> }}
+#                             { custom_iaas_id => { provider => <ec2|cloudstack|dockermachine>, <ec2|cloudstack|dockermachine params> }}
 #
 # - Debug configuration
 #

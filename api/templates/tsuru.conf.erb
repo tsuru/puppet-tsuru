@@ -206,17 +206,28 @@ iaas:
 <%- @custom_iaas.keys.sort.each do |custom_key| -%>
     <%= custom_key %>:
       provider: <%= custom_iaas[custom_key]['provider'] %>
-      <%- if custom_iaas[custom_key]['provider'].eql?('cloudstack') -%>
+      <%- case custom_iaas[custom_key]['provider'] -%>
+      <%- when 'cloudstack' -%>
       url: <%= custom_iaas[custom_key]['cloudstack_api_url'] %>
       api-key: "<%= custom_iaas[custom_key]['cloudstack_apikey'] %>"
       secret-key: "<%= custom_iaas[custom_key]['cloudstack_secretkey'] %>"
       user-data: <%= custom_iaas[custom_key]['cloudstack_user_data'] %>
       wait-timeout: <%= custom_iaas[custom_key]['cloudstack_wait_timeout'] ? custom_iaas[custom_key]['cloudstack_wait_timeout'] : 300 %>
-      <%- else -%>
+      <%- when 'ec2' -%>
       key-id: "<%= custom_iaas[custom_key]['ec2_key_id'] %>"
       secret-key: "<%= custom_iaas[custom_key]['ec2_secret_key'] %>"
       user-data: <%= custom_iaas[custom_key]['ec2_user_data'] %>
       wait-timeout: <%= custom_iaas[custom_key]['ec2_wait_timeout'] ? custom_iaas[custom_key]['ec2_wait_timeout'] : 300 %>
+      <%- when 'dockermachine' -%>
+      user-data: <%= custom_iaas[custom_key]['dockermachine_user_data'] %>
+      debug: <%= custom_iaas[custom_key]['dockermachine_debug'] ? custom_iaas[custom_key]['dockermachine_debug'] : 'false' %>
+      driver:
+        name: <%= custom_iaas[custom_key]['dockermachine_driver'] %>
+        user-data-file-param: <%= custom_iaas[custom_key]['dockermachine_user_data_param'] %>
+        options:
+          <%- @custom_iaas[custom_key]['driver'].keys.each do |driver_key| -%>
+          <%= driver_key.gsub('_','-') %>: <%= custom_iaas[custom_key]['driver'][driver_key] %>
+          <%- end -%>
       <%- end -%>
   <%- end -%>
   node-protocol: <%= @iaas_node_protocol ? @iaas_node_protocol : 'http' %>

@@ -459,6 +459,17 @@ iaas:
       secret-key: "cloudstack_secret_key_2"
       user-data: user_data_2
       wait-timeout: 300
+    test_docker_machine:
+      provider: dockermachine
+      user-data: user_data_3
+      debug: false
+      driver:
+        name: cloudstack
+        user-data-file-param: cloudstack-userdata-file
+        options:
+          cloudstack-api-key: cloudstack_api_key_3
+          cloudstack-secret-key: cloudstack_secret_key_3
+          cloudstack-api-url: https://cloudstack3.tsuru.io
     test_ec2:
       provider: ec2
       key-id: "ec2_key_id_1"
@@ -476,11 +487,16 @@ iaas:
                                                       'cloudstack_secretkey' => 'cloudstack_secret_key_2', 'cloudstack_user_data' => 'user_data_2',
                                                       'cloudstack_api_url' => 'https://cloudstack2.tsuru.io'},
                               'test_ec2' => { 'provider' => 'ec2', 'ec2_key_id' => 'ec2_key_id_1', 'ec2_secret_key' => 'ec2_secret_key_1',
-                                             'ec2_wait_timeout' => 2, 'ec2_user_data' => 'ec2_user_data'}
+                                             'ec2_wait_timeout' => 2, 'ec2_user_data' => 'ec2_user_data'},
+                              'test_docker_machine' => { 'provider' => 'dockermachine', 'dockermachine_user_data' => 'user_data_3',
+                                                         'dockermachine_driver' => 'cloudstack', 'dockermachine_user_data_param' => 'cloudstack-userdata-file',
+                                                         'driver' => { 'cloudstack_api_key' => 'cloudstack_api_key_3', 'cloudstack_secret_key' => 'cloudstack_secret_key_3',
+                                                                       'cloudstack_api_url' => 'https://cloudstack3.tsuru.io'}}
+
                             }
           )
         }
-        it 'file /etc/tsuru/tsuru.conf must contain iaas configuration for custom iaas for test_cloudstack_1, test_cloudstack_2 and test_ec2' do
+        it 'file /etc/tsuru/tsuru.conf must contain iaas configuration for custom iaas for test_cloudstack_1, test_cloudstack_2, test_ec2 and test_docker_machine' do
           should contain_file('/etc/tsuru/tsuru.conf').with_content(/.+#{match_string}.+/)
         end
       end
