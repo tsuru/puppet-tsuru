@@ -31,7 +31,7 @@ class router::install (
   $router_service_hchecker_ensure  = 'running',
   $router_mode                     = 'planb-docker',
   $router_planb_package_version    = 'latest',
-  $lxc_docker_version              = 'latest',
+  $docker_version                  = 'latest',
   $docker_graph_dir                = undef,
   $docker_bind                     = undef,
   $docker_extra_opts               = undef,
@@ -76,7 +76,7 @@ class router::install (
   if ($router_mode == 'planb-docker') {
 
     class { 'docker':
-      lxc_docker_version => $lxc_docker_version,
+      docker_version     => $docker_version,
       docker_graph_dir   => $docker_graph_dir,
       docker_bind        => $docker_bind,
       docker_extra_opts  => $docker_extra_opts,
