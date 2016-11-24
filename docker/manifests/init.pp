@@ -5,7 +5,7 @@
 #
 # === Parameters
 #
-# [lxc_docker_version] LXC docker package version
+# [docker_version] LXC docker package version
 # [docker_graph_dir] Docker root directory where all files are located
 # [docker_bind] Docker bind array options. Eg ['tcp://0.0.0.0:4243', 'unix:///var/run/docker.sock']
 # [docker_extra_opts] Extra opts to docker daemon
@@ -13,7 +13,7 @@
 
 
 class docker (
-  $lxc_docker_version           = latest,
+  $docker_version               = latest,
   $docker_graph_dir             = '/var/lib/docker',
   $docker_bind                  = [],
   $docker_extra_opts            = '',
@@ -25,15 +25,13 @@ class docker (
     fail('\$docker_bind must be an array')
   }
 
-  if (versioncmp($lxc_docker_version, '1.9.1') <= 0 and $lxc_docker_version != latest){
-    $docker_daemon = '-d'
-  } else {
-    $docker_daemon = 'daemon'
+  if (versioncmp($docker_version, '1.9.1') <= 0 and $docker_version != latest) {
+    fail('\$docker_version must be greater than 1.9.1')
   }
 
   package { 'docker-engine':
-    ensure  => $lxc_docker_version,
-    require => [ File['/etc/default/docker'], File['/etc/init/docker.conf'] ]
+    ensure  => $docker_version,
+    require => File['/etc/default/docker']
   }
 
   $docker_bind_join = join($docker_bind, ' -H ')
@@ -58,14 +56,6 @@ class docker (
     mode    => '0644',
     owner   => root,
     group   => root,
-  }
-
-  file { '/etc/init/docker.conf':
-    ensure  => present,
-    content => template('docker/init-docker.conf.erb'),
-    mode    => '0644',
-    owner   => root,
-    group   => root
   }
 
 }

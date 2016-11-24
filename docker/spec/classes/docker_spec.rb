@@ -7,53 +7,32 @@ describe 'docker'  do
   end
 
   let :params do
-    { :lxc_docker_version => 'latest' }
-  end
-
-  context 'when setting docker version to latest' do
-    it 'install docker-engine package with latest version' do
-    should contain_package('docker-engine').with({
-      :require => ["File[/etc/default/docker]", "File[/etc/init/docker.conf]"]
-    })
-    end
-
-    it 'uses daemon flag for docker_engine' do
-      should contain_file('/etc/init/docker.conf').with_content(
-        %r{exec "$DOCKER" daemon $DOCKER_OPTS 2>&1 | logger -t docker -s}m
-      )
-    end
+    { :docker_version => 'latest' }
   end
 
   context 'when setting docker version to 1.8.1' do
-    before { params.merge!( :lxc_docker_version => '1.8.1' ) }
-
-    it 'install docker-engine version 1.8.1 package' do
-      should contain_package('docker-engine').with({
-        :ensure => '1.8.1',
-        :require => ["File[/etc/default/docker]", "File[/etc/init/docker.conf]"]
-      })
-    end
-
-    it 'uses -d flag for docker_engine' do
-      should contain_file('/etc/init/docker.conf').with_content(
-        %r{exec "$DOCKER" -d $DOCKER_OPTS 2>&1 | logger -t docker -s}m
-      )
+    before { params.merge!( :docker_version => '1.8.1' ) }
+    it 'raises puppet error when version is lower or equal than 1.9.1' do
+      should raise_error(Puppet::Error, /\$docker_version must be greater than 1.9.1/)
     end
   end
 
   context 'when setting docker version to 1.10.2' do
-    before { params.merge!( :lxc_docker_version => '1.10.2' ) }
-
-    it 'uses daemon flag for docker_engine' do
-      should contain_file('/etc/init/docker.conf').with_content(
-        %r{exec "$DOCKER" daemon $DOCKER_OPTS 2>&1 | logger -t docker -s}m
-      )
+    before { params.merge!( :docker_version => '1.10.2' ) }
+    it 'install docker-engine package with version 1.10.2' do
+      should contain_package('docker-engine').with({
+        :ensure  => '1.10.2',
+        :require => "File[/etc/default/docker]"
+      })
     end
   end
 
-  it 'creates service docker file /etc/init/docker.conf' do
-
-    should contain_file('/etc/init/docker.conf')
+  context 'when setting docker version to latest' do
+    it 'install docker-engine package with latest version' do
+      should contain_package('docker-engine').with({
+        :require => "File[/etc/default/docker]"
+      })
+    end
   end
 
   context 'setting all docker options' do
