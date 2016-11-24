@@ -76,11 +76,11 @@ class router::install (
   if ($router_mode == 'planb-docker') {
 
     class { 'docker':
-      docker_version     => $docker_version,
-      docker_graph_dir   => $docker_graph_dir,
-      docker_bind        => $docker_bind,
-      docker_extra_opts  => $docker_extra_opts,
-      proxy_url          => $proxy_url,
+      docker_version    => $docker_version,
+      docker_graph_dir  => $docker_graph_dir,
+      docker_bind       => $docker_bind,
+      docker_extra_opts => $docker_extra_opts,
+      proxy_url         => $proxy_url,
     } ->
     exec { 'pull planb':
       command => $planb_pull_command,
