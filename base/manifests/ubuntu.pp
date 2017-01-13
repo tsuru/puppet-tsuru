@@ -12,69 +12,72 @@ class base::ubuntu inherits base {
         update_timeout    => 600
   }
 
-  apt::key { 'tsuru':
-    key         => '383F073D',
-    key_content => $base::tsuru_pub_key
-  }
+  if (!$base::no_repos) {
 
-  apt::key { 'docker':
-    key         => 'A88D21E9',
-    key_content => $base::docker_pub_key
-  }
-
-  apt::key {'docker_project':
-    key         => '2C52609D',
-    key_content => $base::docker_project_pub_key
-  }
-
-  if ($base::tsuru_source_list) {
-    apt::source { 'tsuru':
-      location    => $base::tsuru_source_list,
-      include_src => false,
-      repos       => $base::tsuru_repos,
-      release     => $base::tsuru_release,
-      require     => Apt::Key['tsuru']
+    apt::key { 'tsuru':
+      key         => '383F073D',
+      key_content => $base::tsuru_pub_key
     }
-  } else {
-    apt::ppa { 'ppa:tsuru/ppa':
-      release => $base::tsuru_release,
-      require => Apt::Key['tsuru']
-    }
-  }
 
-  # Tsuru RC
-  if ($base::tsuru_rc_source_list or $base::enable_tsuru_rc) {
-    if ($base::tsuru_rc_source_list) {
-      apt::source { 'tsuru_rc':
-        location    => $base::tsuru_rc_source_list,
+    apt::key { 'docker':
+      key         => 'A88D21E9',
+      key_content => $base::docker_pub_key
+    }
+
+    apt::key {'docker_project':
+      key         => '2C52609D',
+      key_content => $base::docker_project_pub_key
+    }
+
+    if ($base::tsuru_source_list) {
+      apt::source { 'tsuru':
+        location    => $base::tsuru_source_list,
         include_src => false,
-        repos       => $base::tsuru_rc_repos,
-        release     => $base::tsuru_rc_release,
+        repos       => $base::tsuru_repos,
+        release     => $base::tsuru_release,
         require     => Apt::Key['tsuru']
       }
     } else {
-      apt::ppa { 'ppa:tsuru/rc':
-        release => $base::tsuru_rc_release,
+      apt::ppa { 'ppa:tsuru/ppa':
+        release => $base::tsuru_release,
         require => Apt::Key['tsuru']
       }
     }
-  }
 
-  if ($base::docker_source_list) {
-    apt::source { 'docker' :
-      location    => $base::docker_source_list,
-      include_src => false,
-      repos       => $base::docker_repos,
-      release     => $base::docker_release,
-      require     => [Apt::Key['docker'], Apt::Key['docker_project']]
+    # Tsuru RC
+    if ($base::tsuru_rc_source_list or $base::enable_tsuru_rc) {
+      if ($base::tsuru_rc_source_list) {
+        apt::source { 'tsuru_rc':
+          location    => $base::tsuru_rc_source_list,
+          include_src => false,
+          repos       => $base::tsuru_rc_repos,
+          release     => $base::tsuru_rc_release,
+          require     => Apt::Key['tsuru']
+        }
+      } else {
+        apt::ppa { 'ppa:tsuru/rc':
+          release => $base::tsuru_rc_release,
+          require => Apt::Key['tsuru']
+        }
+      }
     }
-  } else {
-    apt::source { 'docker' :
-      location    => 'https://apt.dockerproject.org/repo',
-      include_src => false,
-      repos       => 'main',
-      release     => 'ubuntu-trusty',
-      require     => [Apt::Key['docker'], Apt::Key['docker_project']]
+
+    if ($base::docker_source_list) {
+      apt::source { 'docker' :
+        location    => $base::docker_source_list,
+        include_src => false,
+        repos       => $base::docker_repos,
+        release     => $base::docker_release,
+        require     => [Apt::Key['docker'], Apt::Key['docker_project']]
+      }
+    } else {
+      apt::source { 'docker' :
+        location    => 'https://apt.dockerproject.org/repo',
+        include_src => false,
+        repos       => 'main',
+        release     => 'ubuntu-trusty',
+        require     => [Apt::Key['docker'], Apt::Key['docker_project']]
+      }
     }
   }
 

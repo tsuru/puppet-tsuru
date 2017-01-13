@@ -4,7 +4,7 @@
 #  base used by other tsuru classes
 #
 # === Parameters
-#
+# [no_repos]          Do not add any repository
 # [tsuru_source_list] Optional source list used instead tsuru PPA
 # [tsuru_release]     Optional release name to used instead lsb dist code
 # [docker_source_list] Optional source list used instead tsuru PPA
@@ -14,6 +14,7 @@
 #
 
 class base (
+  $no_repos              = false,
   $tsuru_source_list     = false,
   $tsuru_release         = $::lsbdistcodename,
   $tsuru_repos           = 'main',

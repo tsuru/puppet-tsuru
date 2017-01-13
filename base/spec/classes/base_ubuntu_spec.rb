@@ -61,4 +61,16 @@ describe 'base'  do
 
   end
 
+  context 'setting no repository' do
+    let :params do {
+      :no_repos => true
+    }
+    end
+
+    it 'should no add extra repository for docker or tsuru' do
+      should_not contain_apt__ppa('ppa:tsuru/ppa')
+      should_not contain_apt__source('docker').with(:location => 'https://apt.dockerproject.org/repo', :repos => 'main', :release => 'ubuntu-trusty')
+    end
+  end
+
 end

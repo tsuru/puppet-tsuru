@@ -1,0 +1,1 @@
+../../base/spec/classes/base_ubuntu_spec.rb
