@@ -155,6 +155,7 @@ describe 'api::install' do
           :docker_healing_heal_containers_timeout    => 3,
           :docker_healing_events_collection          => 'healing_events',
           :docker_healthcheck_max_time               => 150,
+          :docker_nodecontainer_max_workers          => 5,
 
           :iaas_node_protocol       => 'https',
           :iaas_node_port           => '4243',
@@ -275,6 +276,8 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    heal-containers-timeout: 3$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    events-collection : healing_events$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    max-time: 150$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  nodecontainer:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    max-workers: 5$})
       end
 
       context 'using sentinel as pubsub' do
@@ -556,7 +559,6 @@ iaas:
 '
   auto-scale:
     enabled: false
-
 '
           end
           before {
@@ -581,7 +583,6 @@ iaas:
   scheduler:
     total-memory-metadata: memory
     max-used-memory: 0.8
-
 '
           end
 

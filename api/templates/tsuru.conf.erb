@@ -180,6 +180,10 @@ docker:
   auto-scale:
     enabled: <%= @docker_auto_scale_enabled %>
   <%- end -%>
+  <%- if @docker_nodecontainer_max_workers -%>
+  nodecontainer:
+    max-workers: <%= @docker_nodecontainer_max_workers %>
+  <%- end -%>
 <%- end -%>
 
 # - Iaas configuration

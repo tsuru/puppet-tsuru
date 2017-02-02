@@ -119,6 +119,7 @@
 # [docker_healthcheck_max_time]                maximum time in seconds to wait for deployment time health check to be successful
 # [docker_image_history_size]                  number of images available for rollback using tsuru app-deploy-rollback
 # [docker_security_opts]                       list of security options that will be passed to containers
+# [docker_nodecontainer_max_workers]           number of concurrent workers creating node containers
 #
 # - IaaS configuration
 #
@@ -232,6 +233,7 @@ class api::install (
   $docker_scheduler_max_used_memory = undef,
   $docker_use_auto_scale = false,
   $docker_auto_scale_enabled = false,
+  $docker_nodecontainer_max_workers = undef,
 
   $tsuru_iaas_default = undef,
   $ec2_key_id = undef,
