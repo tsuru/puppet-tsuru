@@ -22,6 +22,7 @@ class rpaas::install (
   $extra_syslog_server      = undef,
   $nginx_syslog_tag         = undef,
   $nginx_dhparams           = undef,
+  $nginx_vts_enabled        = false,
   $consul_template_version  = latest,
   $consul_server            = undef,
   $consul_syslog_enabled    = true,

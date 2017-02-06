@@ -101,7 +101,6 @@ describe 'rpaas::install' do
             deny            all;
             proxy_cache_purge  rpaas $1$is_args$args;
         }
-
     }
 EOF
       custom_worker_process = <<"EOF"
@@ -144,6 +143,42 @@ EOF
       should contain_exec('apt_update')
       should contain_exec('ssl')
       should contain_exec('add-apt-repository-ppa:tsuru/ppa')
+    end
+
+  end
+
+  context 'enabling vts' do
+    let :params do
+      {
+        :nginx_vts_enabled => true
+      }
+    end
+    server_vts_enabled = <<"EOF"
+    vhost_traffic_status_zone;
+    server {
+        listen     8089;
+        server_name  _tsuru_nginx_admin;
+
+        location /healthcheck {
+            echo "WORKING";
+        }
+
+        location ~ ^/purge/(.+) {
+            allow           127.0.0.0/24;
+            allow           127.1.0.0/24;
+            deny            all;
+            proxy_cache_purge  rpaas $1$is_args$args;
+        }
+
+        location /vts_status {
+          vhost_traffic_status_display;
+          vhost_traffic_status_display_format json;
+        }
+    }
+EOF
+
+    it 'add custom location to admin block and enable it at http block' do
+      should contain_file('/etc/nginx/nginx.conf').with_content(/#{Regexp.escape(server_vts_enabled)}/)
     end
 
   end

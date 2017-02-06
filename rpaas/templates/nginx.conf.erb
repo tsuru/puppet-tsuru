@@ -65,7 +65,9 @@ http {
                         application/json application/rss+xml
                         application/xml application/x-javascript
                         text/css text/javascript text/plain text/xml;
-
+<% if @nginx_vts_enabled -%>
+    vhost_traffic_status_zone;
+<% end -%>
     server {
         listen     <%= @nginx_admin_listen %>;
         server_name  _tsuru_nginx_admin;
@@ -83,7 +85,13 @@ http {
             proxy_cache_purge  rpaas $1$is_args$args;
         }
 <% end -%>
+<% if @nginx_vts_enabled -%>
 
+        location /vts_status {
+          vhost_traffic_status_display;
+          vhost_traffic_status_display_format json;
+        }
+<% end -%>
     }
 
     include sites-enabled/consul/blocks/http.conf;
