@@ -97,8 +97,8 @@ http {
     include sites-enabled/consul/blocks/http.conf;
 
     server {
-        listen <%= @nginx_listen %> default_server;
-        listen <%= @nginx_ssl_listen %> ssl default_server;
+        listen <%= @nginx_listen %> default_server backlog=<%= @sysctl_somaxconn %>;
+        listen <%= @nginx_ssl_listen %> ssl default_server backlog=<%= @sysctl_somaxconn %>;
 
         ssl_certificate /etc/nginx/certs/nginx.crt;
         ssl_certificate_key /etc/nginx/certs/nginx.key;

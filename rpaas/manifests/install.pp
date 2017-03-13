@@ -37,7 +37,9 @@ class rpaas::install (
   $consul_agent_datacenter  = 'dc1',
   $consul_agent_client_addr = '0.0.0.0',
   $consul_agent_bind_addr   = '0.0.0.0',
-  $consul_members           = ['127.0.0.1']
+  $consul_members           = ['127.0.0.1'],
+  $sysctl_somaxconn         = 2048,
+  $sysctl_max_syn_backlog   = 512
 
 ) inherits rpaas {
 
@@ -247,6 +249,22 @@ class rpaas::install (
     content => template('rpaas/nginx.conf.erb'),
     notify  => Service['nginx'],
     require => File['/etc/nginx']
+  }
+
+  file { '/etc/sysctl.d/99-nginx_tunnings.conf':
+    content => template('rpaas/sysctl_nginx_tunnings.conf.erb'),
+    notify  => Exec['invoke-rc.d procps start']
+  }->
+  exec { 'invoke-rc.d procps start':
+    path        => '/bin:/sbin:/usr/bin:/usr/sbin',
+    subscribe   => File['/etc/sysctl.d/99-nginx_tunnings.conf'],
+    refreshonly => true
+  }->
+  exec { 'restart sysctl when wrong nginx values':
+    command => 'invoke-rc.d procps start',
+    path    => '/bin:/sbin:/usr/bin:/usr/sbin',
+    onlyif  => "sysctl net.core.somaxconn | egrep -v '${sysctl_somaxconn}$' || \
+                sysctl net.ipv4.tcp_max_syn_backlog | egrep -v '${sysctl_max_syn_backlog}$'"
   }
 
 }
