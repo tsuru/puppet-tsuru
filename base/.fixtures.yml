@@ -8,6 +8,6 @@ fixtures:
       ref: 4.3.2
     apt:
       repo: "puppetlabs/apt"
-      ref: 1.8.0
+      ref: 2.4.0
   symlinks:
     "base": "#{source_dir}"

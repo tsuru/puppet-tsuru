@@ -8,10 +8,12 @@ describe 'base'  do
 
   it 'contains class apt' do
     should contain_class('apt').with(
-      :always_apt_update => true,
-      :disable_keys       => true,
-      :update_timeout     => 600
+      :update => { 'frequency' => 'always', 'timeout' => 600 }
     )
+  end
+
+  it 'contains define apt::key{unauth}' do
+    should contain_apt__conf('unauth')
   end
 
   it 'contains define apt::key{tsuru}' do
