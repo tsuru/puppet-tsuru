@@ -219,6 +219,7 @@ class api::install (
   $docker_run_cmd_bin = '/var/lib/tsuru/start',
   $docker_run_cmd_port = '8888',
   $docker_user = 'tsuru',
+  $docker_uid = undef,
   $docker_healing_heal_nodes = undef,
   $docker_healing_active_monitoring_interval = undef,
   $docker_healing_disabled_time = undef,
@@ -234,6 +235,9 @@ class api::install (
   $docker_use_auto_scale = false,
   $docker_auto_scale_enabled = false,
   $docker_nodecontainer_max_workers = undef,
+
+  $kubernetes_deploy_sidecar_image = undef,
+  $kubernetes_deploy_inspect_image = undef,
 
   $tsuru_iaas_default = undef,
   $ec2_key_id = undef,
