@@ -34,11 +34,11 @@ class base::ubuntu inherits base {
 
     if ($base::tsuru_source_list) {
       apt::source { 'tsuru':
-        location    => $base::tsuru_source_list,
-        include     => { 'src' => false },
-        repos       => $base::tsuru_repos,
-        release     => $base::tsuru_release,
-        require     => Apt::Key['tsuru']
+        location => $base::tsuru_source_list,
+        include  => { 'src' => false },
+        repos    => $base::tsuru_repos,
+        release  => $base::tsuru_release,
+        require  => Apt::Key['tsuru']
       }
     } else {
       apt::ppa { 'ppa:tsuru/ppa':
@@ -51,11 +51,11 @@ class base::ubuntu inherits base {
     if ($base::tsuru_rc_source_list or $base::enable_tsuru_rc) {
       if ($base::tsuru_rc_source_list) {
         apt::source { 'tsuru_rc':
-          location    => $base::tsuru_rc_source_list,
-          include     => { 'src' => false },
-          repos       => $base::tsuru_rc_repos,
-          release     => $base::tsuru_rc_release,
-          require     => Apt::Key['tsuru']
+          location => $base::tsuru_rc_source_list,
+          include  => { 'src' => false },
+          repos    => $base::tsuru_rc_repos,
+          release  => $base::tsuru_rc_release,
+          require  => Apt::Key['tsuru']
         }
       } else {
         apt::ppa { 'ppa:tsuru/rc':
@@ -67,19 +67,19 @@ class base::ubuntu inherits base {
 
     if ($base::docker_source_list) {
       apt::source { 'docker' :
-        location    => $base::docker_source_list,
-        include     => { 'src' => false },
-        repos       => $base::docker_repos,
-        release     => $base::docker_release,
-        require     => [Apt::Key['docker'], Apt::Key['docker_project']]
+        location => $base::docker_source_list,
+        include  => { 'src' => false },
+        repos    => $base::docker_repos,
+        release  => $base::docker_release,
+        require  => [Apt::Key['docker'], Apt::Key['docker_project']]
       }
     } else {
       apt::source { 'docker' :
-        location    => 'https://apt.dockerproject.org/repo',
-        include     => { 'src' => false },
-        repos       => 'main',
-        release     => 'ubuntu-trusty',
-        require     => [Apt::Key['docker'], Apt::Key['docker_project']]
+        location => 'https://apt.dockerproject.org/repo',
+        include  => { 'src' => false },
+        repos    => 'main',
+        release  => 'ubuntu-trusty',
+        require  => [Apt::Key['docker'], Apt::Key['docker_project']]
       }
     }
   }
