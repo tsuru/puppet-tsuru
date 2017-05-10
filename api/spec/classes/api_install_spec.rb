@@ -76,8 +76,7 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  run-cmd:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    bin: /var/lib/tsuru/start$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    port: 8888$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  ssh:$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    user: tsuru$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  user: tsuru$})
         should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  healing:})
       end
 
@@ -265,8 +264,7 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  run-cmd:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    bin: /var/lib/tsuru/start$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    port: 8888$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  ssh:$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    user: tsuru$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  user: tsuru$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  healing:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    heal-nodes: true$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    active-monitoring-interval: 3$})
