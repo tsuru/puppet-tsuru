@@ -8,7 +8,7 @@ fixtures:
             ref: 1.0.1
         apt:
             repo: "puppetlabs/apt"
-            ref: 1.8.0
+            ref: 2.4.0
         stdlib:
             repo: "puppetlabs/stdlib"
             ref: 4.3.2

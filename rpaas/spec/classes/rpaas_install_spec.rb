@@ -16,9 +16,6 @@ describe 'rpaas::install' do
   context "on a Ubuntu OS with default params" do
 
     it do
-      should contain_anchor('apt::ppa::ppa:tsuru/ppa')
-      should contain_anchor('apt::source::docker')
-      should contain_anchor('apt::update')
       should contain_anchor('apt_key 383F073D present')
       should contain_anchor('apt_key A88D21E9 present')
     end
@@ -49,7 +46,6 @@ describe 'rpaas::install' do
 
     it do
       should contain_package('nginx-extras')
-      should contain_package('software-properties-common')
     end
 
     # test files
@@ -58,10 +54,6 @@ describe 'rpaas::install' do
       should contain_file('/etc/apt/sources.list.d/tsuru-ppa-trusty.list')
       should contain_file('/etc/nginx/sites-enabled/default')
       should contain_file('/etc/nginx/sites-enabled')
-      should contain_file('01proxy')
-      should contain_file('99unauth')
-      should contain_file('docker.list')
-      should contain_file('old-proxy-file')
       should contain_file('preferences.d')
       should contain_file('sources.list.d')
       should contain_file('sources.list')

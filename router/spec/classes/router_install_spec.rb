@@ -31,19 +31,12 @@ describe 'router::install' do
         should contain_exec('apt_update')
         should contain_exec('add-apt-repository-ppa:tsuru/ppa')
 
-        should contain_file('docker.list')
         should contain_file('sources.list')
         should contain_file('sources.list.d')
         should contain_file('preferences.d')
-        should contain_file('99unauth')
-        should contain_file('01proxy')
-        should contain_file('old-proxy-file')
         should contain_file('/etc/apt/apt.conf.d/15update-stamp')
         should contain_file('/etc/apt/sources.list.d/tsuru-ppa-precise.list')
 
-        should contain_anchor('apt::update')
-        should contain_anchor('apt::source::docker')
-        should contain_anchor('apt::ppa::ppa:tsuru/ppa')
         should contain_anchor('apt_key 383F073D present')
         should contain_anchor('apt_key A88D21E9 present')
 
