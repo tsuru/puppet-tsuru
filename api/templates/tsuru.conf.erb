@@ -123,6 +123,7 @@ routers:
     balance-policy: <%= routers[router]['galeb_balance_policy'] %>
     rule-type: <%= routers[router]['galeb_rule_type'] %>
     <%= @routers[router]['galeb_debug'] ? "debug: #{routers[router]['galeb_debug']}" : "debug: false" %>
+    <%= @routers[router]['galeb_use_token'] ? "use-token: #{routers[router]['galeb_use_token']}" : "use-token: false" %>
 <%- else -%>
     <%- raise Puppet::Error, "Router type unknown. Valid types are: hipache, planb, vulcand or galeb" -%>
 <%- end -%>
