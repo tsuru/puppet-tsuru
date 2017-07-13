@@ -175,6 +175,47 @@ EOF
 
   end
 
+  context 'enabling request_id' do
+    let :params do
+      {
+        :nginx_request_id_enabled => true,
+        :nginx_local_log          => false,
+        :nginx_syslog_server      => 'localhost'
+      }
+    end
+    server_request_id_enabled = <<"EOF"
+    uuid4 $request_id_uuid;
+    map $http_x_request_id $request_id_final {
+      default $request_id_uuid;
+      "~." $http_x_request_id;
+    }
+
+
+    log_format main
+      '${remote_addr}\t${host}\t${request_method}\t${request_uri}\t${server_protocol}\t'
+      '${http_referer}\t${http_x_mobile_group}\t'
+      'Local:\t${status}\t*${connection}\t${body_bytes_sent}\t${request_time}\t'
+      'Proxy:\t${upstream_addr}\t${upstream_status}\t${upstream_cache_status}\t'
+      '${upstream_response_length}\t${upstream_response_time}\t${request_uri}\t'
+      'Agent:\t${http_user_agent}\t$request_id_final\t'
+      'Fwd:\t${http_x_forwarded_for}';
+
+    access_log syslog:server=localhost,facility=local6,tag=rpaas main;
+    error_log syslog:server=localhost,facility=local6,tag=rpaas;
+EOF
+
+    server_request_id_headers = <<"EOF"
+        more_set_input_headers "X-Request-ID: $request_id_final";
+        more_set_headers "X-Request-ID: $request_id_final";
+EOF
+    it 'add request_id headers' do
+      should contain_file('/etc/nginx/nginx.conf').with_content(/#{Regexp.escape(server_request_id_headers)}/)
+    end
+    it 'add uuid4 module, generate request_id headers' do
+      should contain_file('/etc/nginx/nginx.conf').with_content(/#{Regexp.escape(server_request_id_enabled)}/)
+    end
+  end
+
   context 'using consul backend' do
     let :params do
       {
