@@ -30,15 +30,14 @@ class docker (
   }
 
   if (versioncmp($docker_version, '17.03.2') >=0 or $docker_version == latest) {
-    package { 'docker-ce':
-      ensure  => $docker_version,
-      require => File['/etc/default/docker']
-    }
+    $docker_package = 'docker-ce'
   } else {
-    package { 'docker-engine':
-      ensure  => $docker_version,
-      require => File['/etc/default/docker']
-    }
+    $docker_package = 'docker-engine'
+  }
+
+  package { $docker_package:
+    ensure  => $docker_version,
+    require => File['/etc/default/docker']
   }
 
   $docker_bind_join = join($docker_bind, ' -H ')
@@ -54,7 +53,7 @@ class docker (
   service { 'docker':
     ensure  => running,
     enable  => true,
-    require => Package['docker-engine']
+    require => Package[$docker_package]
   }
 
   file { '/etc/default/docker':
