@@ -27,9 +27,19 @@ describe 'docker'  do
     end
   end
 
+  context 'when setting docker version to 17.03.2' do
+    before { params.merge!( :docker_version => '17.03.2' ) }
+    it 'install docker-ce package with version 17.03.2' do
+      should contain_package('docker-ce').with({
+        :ensure  => '17.03.2',
+        :require => "File[/etc/default/docker]"
+      })
+    end
+  end
+
   context 'when setting docker version to latest' do
     it 'install docker-engine package with latest version' do
-      should contain_package('docker-engine').with({
+      should contain_package('docker-ce').with({
         :require => "File[/etc/default/docker]"
       })
     end

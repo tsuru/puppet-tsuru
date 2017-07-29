@@ -29,9 +29,16 @@ class docker (
     fail('\$docker_version must be greater than 1.9.1')
   }
 
-  package { 'docker-engine':
-    ensure  => $docker_version,
-    require => File['/etc/default/docker']
+  if (versioncmp($docker_version, '17.03.2') >=0 or $docker_version == latest) {
+    package { 'docker-ce':
+      ensure  => $docker_version,
+      require => File['/etc/default/docker']
+    }
+  } else {
+    package { 'docker-engine':
+      ensure  => $docker_version,
+      require => File['/etc/default/docker']
+    }
   }
 
   $docker_bind_join = join($docker_bind, ' -H ')
