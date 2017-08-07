@@ -23,7 +23,6 @@ class rpaas::install (
   $nginx_dhparams                    = undef,
   $nginx_vts_enabled                 = false,
   $nginx_lua                         = false,
-  $nginx_session_resumption          = false,
   $nginx_request_id_enabled          = false,
   $nginx_disable_response_request_id = false,
   $consul_template_version           = latest,
@@ -187,12 +186,6 @@ class rpaas::install (
       ensure  => file,
       replace => false,
       require => File['/etc/nginx/sites-enabled/consul/blocks']
-    }
-
-    file { '/usr/local/share/lualib':
-      ensure  => directory,
-      source  => 'puppet:///modules/rpaas/lualib',
-      recurse => true,
     }
   } else {
     $lua_templates = []
