@@ -40,3 +40,18 @@ template {
     command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
     perms = 0644
 }
+<% if @nginx_lua %>
+template {
+    source = "/etc/consul-template.d/templates/lua_server.conf.tpl"
+    destination = "/etc/nginx/sites-enabled/consul/blocks/lua_server.conf"
+    command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
+    perms = 0644
+}
+
+template {
+    source = "/etc/consul-template.d/templates/lua_worker.conf.tpl"
+    destination = "/etc/nginx/sites-enabled/consul/blocks/lua_worker.conf"
+    command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
+    perms = 0644
+}
+<% end %>

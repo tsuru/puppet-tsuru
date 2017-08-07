@@ -22,6 +22,8 @@ class rpaas::install (
   $nginx_syslog_tag                  = undef,
   $nginx_dhparams                    = undef,
   $nginx_vts_enabled                 = false,
+  $nginx_lua                         = false,
+  $nginx_session_resumption          = false,
   $nginx_request_id_enabled          = false,
   $nginx_disable_response_request_id = false,
   $consul_template_version           = latest,
@@ -163,27 +165,64 @@ class rpaas::install (
     mode    => '0755'
   }
 
+  if $nginx_lua {
+    $lua_templates = [ File['/etc/consul-template.d/templates/lua_server.conf.tpl'],
+                      File['/etc/consul-template.d/templates/lua_worker.conf.tpl'] ]
+
+    lua_file { 'server':
+      lua_type => 'server'
+    }
+
+    lua_file { 'worker':
+      lua_type => 'worker'
+    }
+
+    file { '/etc/nginx/sites-enabled/consul/blocks/lua_server.conf':
+      ensure  => file,
+      replace => false,
+      require => File['/etc/nginx/sites-enabled/consul/blocks']
+    }
+
+    file { '/etc/nginx/sites-enabled/consul/blocks/lua_worker.conf':
+      ensure  => file,
+      replace => false,
+      require => File['/etc/nginx/sites-enabled/consul/blocks']
+    }
+
+    file { '/usr/local/share/lualib':
+      ensure  => directory,
+      source  => 'puppet:///modules/rpaas/lualib',
+      recurse => true,
+    }
+  } else {
+    $lua_templates = []
+  }
+
+  $service_consul_template_requirements = concat ([ Package['consul-template'],
+                  File['/etc/consul-template.d/consul.conf'],
+                  File['/etc/consul-template.d/templates/locations.conf.tpl'],
+                  File['/etc/consul-template.d/templates/nginx.key.tpl'],
+                  File['/etc/consul-template.d/templates/nginx.crt.tpl'],
+                  File['/etc/consul-template.d/templates/block_http.conf.tpl'],
+                  File['/etc/consul-template.d/templates/block_server.conf.tpl'],
+                  File['/etc/consul-template.d/plugins/check_nginx_ssl_data.sh'],
+                  File['/etc/nginx/certs'],
+                  File['/etc/consul-template.d/plugins/check_and_reload_nginx.sh'] ], $lua_templates)
+
+  $service_consul_template_subscribe = concat([ Package['consul-template'],
+                  File['/etc/consul-template.d/consul.conf'],
+                  File['/etc/consul-template.d/templates/locations.conf.tpl'],
+                  File['/etc/consul-template.d/templates/nginx.key.tpl'],
+                  File['/etc/consul-template.d/templates/nginx.crt.tpl'],
+                  File['/etc/consul-template.d/templates/block_http.conf.tpl'],
+                  File['/etc/consul-template.d/templates/block_server.conf.tpl'],
+                  File['/etc/consul-template.d/plugins/check_nginx_ssl_data.sh'],
+                  File['/etc/nginx/certs'] ] , $lua_templates)
+
   service { 'consul-template':
     ensure    => running,
-    require   => [  Package['consul-template'],
-                    File['/etc/consul-template.d/consul.conf'],
-                    File['/etc/consul-template.d/templates/locations.conf.tpl'],
-                    File['/etc/consul-template.d/templates/nginx.key.tpl'],
-                    File['/etc/consul-template.d/templates/nginx.crt.tpl'],
-                    File['/etc/consul-template.d/templates/block_http.conf.tpl'],
-                    File['/etc/consul-template.d/templates/block_server.conf.tpl'],
-                    File['/etc/consul-template.d/plugins/check_nginx_ssl_data.sh'],
-                    File['/etc/nginx/certs'],
-                    File['/etc/consul-template.d/plugins/check_and_reload_nginx.sh'] ],
-    subscribe => [  Package['consul-template'],
-                    File['/etc/consul-template.d/consul.conf'],
-                    File['/etc/consul-template.d/templates/locations.conf.tpl'],
-                    File['/etc/consul-template.d/templates/nginx.key.tpl'],
-                    File['/etc/consul-template.d/templates/nginx.crt.tpl'],
-                    File['/etc/consul-template.d/templates/block_http.conf.tpl'],
-                    File['/etc/consul-template.d/templates/block_server.conf.tpl'],
-                    File['/etc/consul-template.d/plugins/check_nginx_ssl_data.sh'],
-                    File['/etc/nginx/certs'] ]
+    require   => $service_consul_template_requirements,
+    subscribe => $service_consul_template_subscribe
   }
 
   file { '/etc/nginx/sites-enabled/consul/blocks/http.conf':
@@ -267,5 +306,4 @@ class rpaas::install (
     onlyif  => "sysctl net.core.somaxconn | egrep -v '${sysctl_somaxconn}$' || \
                 sysctl net.ipv4.tcp_max_syn_backlog | egrep -v '${sysctl_max_syn_backlog}$'"
   }
-
 }
