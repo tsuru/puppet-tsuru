@@ -69,7 +69,10 @@ http {
     vhost_traffic_status_zone;
 <% end -%>
     server {
-        listen     <% if @nginx_admin_enable_ssl -%><%= @nginx_admin_ssl_listen %> ssl<% else -%><%= @nginx_admin_listen %><% end %>;
+        listen <%= @nginx_admin_listen %>;
+<% if @nginx_admin_enable_ssl -%>
+        listen <%= @nginx_admin_ssl_listen %> ssl;
+<% end -%>
 
 <% if @nginx_admin_enable_ssl -%>
         ssl_certificate /etc/nginx/certs/nginx_admin.crt;
