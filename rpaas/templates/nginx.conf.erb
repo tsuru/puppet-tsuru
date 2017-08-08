@@ -93,6 +93,9 @@ http {
         }
 <% end -%>
 
+<% if @nginx_admin_locations -%>
+        include nginx_admin_locations.conf;
+<% end -%>
     }
 
     include sites-enabled/consul/blocks/http.conf;

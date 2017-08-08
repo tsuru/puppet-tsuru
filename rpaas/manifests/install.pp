@@ -23,6 +23,7 @@ class rpaas::install (
   $nginx_dhparams                    = undef,
   $nginx_vts_enabled                 = false,
   $nginx_lua                         = false,
+  $nginx_admin_locations             = false,
   $nginx_request_id_enabled          = false,
   $nginx_disable_response_request_id = false,
   $consul_template_version           = latest,
@@ -189,6 +190,14 @@ class rpaas::install (
     }
   } else {
     $lua_templates = []
+  }
+
+  if $nginx_admin_locations {
+    file { '/etc/nginx/nginx_admin_locations.conf':
+      ensure  => file,
+      notify  => Service['nginx'],
+      require => File['/etc/nginx']
+    }
   }
 
   $service_consul_template_requirements = concat ([ Package['consul-template'],
