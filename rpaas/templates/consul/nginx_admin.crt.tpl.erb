@@ -1,0 +1,1 @@
+{{ key_or_default "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/ssl/<%= @vm_id %>/cert" "" | plugin "check_nginx_ssl_data.sh" "crt" }}

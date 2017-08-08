@@ -9,6 +9,8 @@ class rpaas::install (
   $nginx_listen                      = 8080,
   $nginx_ssl_listen                  = 8443,
   $nginx_admin_listen                = 8089,
+  $nginx_admin_ssl_listen            = 8090,
+  $nginx_admin_enable_ssl            = false,
   $nginx_key_zone_size               = '10m',
   $nginx_cache_inactive              = '3d',
   $nginx_cache_size                  = '3g',
@@ -165,6 +167,30 @@ class rpaas::install (
     mode    => '0755'
   }
 
+  if $nginx_admin_enable_ssl {
+    rpaas::generate_ssl_certs { 'generate_nginx_admin_ssl_key_cert':
+      key => $rpaas::consul_admin_ssl_key_file,
+      crt => $rpaas::consul_admin_ssl_crt_file
+    }
+
+    file { '/etc/consul-template.d/templates/nginx_admin.key.tpl':
+      ensure  => file,
+      content => template('rpaas/consul/nginx_admin.key.tpl.erb'),
+      require => File['/etc/consul-template.d/templates']
+    }
+
+    file { '/etc/consul-template.d/templates/nginx_admin.crt.tpl':
+      ensure  => file,
+      content => template('rpaas/consul/nginx_admin.crt.tpl.erb'),
+      require => File['/etc/consul-template.d/templates']
+    }
+
+    $nginx_admin_ssl_templates = [ File['/etc/consul-template.d/templates/nginx_admin.key.tpl'],
+                              File['/etc/consul-template.d/templates/nginx_admin.crt.tpl'] ]
+  } else {
+    $nginx_admin_ssl_templates = []
+  }
+
   if $nginx_lua {
     $lua_templates = [ File['/etc/consul-template.d/templates/lua_server.conf.tpl'],
                       File['/etc/consul-template.d/templates/lua_worker.conf.tpl'] ]
@@ -209,7 +235,7 @@ class rpaas::install (
                   File['/etc/consul-template.d/templates/block_server.conf.tpl'],
                   File['/etc/consul-template.d/plugins/check_nginx_ssl_data.sh'],
                   File['/etc/nginx/certs'],
-                  File['/etc/consul-template.d/plugins/check_and_reload_nginx.sh'] ], $lua_templates)
+                  File['/etc/consul-template.d/plugins/check_and_reload_nginx.sh'] ], $lua_templates, $nginx_admin_ssl_templates)
 
   $service_consul_template_subscribe = concat([ Package['consul-template'],
                   File['/etc/consul-template.d/consul.conf'],
@@ -219,7 +245,7 @@ class rpaas::install (
                   File['/etc/consul-template.d/templates/block_http.conf.tpl'],
                   File['/etc/consul-template.d/templates/block_server.conf.tpl'],
                   File['/etc/consul-template.d/plugins/check_nginx_ssl_data.sh'],
-                  File['/etc/nginx/certs'] ] , $lua_templates)
+                  File['/etc/nginx/certs'] ] , $lua_templates, $nginx_admin_ssl_templates)
 
   service { 'consul-template':
     ensure    => running,
@@ -259,26 +285,9 @@ class rpaas::install (
     group   => $nginx_group
   }
 
-  $ssl_key_file   = $rpaas::consul_ssl_key_file
-  $ssl_crt_file  = $rpaas::consul_ssl_crt_file
-  $ssl_command = "/usr/bin/sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-                 -keyout ${ssl_key_file} \
-                 -out ${ssl_crt_file} \
-                 -subj \"/C=BR/ST=RJ/L=RJ/O=do not use me/OU=do not use me/CN=rpaas.tsuru\""
-
-  exec { 'ssl':
-    path    => '/etc/nginx',
-    command => $ssl_command,
-    onlyif  => ["/usr/bin/test ! -f ${ssl_key_file}",
-                "/usr/bin/test ! -f ${ssl_crt_file}"],
-    require => [File['/etc/nginx'], File[$rpaas::consul_ssl_dir]]
-  }
-
-  file { [$ssl_key_file, $ssl_crt_file]:
-    ensure  => file,
-    owner   => $nginx_user,
-    group   => $nginx_group,
-    require => Exec['ssl'],
+  rpaas::generate_ssl_certs { 'generate_nginx_ssl_key_cert':
+    key => $rpaas::consul_ssl_key_file,
+    crt => $rpaas::consul_ssl_crt_file
   }
 
   file { '/etc/nginx/sites-enabled/default':
