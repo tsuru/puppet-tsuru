@@ -13,7 +13,7 @@
     "operatingsystemrelease": [ "14.04" ]}
    ],
   "dependencies": [
-    { "name": "puppetlabs/stdlib", "version_requirement": ">= 2.5.0" },
+    { "name": "puppetlabs/stdlib", "version_requirement": ">= 4.17.1" },
     { "name": "saz/sudo" },
     { "name": "tsuru/base" }
   ]
