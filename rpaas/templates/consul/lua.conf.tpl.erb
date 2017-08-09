@@ -1,10 +1,10 @@
-<% if @name == "server" %>
+<% if @name == "server" -%>
 init_by_lua_block {
-<% else %>
-  <% if @name == "worker"%>
+<% else -%>
+<% if @name == "worker" -%>
 init_worker_by_lua_block {
-  <% end %>
-<% end %>
+<% end -%>
+<% end -%>
 {{ with $locations := ls "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/lua_module/<%= @name %>" }}
   {{ range $locations }}
     {{if .Value | regexMatch "(?ms)-- Begin custom RpaaS .+ lua module --.+-- End custom RpaaS .+ lua module --" }}

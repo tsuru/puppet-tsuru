@@ -10,6 +10,7 @@ describe 'rpaas::install' do
       :lsbdistcodename           => 'trusty',
       :hostname                  => 'foo.bar',
       :zabbix_enable             => true,
+      :vm_id                     => 'd196717b-bcca-4ab1-8ca3-221b2ac4bf8d'
     }
   end
 
@@ -74,7 +75,7 @@ describe 'rpaas::install' do
           :nginx_intercept_errors => true,
           :nginx_syslog_server => '127.0.0.1',
           :nginx_syslog_tag => 'rpaas01',
-          :nginx_dhparams => '/etc/nginx/dh_params.pem'
+          :nginx_dhparams => '/etc/nginx/dh_params.pem',
         }
       end
 
@@ -138,6 +139,73 @@ EOF
     end
 
   end
+
+  context 'enabling nginx admin ssl' do
+    let :params do
+      {
+        :nginx_admin_enable_ssl => true
+      }
+    end
+
+    nginx_admin_ssl_enabled = <<"EOF"
+    server {
+        listen 8089;
+        listen 8090 ssl;
+        ssl_certificate /etc/nginx/certs/nginx_admin.crt;
+        ssl_certificate_key /etc/nginx/certs/nginx_admin.key;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_ciphers 'ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:ECDHE-ECDSA-DES-CBC3-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:DES-CBC3-SHA:!DSS';
+        ssl_prefer_server_ciphers on;
+        ssl_session_cache shared:SSL:200m;
+        ssl_session_timeout 1h;
+        server_name  _tsuru_nginx_admin;
+
+        location /healthcheck {
+            echo "WORKING";
+        }
+EOF
+
+    it 'nginx admin server should bind to the ssl port' do
+      should contain_file('/etc/nginx/nginx.conf').with_content(/#{Regexp.escape(nginx_admin_ssl_enabled)}/)
+    end
+  end
+
+
+  context 'enabling nginx custom locations based on consul' do
+    let :params do
+      {
+        :nginx_admin_locations => true
+      }
+    end
+
+    nginx_custom_locations = <<"EOF"
+    server {
+        listen 8089;
+        server_name  _tsuru_nginx_admin;
+
+        location /healthcheck {
+            echo "WORKING";
+        }
+
+        location ~ ^/purge/(.+) {
+            allow           127.0.0.0/24;
+            allow           127.1.0.0/24;
+            deny            all;
+            proxy_cache_purge  rpaas $1$is_args$args;
+        }
+        include nginx_admin_locations.conf;
+    }
+EOF
+
+    it 'nginx admin server should include a custom locations file' do
+      should contain_file('/etc/nginx/nginx.conf').with_content(/#{Regexp.escape(nginx_custom_locations)}/)
+    end
+
+    it 'nginx admin server should have a custom admin location file to not throw an error' do
+      should contain_file('/etc/nginx/nginx_admin_locations.conf')
+    end
+  end
+
 
   context 'enabling vts' do
     let :params do
@@ -219,10 +287,12 @@ EOF
   context 'using consul backend' do
     let :params do
       {
-        :consul_server        => 'foo.bar:8500',
-        :consul_acl_token     => '0000-1111',
-        :rpaas_service_name   => 'rpaas_fe',
-        :rpaas_instance_name  => 'foo_instance'
+        :consul_server          => 'foo.bar:8500',
+        :consul_acl_token       => '0000-1111',
+        :rpaas_service_name     => 'rpaas_fe',
+        :rpaas_instance_name    => 'foo_instance',
+        :nginx_admin_enable_ssl => true,
+        :nginx_lua              => true
       }
     end
 
@@ -239,6 +309,44 @@ EOF
 EOF
     )
     end
+
+    it 'generate admin key template file for consul' do
+      should contain_file('/etc/consul-template.d/templates/nginx_admin.key.tpl').with_content(<<EOF
+{{ key_or_default "rpaas_fe/foo_instance/ssl/d196717b-bcca-4ab1-8ca3-221b2ac4bf8d/key" "" | plugin "check_nginx_ssl_data.sh" "key" }}
+EOF
+    )
+    end
+
+    it 'generate admin crt template file for consul' do
+      should contain_file('/etc/consul-template.d/templates/nginx_admin.crt.tpl').with_content(<<EOF
+{{ key_or_default "rpaas_fe/foo_instance/ssl/d196717b-bcca-4ab1-8ca3-221b2ac4bf8d/cert" "" | plugin "check_nginx_ssl_data.sh" "crt" }}
+EOF
+    )
+    end
+
+    lua_worker_content = <<EOF
+init_worker_by_lua_block {
+{{ with $locations := ls "rpaas_fe/foo_instance/lua_module/worker" }}
+  {{ range $locations }}
+    {{if .Value | regexMatch "(?ms)-- Begin custom RpaaS .+ lua module --.+-- End custom RpaaS .+ lua module --" }}
+{{ .Value }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+}
+EOF
+
+    lua_server_content = <<EOF
+init_by_lua_block {
+{{ with $locations := ls "rpaas_fe/foo_instance/lua_module/server" }}
+  {{ range $locations }}
+    {{if .Value | regexMatch "(?ms)-- Begin custom RpaaS .+ lua module --.+-- End custom RpaaS .+ lua module --" }}
+{{ .Value }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+}
+EOF
 
     it 'generate block templates file for consul' do
       should contain_file('/etc/consul-template.d/templates/block_http.conf.tpl').with_content(<<EOF
@@ -266,11 +374,19 @@ EOF
 {{ end }}
 EOF
       )
-    end
+
+    should contain_file('/etc/consul-template.d/templates/lua_server.conf.tpl').with_content(lua_server_content)
+    should contain_file('/etc/consul-template.d/templates/lua_worker.conf.tpl').with_content(lua_worker_content)
+  end
 
     it 'generate initial empty block files' do
       should contain_file('/etc/nginx/sites-enabled/consul/blocks/http.conf')
       should contain_file('/etc/nginx/sites-enabled/consul/blocks/server.conf')
+    end
+
+    it 'generate initial empty block files for lua' do
+      should contain_file('/etc/nginx/sites-enabled/consul/blocks/lua_server.conf')
+      should contain_file('/etc/nginx/sites-enabled/consul/blocks/lua_worker.conf')
     end
 
     consul_conf_content = <<EOF
@@ -279,6 +395,70 @@ token = "0000-1111"
 syslog {
     enabled = true
     facility = "LOCAL0"
+}
+
+template {
+    source = "/etc/consul-template.d/templates/locations.conf.tpl"
+    destination = "/etc/nginx/sites-enabled/consul/locations.conf"
+    command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
+    perms = 0644
+}
+
+template {
+    source = "/etc/consul-template.d/templates/nginx.key.tpl"
+    destination = "/etc/nginx/certs/nginx.key"
+    command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
+    perms = 0644
+}
+
+template {
+    source = "/etc/consul-template.d/templates/nginx.crt.tpl"
+    destination = "/etc/nginx/certs/nginx.crt"
+    command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
+    perms = 0644
+}
+
+template {
+    source = "/etc/consul-template.d/templates/block_http.conf.tpl"
+    destination = "/etc/nginx/sites-enabled/consul/blocks/http.conf"
+    command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
+    perms = 0644
+}
+
+template {
+    source = "/etc/consul-template.d/templates/block_server.conf.tpl"
+    destination = "/etc/nginx/sites-enabled/consul/blocks/server.conf"
+    command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
+    perms = 0644
+}
+
+template {
+    source = "/etc/consul-template.d/templates/lua_server.conf.tpl"
+    destination = "/etc/nginx/sites-enabled/consul/blocks/lua_server.conf"
+    command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
+    perms = 0644
+}
+
+template {
+    source = "/etc/consul-template.d/templates/lua_worker.conf.tpl"
+    destination = "/etc/nginx/sites-enabled/consul/blocks/lua_worker.conf"
+    command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
+    perms = 0644
+}
+
+
+template {
+    source = "/etc/consul-template.d/templates/nginx_admin.key.tpl"
+    destination = "/etc/nginx/certs/nginx_admin.key"
+    command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
+    perms = 0644
+}
+
+template {
+    source = "/etc/consul-template.d/templates/nginx_admin.crt.tpl"
+    destination = "/etc/nginx/certs/nginx_admin.crt"
+    command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
+    perms = 0644
 }
 EOF
     it 'creates /etc/consul-template.d/consul.conf' do
