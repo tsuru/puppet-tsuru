@@ -6,7 +6,6 @@ rvm:
 script: bundle exec rake spec SPEC_OPTS='--color --format documentation'
 env:
   matrix:
-    - PUPPET_GEM_VERSION="~> 3.4.3"
     - PUPPET_GEM_VERSION="~> 3.5.1"
     - PUPPET_GEM_VERSION="~> 3.7.1"
     - PUPPET_GEM_VERSION="~> 3.8.6"
