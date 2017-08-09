@@ -1,11 +1,11 @@
 #!/bin/bash
 
-if [ -z "$2" ]; then
-    cat /etc/nginx/certs/nginx.$1
+if [ -z "$3" ]; then
+    cat /etc/nginx/certs/nginx_${1}.${2}
 else
     header_key_cert=""
     footer_key_cert=""
-    for line in $2; do
+    for line in $3; do
         if [[ $line =~ ^-----BEGIN$ ]]; then
             header_key_cert=true
             cert_line=$line
