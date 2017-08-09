@@ -89,7 +89,7 @@ EOF
       end
 
       it 'install docker package' do
-        should contain_package('docker-engine').with_ensure('latest')
+        should contain_package('docker-ce').with_ensure('latest')
       end
 
       it 'exec planb commands' do
