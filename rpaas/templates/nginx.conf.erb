@@ -73,7 +73,6 @@ http {
 <% if @nginx_admin_enable_ssl -%>
         listen <%= @nginx_admin_ssl_listen %> ssl;
 <% end -%>
-
 <% if @nginx_admin_enable_ssl -%>
         ssl_certificate /etc/nginx/certs/nginx_admin.crt;
         ssl_certificate_key /etc/nginx/certs/nginx_admin.key;
@@ -86,14 +85,13 @@ http {
         ssl_dhparam <%= @nginx_dhparams %>;
 <% end -%>
 <% end -%>
-
         server_name  _tsuru_nginx_admin;
 
         location /healthcheck {
             echo "WORKING";
         }
-<% if @nginx_location_purge -%>
 
+<% if @nginx_location_purge -%>
         location ~ ^/purge/(.+) {
 <% @nginx_allow_admin_list.each do |ip| -%>
             allow           <%= ip %>;
@@ -109,7 +107,6 @@ http {
           vhost_traffic_status_display_format json;
         }
 <% end -%>
-
 <% if @nginx_admin_locations -%>
         include nginx_admin_locations.conf;
 <% end -%>

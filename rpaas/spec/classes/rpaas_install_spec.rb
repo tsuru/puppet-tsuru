@@ -80,7 +80,7 @@ describe 'rpaas::install' do
 
       server_purge_entry = <<"EOF"
     server {
-        listen     8081;
+        listen 8081;
         server_name  _tsuru_nginx_admin;
 
         location /healthcheck {
@@ -133,7 +133,7 @@ EOF
 
     it 'check if exec exist' do
       should contain_exec('apt_update')
-      should contain_exec('ssl')
+      should contain_exec('ssl_generate_nginx_ssl_key_cert')
       should contain_exec('add-apt-repository-ppa:tsuru/ppa')
     end
 
@@ -148,7 +148,7 @@ EOF
     server_vts_enabled = <<"EOF"
     vhost_traffic_status_zone;
     server {
-        listen     8089;
+        listen 8089;
         server_name  _tsuru_nginx_admin;
 
         location /healthcheck {
@@ -192,13 +192,13 @@ EOF
 
 
     log_format main
-      '${remote_addr}\t${host}\t${request_method}\t${request_uri}\t${server_protocol}\t'
-      '${http_referer}\t${http_x_mobile_group}\t'
-      'Local:\t${status}\t*${connection}\t${body_bytes_sent}\t${request_time}\t'
-      'Proxy:\t${upstream_addr}\t${upstream_status}\t${upstream_cache_status}\t'
-      '${upstream_response_length}\t${upstream_response_time}\t${request_uri}\t'
-      'Agent:\t${http_user_agent}\t$request_id_final\t'
-      'Fwd:\t${http_x_forwarded_for}';
+      '${remote_addr}\\t${host}\\t${request_method}\\t${request_uri}\\t${server_protocol}\\t'
+      '${http_referer}\\t${http_x_mobile_group}\\t'
+      'Local:\\t${status}\\t*${connection}\\t${body_bytes_sent}\\t${request_time}\\t'
+      'Proxy:\\t${upstream_addr}\\t${upstream_status}\\t${upstream_cache_status}\\t'
+      '${upstream_response_length}\\t${upstream_response_time}\\t${request_uri}\\t'
+      'Agent:\\t${http_user_agent}\\t$request_id_final\\t'
+      'Fwd:\\t${http_x_forwarded_for}';
 
     access_log syslog:server=localhost,facility=local6,tag=rpaas main;
     error_log syslog:server=localhost,facility=local6,tag=rpaas;
