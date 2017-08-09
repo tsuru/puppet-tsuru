@@ -312,14 +312,14 @@ EOF
 
     it 'generate admin key template file for consul' do
       should contain_file('/etc/consul-template.d/templates/nginx_admin.key.tpl').with_content(<<EOF
-{{ key_or_default "rpaas_fe/foo_instance/ssl/d196717b-bcca-4ab1-8ca3-221b2ac4bf8d/key" "" | plugin "check_nginx_ssl_data.sh" "key" }}
+{{ key_or_default "rpaas_fe/foo_instance/ssl/d196717b-bcca-4ab1-8ca3-221b2ac4bf8d/key" "" | plugin "check_nginx_ssl_data.sh" "admin" "key" }}
 EOF
     )
     end
 
     it 'generate admin crt template file for consul' do
       should contain_file('/etc/consul-template.d/templates/nginx_admin.crt.tpl').with_content(<<EOF
-{{ key_or_default "rpaas_fe/foo_instance/ssl/d196717b-bcca-4ab1-8ca3-221b2ac4bf8d/cert" "" | plugin "check_nginx_ssl_data.sh" "crt" }}
+{{ key_or_default "rpaas_fe/foo_instance/ssl/d196717b-bcca-4ab1-8ca3-221b2ac4bf8d/cert" "" | plugin "check_nginx_ssl_data.sh" "admin" "crt" }}
 EOF
     )
     end
@@ -406,14 +406,14 @@ template {
 
 template {
     source = "/etc/consul-template.d/templates/nginx.key.tpl"
-    destination = "/etc/nginx/certs/nginx.key"
+    destination = "/etc/nginx/certs/nginx_main.key"
     command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
     perms = 0644
 }
 
 template {
     source = "/etc/consul-template.d/templates/nginx.crt.tpl"
-    destination = "/etc/nginx/certs/nginx.crt"
+    destination = "/etc/nginx/certs/nginx_main.crt"
     command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
     perms = 0644
 }
