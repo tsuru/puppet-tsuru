@@ -185,9 +185,12 @@ class rpaas::install (
       require => File['/etc/consul-template.d/templates']
     }
 
+    $nginx_admin_generate_certs_requirement = Exec['ssl_generate_nginx_admin_ssl_key_cert']
+
     $nginx_admin_ssl_templates = [ File['/etc/consul-template.d/templates/nginx_admin.key.tpl'],
                               File['/etc/consul-template.d/templates/nginx_admin.crt.tpl'] ]
   } else {
+    $nginx_admin_generate_certs_requirement = []
     $nginx_admin_ssl_templates = []
   }
 
@@ -270,12 +273,16 @@ class rpaas::install (
     require => [ Exec['apt_update'], File['/etc/nginx/nginx.conf'], Exec['ssl'] ]
   }
 
+  $nginx_service_requirements = concat ([ Package['nginx-extras'],
+                                  Exec['ssl_generate_nginx_ssl_key_cert'],
+                                  Service['consul'] ], $nginx_admin_generate_certs_requirement)
+
   service { 'nginx':
     ensure   => running,
     enable   => true,
     provider => 'upstart',
     restart  => '/usr/sbin/service nginx reload',
-    require  => Package['nginx-extras']
+    require  => $nginx_service_requirements
   }
 
   file { $rpaas::nginx_dirs:
