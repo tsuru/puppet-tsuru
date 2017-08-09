@@ -15,14 +15,14 @@ template {
 
 template {
     source = "/etc/consul-template.d/templates/nginx.key.tpl"
-    destination = "/etc/nginx/certs/nginx.key"
+    destination = "/etc/nginx/certs/nginx_main.key"
     command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
     perms = 0644
 }
 
 template {
     source = "/etc/consul-template.d/templates/nginx.crt.tpl"
-    destination = "/etc/nginx/certs/nginx.crt"
+    destination = "/etc/nginx/certs/nginx_main.crt"
     command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
     perms = 0644
 }

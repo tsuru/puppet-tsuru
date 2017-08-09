@@ -8,8 +8,8 @@ class rpaas {
   }
 
   $consul_ssl_dir = '/etc/nginx/certs'
-  $consul_ssl_key_file = "${consul_ssl_dir}/nginx.key"
-  $consul_ssl_crt_file = "${consul_ssl_dir}/nginx.crt"
+  $consul_ssl_key_file = "${consul_ssl_dir}/nginx_main.key"
+  $consul_ssl_crt_file = "${consul_ssl_dir}/nginx_main.crt"
   $consul_admin_ssl_key_file = "${consul_ssl_dir}/nginx_admin.key"
   $consul_admin_ssl_crt_file = "${consul_ssl_dir}/nginx_admin.crt"
 
