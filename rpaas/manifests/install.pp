@@ -238,7 +238,10 @@ class rpaas::install (
                   File['/etc/consul-template.d/templates/block_server.conf.tpl'],
                   File['/etc/consul-template.d/plugins/check_nginx_ssl_data.sh'],
                   File['/etc/nginx/certs'],
-                  File['/etc/consul-template.d/plugins/check_and_reload_nginx.sh'] ], $lua_templates, $nginx_admin_ssl_templates)
+                  File['/etc/consul-template.d/plugins/check_and_reload_nginx.sh'],
+                  Exec['ssl_generate_nginx_ssl_key_cert']],
+                  $lua_templates, $nginx_admin_ssl_templates,
+                  $nginx_admin_generate_certs_requirement)
 
   $service_consul_template_subscribe = concat([ Package['consul-template'],
                   File['/etc/consul-template.d/consul.conf'],
@@ -273,16 +276,12 @@ class rpaas::install (
     require => [ Exec['apt_update'], File['/etc/nginx/nginx.conf'], Exec['ssl'] ]
   }
 
-  $nginx_service_requirements = concat ([ Package['nginx-extras'],
-                                  Exec['ssl_generate_nginx_ssl_key_cert'],
-                                  Service['consul'] ], $nginx_admin_generate_certs_requirement)
-
   service { 'nginx':
     ensure   => running,
     enable   => true,
     provider => 'upstart',
     restart  => '/usr/sbin/service nginx reload',
-    require  => $nginx_service_requirements
+    require  => [ Package['nginx-extras'], Service['consul-template']]
   }
 
   file { $rpaas::nginx_dirs:
