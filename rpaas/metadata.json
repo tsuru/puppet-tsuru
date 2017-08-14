@@ -1,6 +1,6 @@
 {
   "name": "tsuru-rpaas",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "author": "Tsuru",
   "license": "BSD-style license that can be found in the LICENSE file",
   "summary": "Puppet module to Tsuru PaaS rpaas",
