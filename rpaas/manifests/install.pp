@@ -296,6 +296,13 @@ class rpaas::install (
     crt => $rpaas::consul_ssl_crt_file
   }
 
+  exec { 'session_resumption_random_ticket':
+    command  => 'dd if=/dev/random bs=48 count=1 > /etc/nginx/certs/ticket.key',
+    onlyif   => '/usr/bin/test ! -f /etc/nginx/certs/ticket.key',
+    provider => shell,
+    require  => File['/etc/nginx/certs'],
+  }
+
   file { '/etc/nginx/sites-enabled/default':
     ensure  => absent,
     force   => true,
