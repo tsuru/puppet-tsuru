@@ -319,7 +319,7 @@ pubsub:
             params.merge!(
               :routers => { 'bar_galeb' => {'router_type' => 'galeb', 'galeb_api_url' => 'galeb2.endpoint.com', 'galeb_username' => 'bilbo', 'galeb_password' => 'secret2',
                                             'galeb_domain' => 'cloud3.test.com', 'galeb_environment' => 'prod', 'galeb_project' => 'Y',
-                                            'galeb_balance_policy' => 'ip-hash', 'galeb_rule_type' => '2', 'galeb_debug' => 'true', 'galeb_use_token' => 'true' },
+                                            'galeb_balance_policy' => 'ip-hash', 'galeb_rule_type' => '2', 'galeb_debug' => 'true', 'galeb_use_token' => true },
                             'foo_galeb' => {'router_type' => 'galeb', 'galeb_api_url' => 'galeb1.endpoint.com', 'galeb_username' => 'foobar', 'galeb_password' => 'secret',
                                             'galeb_domain' => 'cloud2.test.com', 'galeb_environment' => 'dev', 'galeb_project' => 'X',
                                             'galeb_balance_policy' => 'round-robin', 'galeb_rule_type' => '1'},
