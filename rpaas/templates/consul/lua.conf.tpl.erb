@@ -6,7 +6,7 @@ init_worker_by_lua_block {
 <% end -%>
 <% end -%>
 ngx_instance_hosts = {
-{{- range service "<%= @rpaas_instance_name %>.nginx"}}
+{{- range service "<%= @rpaas_instance_name %>.nginx" "any"}}
   {{- if and (.Tags.Contains "<%= @rpaas_service_name %>") (.Tags.Contains "<%= @rpaas_instance_name %>")}}
     "{{- .NodeAddress }}",
   {{- end}}
