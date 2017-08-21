@@ -327,7 +327,7 @@ EOF
     lua_worker_content = <<EOF
 init_worker_by_lua_block {
 ngx_instance_hosts = {
-{{- range service "foo_instance.nginx"}}
+{{- range service "foo_instance.nginx" "any"}}
   {{- if and (.Tags.Contains "rpaas_fe") (.Tags.Contains "foo_instance")}}
     "{{- .NodeAddress }}",
   {{- end}}
@@ -346,7 +346,7 @@ EOF
     lua_server_content = <<EOF
 init_by_lua_block {
 ngx_instance_hosts = {
-{{- range service "foo_instance.nginx"}}
+{{- range service "foo_instance.nginx" "any"}}
   {{- if and (.Tags.Contains "rpaas_fe") (.Tags.Contains "foo_instance")}}
     "{{- .NodeAddress }}",
   {{- end}}
