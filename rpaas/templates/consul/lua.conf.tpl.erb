@@ -5,6 +5,13 @@ init_by_lua_block {
 init_worker_by_lua_block {
 <% end -%>
 <% end -%>
+ngx_instance_hosts = {
+{{- range service "<%= @rpaas_instance_name %>.nginx"}}
+  {{- if and (.Tags.Contains "<%= @rpaas_service_name %>") (.Tags.Contains "<%= @rpaas_instance_name %>")}}
+    "{{- .NodeAddress }}",
+  {{- end}}
+{{- end}}
+}
 {{ with $locations := ls "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/lua_module/<%= @name %>" }}
   {{ range $locations }}
     {{if .Value | regexMatch "(?ms)-- Begin custom RpaaS .+ lua module --.+-- End custom RpaaS .+ lua module --" }}

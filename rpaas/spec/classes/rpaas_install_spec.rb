@@ -326,6 +326,13 @@ EOF
 
     lua_worker_content = <<EOF
 init_worker_by_lua_block {
+ngx_instance_hosts = {
+{{- range service "foo_instance.nginx"}}
+  {{- if and (.Tags.Contains "rpaas_fe") (.Tags.Contains "foo_instance")}}
+    "{{- .NodeAddress }}",
+  {{- end}}
+{{- end}}
+}
 {{ with $locations := ls "rpaas_fe/foo_instance/lua_module/worker" }}
   {{ range $locations }}
     {{if .Value | regexMatch "(?ms)-- Begin custom RpaaS .+ lua module --.+-- End custom RpaaS .+ lua module --" }}
@@ -338,6 +345,13 @@ EOF
 
     lua_server_content = <<EOF
 init_by_lua_block {
+ngx_instance_hosts = {
+{{- range service "foo_instance.nginx"}}
+  {{- if and (.Tags.Contains "rpaas_fe") (.Tags.Contains "foo_instance")}}
+    "{{- .NodeAddress }}",
+  {{- end}}
+{{- end}}
+}
 {{ with $locations := ls "rpaas_fe/foo_instance/lua_module/server" }}
   {{ range $locations }}
     {{if .Value | regexMatch "(?ms)-- Begin custom RpaaS .+ lua module --.+-- End custom RpaaS .+ lua module --" }}
