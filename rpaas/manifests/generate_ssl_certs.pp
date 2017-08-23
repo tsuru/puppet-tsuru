@@ -19,4 +19,6 @@ define rpaas::generate_ssl_certs ($key,$crt) {
     group   => $rpaas::install::nginx_group,
     require => Exec["ssl_${title}"],
   }
+
+  File[$key]->File[$crt]->Package['nginx-extras']
 }
