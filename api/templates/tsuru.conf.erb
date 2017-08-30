@@ -152,12 +152,8 @@ docker:
   run-cmd:
     bin: <%= @docker_run_cmd_bin %>
     port: <%= @docker_run_cmd_port %>
-  <%- if @docker_user -%>
-  user: <%= @docker_user %>
-  <%- end -%>
-  <%- if @docker_uid -%>
-  uid: <%= @docker_uid %>
-  <%- end -%>
+  user: <%= @docker_user ? @docker_user : "" %>
+  uid: <%= @docker_uid ? @docker_uid : -1 %>
   <%- if @docker_healing_heal_nodes -%>
   healing:
     heal-nodes: <%= @docker_healing_heal_nodes %>
