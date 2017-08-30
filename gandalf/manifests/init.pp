@@ -17,12 +17,6 @@
 # [gandalf_group] Gandalf running group
 # [gandalf_authorized_keys_path] Path to the authorized_keys file
 # [gandalf_version] Gandalf server package version
-# [gandalf_storage_type]   Storage type [archive, swift, s3]
-# [gandalf_storage_venv]   Virtualenv location for swift or s3 storage
-# [gandalf_storage_bucket] Bucket or container for swift / s3
-# [gandalf_cdn_url]        CDN URL for swift / s3
-# [gandalf_auth_params]    Auth params for swift / s3
-# [gandalf_pre_receive_template]   Use pre_receive or location for custom template
 # [tsuru_api_host] Tsuru Server API Host
 # [tsuru_api_token] Tsuru API Token
 
@@ -41,15 +35,8 @@ class gandalf (
   $gandalf_user_home      = '/var/lib/gandalf',
   $gandalf_authorized_keys_path = '/var/lib/gandalf/.ssh/authorized_keys',
   $gandalf_version        = 'latest',
-  $gandalf_storage_type   = 'archive',
-  $gandalf_storage_venv   = '/var/lib/gandalf/virtualenv',
-  $gandalf_storage_bucket = undef,
-  $gandalf_cdn_url        = undef,
-  $gandalf_auth_params    = undef,
-  $gandalf_pre_receive_template   = undef,
   $tsuru_api_host         = 'localhost:8081',
   $tsuru_api_token        = undef
-
 ) {
 
   include base
@@ -116,63 +103,14 @@ class gandalf (
     }
   }
 
-  if ($gandalf_storage_type in ['s3', 'swift']) {
-
-    class { 'python' :
-      version    => 'system',
-      pip        => true,
-      dev        => true,
-      virtualenv => true,
-      gunicorn   => false,
-      require    => Package['gandalf-server']
-    }
-
-    python::virtualenv { $gandalf_storage_venv :
-      ensure  => present,
-      version => 'system',
-      owner   => $gandalf_user,
-      group   => $gandalf_group,
-      require => Class['Python']
-    }
-
-    $python_os_dependencies = [ 'libffi-dev', 'libssl-dev' ]
-    package { $python_os_dependencies :
-      ensure => installed
-    }
-
-    $python_security_extra = [ 'pyopenssl', 'ndg-httpsclient', 'pyasn1' ]
-    python::pip { $python_security_extra:
-      owner      => $gandalf_user,
-      virtualenv => $gandalf_storage_venv,
-      require    => [ Python::Virtualenv[$gandalf_storage_venv], Package[$python_os_dependencies] ]
-    }
-
-    if ($gandalf_storage_type == 's3') {
-      $python_archive_packages = 's3cmd'
-    } else {
-      $python_archive_packages = ['pbr', 'python-keystoneclient', 'python-swiftclient']
-      Python::Pip['pbr']->Python::Pip['python-keystoneclient']
-    }
-
-    python::pip { $python_archive_packages:
-      owner      => $gandalf_user,
-      virtualenv => $gandalf_storage_venv,
-      require    => Python::Virtualenv[$gandalf_storage_venv]
-    }
-
-  }
-
-  if ($gandalf_pre_receive_template) {
-    file { "${gandalf_bare_template_path}/hooks/pre-receive":
-      ensure  => file,
-      recurse => true,
-      mode    => '0755',
-      owner   => $gandalf_user,
-      group   => $gandalf_group,
-      content => multitemplate($gandalf_pre_receive_template,
-                                "gandalf/pre-receive-${gandalf_storage_type}.erb"),
-      require => File[$gandalf_bare_template_path]
-      }
+  file { "${gandalf_bare_template_path}/hooks/pre-receive":
+    ensure  => file,
+    recurse => true,
+    mode    => '0755',
+    owner   => $gandalf_user,
+    group   => $gandalf_group,
+    source  => 'puppet:///modules/gandalf/pre-receive',
+    require => File[$gandalf_bare_template_path]
   }
 
   file { "${gandalf_user_home}/.profile":
