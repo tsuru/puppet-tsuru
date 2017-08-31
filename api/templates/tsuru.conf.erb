@@ -193,6 +193,14 @@ kubernetes:
   deploy-inspect-image: <%= @kubernetes_deploy_inspect_image %>
   <%- end -%>
 
+<%- if @kubernetes_nfs_volume-%>
+volume-plans:
+  nfs:
+    kubernetes:
+      plugin: nfs
+      access-modes: ReadWriteMany
+<%- end -%>
+
 # - Iaas configuration
 # http://docs.tsuru.io/en/stable/reference/config.html#iaas-configuration
 <%- if @iaas_enable -%>
