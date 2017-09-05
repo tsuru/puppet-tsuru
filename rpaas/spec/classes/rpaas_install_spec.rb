@@ -82,6 +82,7 @@ describe 'rpaas::install' do
       server_purge_entry = <<"EOF"
     server {
         listen 8081;
+
         server_name  _tsuru_nginx_admin;
 
         location /healthcheck {
@@ -134,7 +135,6 @@ EOF
 
     it 'check if exec exist' do
       should contain_exec('apt_update')
-      should contain_exec('ssl_generate_nginx_ssl_key_cert')
       should contain_exec('add-apt-repository-ppa:tsuru/ppa')
     end
 
@@ -150,14 +150,8 @@ EOF
     nginx_admin_ssl_enabled = <<"EOF"
     server {
         listen 8089;
-        listen 8090 ssl;
-        ssl_certificate /etc/nginx/certs/nginx_admin.crt;
-        ssl_certificate_key /etc/nginx/certs/nginx_admin.key;
-        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-        ssl_ciphers 'ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:ECDHE-ECDSA-DES-CBC3-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:DES-CBC3-SHA:!DSS';
-        ssl_prefer_server_ciphers on;
-        ssl_session_cache shared:SSL:200m;
-        ssl_session_timeout 1h;
+        include /etc/nginx/admin_ssl.conf;
+
         server_name  _tsuru_nginx_admin;
 
         location /healthcheck {
@@ -181,6 +175,7 @@ EOF
     nginx_custom_locations = <<"EOF"
     server {
         listen 8089;
+
         server_name  _tsuru_nginx_admin;
 
         location /healthcheck {
@@ -217,6 +212,7 @@ EOF
     vhost_traffic_status_zone;
     server {
         listen 8089;
+
         server_name  _tsuru_nginx_admin;
 
         location /healthcheck {
@@ -425,6 +421,13 @@ template {
 }
 
 template {
+    source = "/etc/consul-template.d/templates/main_ssl.conf.tpl"
+    destination = "/etc/nginx/main_ssl.conf"
+    command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
+    perms = 0644
+}
+
+template {
     source = "/etc/consul-template.d/templates/block_http.conf.tpl"
     destination = "/etc/nginx/sites-enabled/consul/blocks/http.conf"
     command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
@@ -463,6 +466,13 @@ template {
 template {
     source = "/etc/consul-template.d/templates/nginx_admin.crt.tpl"
     destination = "/etc/nginx/certs/nginx_admin.crt"
+    command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
+    perms = 0644
+}
+
+template {
+    source = "/etc/consul-template.d/templates/admin_ssl.conf.tpl"
+    destination = "/etc/nginx/admin_ssl.conf"
     command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
     perms = 0644
 }

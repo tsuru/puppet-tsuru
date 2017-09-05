@@ -140,6 +140,12 @@ class rpaas::install (
     require => File['/etc/consul-template.d/templates']
   }
 
+  file { '/etc/consul-template.d/templates/main_ssl.conf.tpl':
+    ensure  => file,
+    content => template('rpaas/consul/main_ssl.conf.tpl.erb'),
+    require => File['/etc/consul-template.d/templates']
+  }
+
   block_file { 'server':
     block_type => 'server'
   }
@@ -168,11 +174,6 @@ class rpaas::install (
   }
 
   if $nginx_admin_enable_ssl {
-    rpaas::generate_ssl_certs { 'generate_nginx_admin_ssl_key_cert':
-      key => $rpaas::consul_admin_ssl_key_file,
-      crt => $rpaas::consul_admin_ssl_crt_file
-    }
-
     file { '/etc/consul-template.d/templates/nginx_admin.key.tpl':
       ensure  => file,
       content => template('rpaas/consul/nginx_admin.key.tpl.erb'),
@@ -185,18 +186,28 @@ class rpaas::install (
       require => File['/etc/consul-template.d/templates']
     }
 
-    $nginx_admin_generate_certs_requirement = Exec['ssl_generate_nginx_admin_ssl_key_cert']
+    file { '/etc/consul-template.d/templates/admin_ssl.conf.tpl':
+      ensure  => file,
+      content => template('rpaas/consul/admin_ssl.conf.tpl.erb'),
+      require => File['/etc/consul-template.d/templates']
+    }
 
-    $nginx_admin_ssl_templates = [ File['/etc/consul-template.d/templates/nginx_admin.key.tpl'],
-                              File['/etc/consul-template.d/templates/nginx_admin.crt.tpl'] ]
+    file { '/etc/nginx/admin_ssl.conf':
+      ensure  => file,
+      replace => false,
+      require => File['/etc/nginx']
+    }
+
+    $nginx_admin_ssl_templates = [File['/etc/consul-template.d/templates/nginx_admin.key.tpl'],
+                                  File['/etc/consul-template.d/templates/nginx_admin.crt.tpl'],
+                                  File['/etc/consul-template.d/templates/admin_ssl.conf.tpl']]
   } else {
-    $nginx_admin_generate_certs_requirement = []
     $nginx_admin_ssl_templates = []
   }
 
   if $nginx_lua {
-    $lua_templates = [ File['/etc/consul-template.d/templates/lua_server.conf.tpl'],
-                      File['/etc/consul-template.d/templates/lua_worker.conf.tpl'] ]
+    $lua_templates = [File['/etc/consul-template.d/templates/lua_server.conf.tpl'],
+                      File['/etc/consul-template.d/templates/lua_worker.conf.tpl']]
 
     lua_file { 'server':
       lua_type => 'server'
@@ -234,12 +245,12 @@ class rpaas::install (
                   File['/etc/consul-template.d/templates/locations.conf.tpl'],
                   File['/etc/consul-template.d/templates/nginx.key.tpl'],
                   File['/etc/consul-template.d/templates/nginx.crt.tpl'],
+                  File['/etc/consul-template.d/templates/main_ssl.conf.tpl'],
                   File['/etc/consul-template.d/templates/block_http.conf.tpl'],
                   File['/etc/consul-template.d/templates/block_server.conf.tpl'],
                   File['/etc/consul-template.d/plugins/check_nginx_ssl_data.sh'],
                   File['/etc/nginx/certs'],
-                  File['/etc/consul-template.d/plugins/check_and_reload_nginx.sh'],
-                  Exec['ssl_generate_nginx_ssl_key_cert']],
+                  File['/etc/consul-template.d/plugins/check_and_reload_nginx.sh']],
                   $lua_templates, $nginx_admin_ssl_templates,
                   $nginx_admin_generate_certs_requirement)
 
@@ -259,6 +270,12 @@ class rpaas::install (
     subscribe => $service_consul_template_subscribe
   }
 
+  file { '/etc/nginx/main_ssl.conf':
+    ensure  => file,
+    replace => false,
+    require => File['/etc/nginx']
+  }
+
   file { '/etc/nginx/sites-enabled/consul/blocks/http.conf':
     ensure  => file,
     replace => false,
@@ -273,7 +290,7 @@ class rpaas::install (
 
   package { 'nginx-extras':
     ensure  => $nginx_package,
-    require => [ Exec['apt_update'], File['/etc/nginx/nginx.conf'], Exec['ssl'] ]
+    require => [ Exec['apt_update'], File['/etc/nginx/nginx.conf'] ]
   }
 
   service { 'nginx':
@@ -289,11 +306,6 @@ class rpaas::install (
     recurse => true,
     owner   => $nginx_user,
     group   => $nginx_group
-  }
-
-  rpaas::generate_ssl_certs { 'generate_nginx_ssl_key_cert':
-    key => $rpaas::consul_ssl_key_file,
-    crt => $rpaas::consul_ssl_crt_file
   }
 
   exec { 'session_resumption_random_ticket':

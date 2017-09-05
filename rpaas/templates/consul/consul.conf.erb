@@ -28,6 +28,13 @@ template {
 }
 
 template {
+    source = "/etc/consul-template.d/templates/main_ssl.conf.tpl"
+    destination = "/etc/nginx/main_ssl.conf"
+    command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
+    perms = 0644
+}
+
+template {
     source = "/etc/consul-template.d/templates/block_http.conf.tpl"
     destination = "/etc/nginx/sites-enabled/consul/blocks/http.conf"
     command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
@@ -66,6 +73,13 @@ template {
 template {
     source = "/etc/consul-template.d/templates/nginx_admin.crt.tpl"
     destination = "/etc/nginx/certs/nginx_admin.crt"
+    command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
+    perms = 0644
+}
+
+template {
+    source = "/etc/consul-template.d/templates/admin_ssl.conf.tpl"
+    destination = "/etc/nginx/admin_ssl.conf"
     command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
     perms = 0644
 }
