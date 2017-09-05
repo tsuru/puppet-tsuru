@@ -1,5 +1,5 @@
-{{ with cert := key_or_default "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/ssl/cert" "" }}
-  {{ if cert }}
+{{ with $cert := key_or_default "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/ssl/cert" "" }}
+  {{ if $cert }}
 listen <%= @nginx_ssl_listen %> ssl default_server backlog=<%= @sysctl_somaxconn %>;
 
 ssl_certificate /etc/nginx/certs/nginx_main.crt;
@@ -16,4 +16,6 @@ ssl_dhparam <%= @nginx_dhparams %>;
   {{ else }}
 {{ plugin "check_file.sh" "/etc/nginx/main_ssl.conf" }}
   {{ end }}
+{{ else }}
+{{ plugin "check_file.sh" "/etc/nginx/main_ssl.conf" }}
 {{ end }}

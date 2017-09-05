@@ -251,8 +251,7 @@ class rpaas::install (
                   File['/etc/consul-template.d/plugins/check_nginx_ssl_data.sh'],
                   File['/etc/nginx/certs'],
                   File['/etc/consul-template.d/plugins/check_and_reload_nginx.sh']],
-                  $lua_templates, $nginx_admin_ssl_templates,
-                  $nginx_admin_generate_certs_requirement)
+                  $lua_templates, $nginx_admin_ssl_templates)
 
   $service_consul_template_subscribe = concat([ Package['consul-template'],
                   File['/etc/consul-template.d/consul.conf'],

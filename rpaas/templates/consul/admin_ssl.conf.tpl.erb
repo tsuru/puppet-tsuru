@@ -1,5 +1,5 @@
-{{ with cert := key_or_default "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/ssl/<%= @vm_id %>/cert" "" }}
-  {{ if cert }}
+{{ with $cert := key_or_default "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/ssl/<%= @vm_id %>/cert" "" }}
+  {{ if $cert }}
 listen <%= @nginx_admin_ssl_listen %> ssl;
 ssl_certificate /etc/nginx/certs/nginx_admin.crt;
 ssl_certificate_key /etc/nginx/certs/nginx_admin.key;
@@ -14,4 +14,6 @@ ssl_dhparam <%= @nginx_dhparams %>;
   {{ else }}
 {{ plugin "check_file.sh" "/etc/nginx/admin_ssl.conf" }}
   {{ end }}
+{{ else }}
+{{ plugin "check_file.sh" "/etc/nginx/admin_ssl.conf" }}
 {{ end }}
