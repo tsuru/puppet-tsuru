@@ -1,0 +1,11 @@
+{{ with $upstreams := ls "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/upstream" }}
+  {{ range $upstreams}}
+upstream {{ .Key }} { 
+    {{- range $server :=  .Value | split "," }}
+    server {{ $server }};
+    {{- end }}
+    keepalive <%= @nginx_upstream_keepalive %>;
+}
+
+  {{ end }}
+{{ end }}

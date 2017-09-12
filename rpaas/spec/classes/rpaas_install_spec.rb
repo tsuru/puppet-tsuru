@@ -407,6 +407,13 @@ template {
 }
 
 template {
+    source = "/etc/consul-template.d/templates/upstreams.conf.tpl"
+    destination = "/etc/nginx/sites-enabled/consul/upstreams.conf"
+    command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"
+    perms = 0644
+}
+
+template {
     source = "/etc/consul-template.d/templates/nginx.key.tpl"
     destination = "/etc/nginx/certs/nginx_main.key"
     command = "/etc/consul-template.d/plugins/check_and_reload_nginx.sh"

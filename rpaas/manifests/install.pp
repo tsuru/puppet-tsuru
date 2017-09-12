@@ -28,6 +28,7 @@ class rpaas::install (
   $nginx_admin_locations             = false,
   $nginx_request_id_enabled          = false,
   $nginx_disable_response_request_id = false,
+  $nginx_upstream_keepalive          = 100,
   $consul_template_version           = latest,
   $consul_server                     = undef,
   $consul_syslog_enabled             = true,
@@ -128,6 +129,12 @@ class rpaas::install (
     require => File['/etc/consul-template.d/templates']
   }
 
+  file { '/etc/consul-template.d/templates/upstreams.conf.tpl':
+    ensure  => file,
+    content => template('rpaas/consul/upstreams.conf.tpl.erb'),
+    require => File['/etc/consul-template.d/templates']
+  }
+
   file { '/etc/consul-template.d/templates/nginx.key.tpl':
     ensure  => file,
     content => template('rpaas/consul/nginx.key.tpl.erb'),
@@ -171,6 +178,18 @@ class rpaas::install (
     content => template('rpaas/consul/check_and_reload_nginx.sh.erb'),
     require => File['/etc/consul-template.d/plugins'],
     mode    => '0755'
+  }
+
+  file { '/etc/nginx/sites-enabled/consul/locations.conf':
+    ensure  => file,
+    replace => false,
+    require => File['/etc/nginx/sites-enabled/consul']
+  }
+
+  file { '/etc/nginx/sites-enabled/consul/upstreams.conf':
+    ensure  => file,
+    replace => false,
+    require => File['/etc/nginx/sites-enabled/consul']
   }
 
   if $nginx_admin_enable_ssl {

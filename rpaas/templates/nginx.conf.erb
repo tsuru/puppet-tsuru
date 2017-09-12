@@ -101,6 +101,7 @@ http {
 <% end -%>
     }
 
+    include sites-enabled/consul/upstreams.conf;
     include sites-enabled/consul/blocks/http.conf;
 
 <% if @nginx_lua -%>
@@ -150,7 +151,7 @@ http {
         }
 <% end -%>
 
-        include sites-enabled/consul/*.conf;
+        include sites-enabled/consul/locations.conf;
         include sites-enabled/consul/blocks/server.conf;
     }
 }
