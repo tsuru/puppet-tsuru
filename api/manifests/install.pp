@@ -234,6 +234,7 @@ class api::install (
   $docker_scheduler_max_used_memory = undef,
   $docker_use_auto_scale = false,
   $docker_auto_scale_enabled = false,
+  $docker_auto_scale_run_interval = 3600,
   $docker_nodecontainer_max_workers = undef,
 
   $kubernetes_deploy_sidecar_image = undef,

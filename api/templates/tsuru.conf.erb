@@ -179,6 +179,7 @@ docker:
   <%- if @docker_use_auto_scale -%>
   auto-scale:
     enabled: <%= @docker_auto_scale_enabled %>
+    run-interval: <%= @docker_auto_scale_run_interval %>
   <%- end -%>
   <%- if @docker_nodecontainer_max_workers -%>
   nodecontainer:
