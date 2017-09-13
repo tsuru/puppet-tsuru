@@ -259,10 +259,10 @@ iaas:
 # http://docs.tsuru.io/en/stable/reference/config.html#log-level
 debug: <%= @tsuru_debug %>
 
+<%- if @event_throttling_enable -%>
 # - Event throttling configuration
 # https://docs.tsuru.io/master/reference/config.html#event-throttling-configuration
 
-<%- if @event_throttling_enable -%>
 event:
   throttling:
   - target-type: <%= @event_throttling_target_type %>
