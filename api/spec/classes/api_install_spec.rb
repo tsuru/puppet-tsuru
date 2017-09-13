@@ -603,6 +603,35 @@ iaas:
 
         end
 
+        context 'event trottling' do
+          
+          context 'using enabled options' do
+            let :event_trottling_enabled_options do
+'
+event:
+  throttling:
+  - target-type: node
+    kind-name: healer
+    limit: 3
+    window: 300
+    all-targets: true
+    wait-finish: true'
+            end
+            before {
+              params.merge!( :event_throttling_enable => true,
+                             :event_throttling_target_type => 'node',
+                             :event_throttling_kind_name => 'healer',
+                             :event_throttling_limit => 3,
+                             :event_throttling_window => 300,
+                             :event_throttling_all_targets => true,
+                             :event_throttling_wait_finish => true)
+            }
+            it 'set event throttling with enable status' do
+              should contain_file('/etc/tsuru/tsuru.conf').with_content(/.+#{event_trottling_enabled_options}.+/)
+            end
+          end
+        end
+
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain debug configuration' do
@@ -633,7 +662,6 @@ iaas:
           :ensure => 'latest'
         })
       end
-
     end
   end
 end

@@ -255,6 +255,14 @@ class api::install (
   $iaas_node_port = undef,
   $custom_iaas = {},
 
+  $event_throttling_enable = undef,
+  $event_throttling_target_type = undef,
+  $event_throttling_kind_name = undef,
+  $event_throttling_limit = undef,
+  $event_throttling_window = undef,
+  $event_throttling_all_targets = undef,
+  $event_throttling_wait_finish = undef,
+
   $tsuru_debug = false,
 
 ) inherits api {

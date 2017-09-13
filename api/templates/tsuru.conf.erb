@@ -179,7 +179,9 @@ docker:
   <%- if @docker_use_auto_scale -%>
   auto-scale:
     enabled: <%= @docker_auto_scale_enabled %>
+    <%- if @docker_auto_scale_run_interval -%>
     run-interval: <%= @docker_auto_scale_run_interval %>
+    <%- end -%>
   <%- end -%>
   <%- if @docker_nodecontainer_max_workers -%>
   nodecontainer:
@@ -256,3 +258,17 @@ iaas:
 # - Debug configuration
 # http://docs.tsuru.io/en/stable/reference/config.html#log-level
 debug: <%= @tsuru_debug %>
+
+# - Event throttling configuration
+# https://docs.tsuru.io/master/reference/config.html#event-throttling-configuration
+
+<%- if @event_throttling_enable -%>
+event:
+  throttling:
+  - target-type: <%= @event_throttling_target_type %>
+    kind-name: <%= @event_throttling_kind_name %>
+    limit: <%= @event_throttling_limit %>
+    window: <%= @event_throttling_window %>
+    all-targets: <%= @event_throttling_all_targets %>
+    wait-finish: <%= @event_throttling_wait_finish %>
+<%- end -%>
