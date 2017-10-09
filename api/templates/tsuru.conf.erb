@@ -127,11 +127,13 @@ routers:
 <%- when 'api' -%>
     type: api
     api-url: <%= routers[router]['api_url'] %>
+<% if @routers[router]['api_headers'] -%>
     headers:
-    <%- routers[router]['api_headers'].each do |header| -%>
+<%- routers[router]['api_headers'].each do |header| -%>
       - <%= header %>
-    <%- end -%>
-    debug: <%= routers[router]['api_debug'] %>
+<%- end -%>
+<% end -%>
+    <%= @routers[router]['api_debug'] ? "debug: #{routers[router]['api_debug']}" : "debug: false" %>
 <%- else -%>
     <%- raise Puppet::Error, "Router type unknown. Valid types are: hipache, planb, vulcand, galeb or api" -%>
 <%- end -%>
