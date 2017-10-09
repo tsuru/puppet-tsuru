@@ -314,7 +314,7 @@ pubsub:
         end
       end
 
-      context 'setting routers hipache, planb, galeb and vulcand' do
+      context 'setting routers hipache, planb, galeb, vulcand and api' do
         before {
             params.merge!(
               :routers => { 'bar_galeb' => {'router_type' => 'galeb', 'galeb_api_url' => 'galeb2.endpoint.com', 'galeb_username' => 'bilbo', 'galeb_password' => 'secret2',
@@ -327,7 +327,8 @@ pubsub:
                             'foo_hipache_sentinel' => {'router_type' => 'hipache', 'hipache_domain' => 'cloud5.test.com', 'hipache_redis_sentinel_addrs' => '10.10.10.10:26379, 10.20.30.40:26379',
                                                        'hipache_redis_sentinel_master' => 'master_sentinel', 'hipache_redis_password' => 'secret'},
                             'foo_vulcand' => {'router_type' => 'vulcand', 'vulcand_api_url' => 'http://localhost:8009', 'vulcand_domain' => 'cloud4.test.com'},
-                            'foo_planb' => {'router_type' => 'planb', 'planb_domain' => 'cloud.test.com', 'planb_redis_server' => '10.10.10.10:6379' }
+                            'foo_planb' => {'router_type' => 'planb', 'planb_domain' => 'cloud.test.com', 'planb_redis_server' => '10.10.10.10:6379' },
+                            'foo_api' => {'router_type' => 'api', 'api_url' => 'http://localhost:8090', 'api_debug' => true, 'api_headers' => ['KEY1: VAL1', 'KEY2: VAL2']},
                           }
             )
         }
@@ -347,6 +348,13 @@ routers:
     rule-type: 2
     debug: true
     use-token: true
+  foo_api:
+    type: api
+    api-url: http://localhost:8090
+    headers:
+      - KEY1: VAL1
+      - KEY2: VAL2
+    debug: true
   foo_galeb:
     type: galeb
     api-url: galeb1.endpoint.com
