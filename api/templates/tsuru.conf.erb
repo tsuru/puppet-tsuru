@@ -124,8 +124,16 @@ routers:
     rule-type: <%= routers[router]['galeb_rule_type'] %>
     <%= @routers[router]['galeb_debug'] ? "debug: #{routers[router]['galeb_debug']}" : "debug: false" %>
     <%= @routers[router]['galeb_use_token'] ? "use-token: #{routers[router]['galeb_use_token']}" : "use-token: false" %>
+<%- when 'api' -%>
+    type: api
+    api-url: <%= routers[router]['api_url'] %>
+    headers:
+    <%- routers[router]['api_headers'].each do |header| -%>
+      - <%= header %>
+    <%- end -%>
+    debug: <%= routers[router]['api_debug'] %>
 <%- else -%>
-    <%- raise Puppet::Error, "Router type unknown. Valid types are: hipache, planb, vulcand or galeb" -%>
+    <%- raise Puppet::Error, "Router type unknown. Valid types are: hipache, planb, vulcand, galeb or api" -%>
 <%- end -%>
 <%- end -%>
 
