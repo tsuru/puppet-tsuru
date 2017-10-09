@@ -7,7 +7,10 @@
 class base::ubuntu inherits base {
 
   class { 'apt':
-        update => { 'frequency' => 'always', 'timeout' => 600 }
+    update => {
+      'frequency' => 'always',
+      'timeout'   => 600
+    }
   }
 
   apt::conf { 'unauth':
