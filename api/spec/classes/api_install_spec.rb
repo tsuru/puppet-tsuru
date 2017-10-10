@@ -406,7 +406,7 @@ routers:
         }
 
         it 'rises unknown router type' do
-          should raise_error(Puppet::Error, /Router type unknown. Valid types are: hipache, planb, vulcand or galeb/)
+          should raise_error(Puppet::Error, /Failed to parse template api\/tsuru.conf.erb/)
         end
       end
 
@@ -622,25 +622,43 @@ iaas:
             let :event_trottling_enabled_options do
 '
 event:
-  throttling:
+  throttling: 
   - target-type: node
     kind-name: healer
     limit: 3
     window: 300
     all-targets: true
+    wait-finish: true
+  - target-type: container
+    kind-name: healer
+    limit: 10
+    window: 180
+    all-targets: true
     wait-finish: true'
             end
             before {
               params.merge!( :event_throttling_enable => true,
-                             :event_throttling_target_type => 'node',
-                             :event_throttling_kind_name => 'healer',
-                             :event_throttling_limit => 3,
-                             :event_throttling_window => 300,
-                             :event_throttling_all_targets => true,
-                             :event_throttling_wait_finish => true)
+                             :event_throttling_configs => [
+                {
+                    "target-type" => 'node',
+                    "kind-name" => 'healer',
+                    "limit" => 3,
+                    "window" => 300,
+                    "all-targets" => true,
+                    "wait-finish" => true
+                },
+                {
+                    "target-type" => 'container',
+                    "kind-name" => 'healer',
+                    "limit" => 10,
+                    "window" => 180,
+                    "all-targets" => true,
+                    "wait-finish" => true
+                }
+              ])
             }
             it 'set event throttling with enable status' do
-              should contain_file('/etc/tsuru/tsuru.conf').with_content(/.+#{event_trottling_enabled_options}.+/)
+              should contain_file('/etc/tsuru/tsuru.conf').with_content(/.*#{event_trottling_enabled_options}.*/)
             end
           end
         end

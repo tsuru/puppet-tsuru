@@ -256,12 +256,7 @@ class api::install (
   $custom_iaas = {},
 
   $event_throttling_enable = undef,
-  $event_throttling_target_type = undef,
-  $event_throttling_kind_name = undef,
-  $event_throttling_limit = undef,
-  $event_throttling_window = undef,
-  $event_throttling_all_targets = undef,
-  $event_throttling_wait_finish = undef,
+  $event_throttling_configs = undef,
 
   $tsuru_debug = false,
 

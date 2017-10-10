@@ -274,11 +274,5 @@ debug: <%= @tsuru_debug %>
 # https://docs.tsuru.io/master/reference/config.html#event-throttling-configuration
 
 event:
-  throttling:
-  - target-type: <%= @event_throttling_target_type %>
-    kind-name: <%= @event_throttling_kind_name %>
-    limit: <%= @event_throttling_limit %>
-    window: <%= @event_throttling_window %>
-    all-targets: <%= @event_throttling_all_targets %>
-    wait-finish: <%= @event_throttling_wait_finish %>
-<%- end -%>
+  throttling:<%= @event_throttling_configs.to_yaml.gsub("---", '').gsub("\"", '') %>
+<% end -%>
