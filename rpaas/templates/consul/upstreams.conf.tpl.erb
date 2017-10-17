@@ -1,11 +1,23 @@
+{{- $fail := false }}
 {{ with $upstreams := ls "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/upstream" }}
   {{ range $upstreams}}
-upstream {{ .Key }} { 
-    {{- range $server :=  .Value | split "," }}
+    {{ if .Value | regexMatch "(?ms)## Begin custom RpaaS .+ block ##\n## End custom RpaaS .+ block ##" }}
+    {{ else }}
+      {{ if .Value | regexMatch "(?ms)## Begin custom RpaaS .+ block ##.+## End custom RpaaS .+ block ##" }}
+upstream {{ .Key }} {
+    {{- range $server :=  .Value | regexReplaceAll "(?ms)## Begin custom RpaaS .+ block ##(.+)## End custom RpaaS .+ block ##" "$1" | split "," }}
     server {{ $server }};
     {{- end }}
     keepalive <%= @nginx_upstream_keepalive %>;
 }
-
+      {{ else }}
+        {{- $fail := true }}
+      {{ end }}
+    {{ end }}
   {{ end }}
+{{ else }}
+  {{- $fail := true }}
 {{ end }}
+{{- if $fail }}
+{{ plugin "check_file.sh" "/etc/nginx/sites-enabled/consul/upstreams.conf" }}
+{{- end }}
