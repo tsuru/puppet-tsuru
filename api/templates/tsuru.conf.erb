@@ -130,7 +130,7 @@ routers:
 <% if @routers[router]['api_headers'] -%>
     headers:
 <%- routers[router]['api_headers'].each do |header| -%>
-      - <%= header %>
+      <%= header %>
 <%- end -%>
 <% end -%>
     <%= @routers[router]['api_debug'] ? "debug: #{routers[router]['api_debug']}" : "debug: false" %>

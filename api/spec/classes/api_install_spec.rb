@@ -353,8 +353,8 @@ routers:
     type: api
     api-url: http://localhost:8090
     headers:
-      - KEY1: VAL1
-      - KEY2: VAL2
+      KEY1: VAL1
+      KEY2: VAL2
     debug: true
   foo_api2:
     type: api
