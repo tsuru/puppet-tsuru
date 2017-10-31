@@ -254,6 +254,21 @@ EOF
       "~." $http_x_request_id;
     }
 
+    map $http_x_real_ip $real_ip_final {
+        default $remote_addr;
+        "~." $http_x_real_ip;
+    }
+
+    map $http_x_forwarded_proto $forwarded_proto_final {
+      default $scheme;
+      "~." $http_x_forwarded_proto;
+    }
+
+    map $http_x_forwarded_host $forwarded_host_final {
+      default $host;
+      "~." $http_x_forwarded_host;
+    }
+
 
     log_format main
       '${remote_addr}\\t${host}\\t${request_method}\\t${request_uri}\\t${server_protocol}\\t'
