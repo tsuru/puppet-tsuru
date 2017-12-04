@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
 group :development, :test do
-  gem 'puppetlabs_spec_helper', :require => false
-  gem 'puppet-lint', :git => 'https://github.com/rodjek/puppet-lint', :ref => 'eec92c19ccfbf558890124d4436bfe7d0e8879e5'
+  gem 'puppetlabs_spec_helper', '~>2.5.1'
+  gem 'puppet-lint'
   gem 'rspec-mocks'
   gem 'rspec-puppet'
-  gem 'rspec', '~>3.2.0'
+  gem 'rspec'
   gem 'webmock'
 end
 

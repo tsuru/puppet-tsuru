@@ -99,8 +99,8 @@ TvBR8Q==
 '
 
   case $::operatingsystem {
-    Ubuntu : { include base::ubuntu }
-    CentOS : { include base::centos }
+    'Ubuntu' : { include base::ubuntu }
+    'CentOS' : { include base::centos }
     default : { fail('OS not supported') }
   }
 
