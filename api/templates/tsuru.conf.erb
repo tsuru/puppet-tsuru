@@ -253,6 +253,10 @@ iaas:
       <%- when 'dockermachine' -%>
       user-data: <%= custom_iaas[custom_key]['dockermachine_user_data'] %>
       debug: <%= custom_iaas[custom_key]['dockermachine_debug'] ? custom_iaas[custom_key]['dockermachine_debug'] : 'false' %>
+      docker-flags: <%= custom_iaas[custom_key]['docker_flags'] %>
+      docker-install-url: <%= custom_iaas[custom_key]['docker_install_url'] %>
+      docker-storage-driver: <%= custom_iaas[custom_key]['docker_storage_driver'] %>
+      insecure-registry: <%= custom_iaas[custom_key]['insecure_registry'] %>
       driver:
         name: <%= custom_iaas[custom_key]['dockermachine_driver'] %>
         user-data-file-param: <%= custom_iaas[custom_key]['dockermachine_user_data_param'] %>
