@@ -681,11 +681,30 @@ event:
         should contain_file('/etc/default/tsuru-server').with_content("TSR_API_ENABLED=yes")
       end
 
-      it 'enabling tsuru-server-api service' do
-        should contain_service('tsuru-server-api').with({
-          :ensure => 'running',
-          :enable => 'true'
-        })
+      context 'enabling tsuru-server service based on version' do
+        context 'for version <= 1.4.0' do
+          before {
+            params.merge!( :tsuru_server_version => "1.3.0" )
+          }
+          it 'install tsuru-server-api service ' do
+            should contain_service('tsuru-server-api').with({
+              :ensure => 'running',
+              :enable => 'true'
+            })
+          end
+        end
+
+        context 'for version >= 1.4.0' do
+          before {
+            params.merge!( :tsuru_server_version => "1.5.0-rc1" )
+          }
+          it 'install tsurud service ' do
+            should contain_service('tsurud').with({
+              :ensure => 'running',
+              :enable => 'true'
+            })
+          end
+        end
       end
 
       it 'package tsuru-server should be installed' do

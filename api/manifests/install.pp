@@ -304,8 +304,14 @@ class api::install (
     require => Package['tsuru-server']
   }
 
+  if (versioncmp($tsuru_server_version, '1.4.0') >=0 or $tsuru_server_version == latest) {
+    $tsuru_service = 'tsurud'
+  } else {
+    $tsuru_service = 'tsuru-server-api'
+  }
+
   # Services
-  service { 'tsuru-server-api' :
+  service { $tsuru_service :
     ensure    => running,
     enable    => true,
     provider  => $api::service_provider,
