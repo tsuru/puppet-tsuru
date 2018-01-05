@@ -349,13 +349,13 @@ class rpaas::install (
   file { '/etc/sysctl.d/99-nginx_tunnings.conf':
     content => template('rpaas/sysctl_nginx_tunnings.conf.erb'),
     notify  => Exec['invoke-rc.d procps start']
-  }->
-  exec { 'invoke-rc.d procps start':
+  }
+  ->exec { 'invoke-rc.d procps start':
     path        => '/bin:/sbin:/usr/bin:/usr/sbin',
     subscribe   => File['/etc/sysctl.d/99-nginx_tunnings.conf'],
     refreshonly => true
-  }->
-  exec { 'restart sysctl when wrong nginx values':
+  }
+  ->exec { 'restart sysctl when wrong nginx values':
     command => 'invoke-rc.d procps start',
     path    => '/bin:/sbin:/usr/bin:/usr/sbin',
     onlyif  => "sysctl net.core.somaxconn | egrep -v '${sysctl_somaxconn}$' || \

@@ -84,19 +84,19 @@ class bs (
     command => "docker pull ${image}",
     path    => '/usr/bin',
     require => Class['docker']
-  } ->
-  exec { 'stop bs container':
+  }
+  ->exec { 'stop bs container':
     command => 'docker stop big-sibling',
     path    => ['/usr/bin', '/bin'],
     onlyif  => [$changed, $bs_running],
-  } ->
-  exec { 'remove bs container':
+  }
+  ->exec { 'remove bs container':
     command => 'docker rm big-sibling',
     path    => ['/usr/bin', '/bin'],
     onlyif  => $inspect_bs,
     unless  => $bs_running,
-  } ->
-  exec { 'run bs container':
+  }
+  ->exec { 'run bs container':
     command => "docker run -d --privileged --net='host' --restart='always' --name='big-sibling' \
 ${socket_volume} ${proc_volume} ${env} ${image}",
     path    =>  ['/usr/bin', '/bin'],

@@ -81,12 +81,12 @@ class router::install (
       docker_bind       => $docker_bind,
       docker_extra_opts => $docker_extra_opts,
       proxy_url         => $proxy_url,
-    } ->
-    exec { 'pull planb':
+    }
+    ->exec { 'pull planb':
       command => $planb_pull_command,
       path    => '/usr/bin',
-    } ->
-    exec { 'start planb':
+    }
+    ->exec { 'start planb':
       command => $planb_start_command,
       path    => '/usr/bin',
       unless  => '/usr/bin/docker inspect --format="{{ .State.Running }}" planb',

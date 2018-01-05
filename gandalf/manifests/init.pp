@@ -45,8 +45,7 @@ class gandalf (
     ensure  => $gandalf_version,
     require => Class['Base']
   }
-  ->
-  file { '/etc/gandalf.conf':
+  ->file { '/etc/gandalf.conf':
     ensure  => present,
     content => template('gandalf/gandalf.conf.erb'),
     mode    => '0644',
@@ -54,8 +53,7 @@ class gandalf (
     group   => root,
     notify  => Service['gandalf-server'],
   }
-  ->
-  file { '/etc/init/gandalf-server.conf':
+  ->file { '/etc/init/gandalf-server.conf':
     ensure  => present,
     content => template('gandalf/gandalf-server.conf.erb'),
     mode    => '0644',
