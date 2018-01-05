@@ -255,8 +255,8 @@ EOF
     }
 
     map $http_x_real_ip $real_ip_final {
-        default $remote_addr;
-        "~." $http_x_real_ip;
+      default $remote_addr;
+      "~." $http_x_real_ip;
     }
 
     map $http_x_forwarded_proto $forwarded_proto_final {
@@ -291,7 +291,7 @@ EOF
       should contain_file('/etc/nginx/nginx.conf').with_content(/#{Regexp.escape(server_request_id_headers)}/)
     end
     it 'add uuid4 module, generate request_id headers' do
-      should contain_file('/etc/nginx/nginx.conf').with_content(/#{Regexp.escape(server_request_id_enabled)}/)
+      should contain_file('/etc/nginx/nginx.conf').with_content(/#{Regexp.escape(server_request_id_enabled)}/m)
     end
   end
 
