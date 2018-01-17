@@ -18,6 +18,7 @@
 # [tsuru_use_tls]       indicates whether tsuru should use TLS or not
 # [tsuru_tls_cert_file] is the path to the X.509 certificate file configured to serve the domain
 # [tsuru_tls_key_file]  is the path to private key file configured to serve the domain
+# [tsuru_tls_listen]    is the address webserver will listen over TLS
 #
 # - Database access
 #
@@ -151,6 +152,7 @@ class api::install (
   $tsuru_use_tls = undef,
   $tsuru_tls_cert_file = undef,
   $tsuru_tls_key_file = undef,
+  $tsuru_tls_listen = undef,
   $disable_index_page = false,
   $index_page_template = undef,
 
