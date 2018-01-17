@@ -96,6 +96,7 @@ describe 'api::install' do
           :tsuru_use_tls       => 'true',
           :tsuru_tls_cert_file => '/var/lib/tsuru/cert_file.cert',
           :tsuru_tls_key_file  => '/var/lib/tsuru/key_file.key',
+          :tsuru_tls_listen    => '0.0.0.0:443',
 
           :mongodb_url               => 'localhost:27017',
           :mongodb_database_name     => 'tsuru',
@@ -170,8 +171,9 @@ describe 'api::install' do
 
       it 'file /etc/tsuru/tsuru.conf must contain tls configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^use-tls: true$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  tls-cert-file: /var/lib/tsuru/cert_file.cert$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  tls-key-file: /var/lib/tsuru/key_file.key$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  cert-file: /var/lib/tsuru/cert_file.cert$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  key-file: /var/lib/tsuru/key_file.key$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  listen: 0.0.0.0:443$})
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain database configuration' do
@@ -617,12 +619,12 @@ iaas:
         end
 
         context 'event trottling' do
-          
+
           context 'using enabled options' do
             let :event_trottling_enabled_options do
 '
 event:
-  throttling: 
+  throttling:
   - target-type: node
     kind-name: healer
     limit: 3

@@ -4,8 +4,9 @@ listen: "<%= @tsuru_server_listen %>"
 host: "<%= @tsuru_host %>"
 <%- if @tsuru_use_tls %>
 use-tls: <%= @tsuru_use_tls %>
-  tls-cert-file: <%= @tsuru_tls_cert_file %>
-  tls-key-file: <%= @tsuru_tls_key_file %>
+  cert-file: <%= @tsuru_tls_cert_file %>
+  key-file: <%= @tsuru_tls_key_file %>
+  listen: <%= @tsuru_tls_listen %>
 <%- end %>
 
 # - Index API page
