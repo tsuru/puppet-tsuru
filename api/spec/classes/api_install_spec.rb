@@ -1,18 +1,18 @@
 require 'spec_helper'
 
 describe 'api::install' do
-
   context "on a Ubuntu OS" do
     let :facts do
-      { :osfamily => 'Debian', :operatingsystem => 'Ubuntu', :lsbdistid => 'Ubuntu', :lsbdistcodename => 'precise', :hostname => 'foo.bar' }
+      { osfamily: 'Debian', operatingsystem: 'Ubuntu', lsbdistid: 'Ubuntu', lsbdistcodename: 'precise', hostname: 'foo.bar' }
     end
 
     context "with default parameters" do
       let :params do
         {
-          :tsuru_server_version => 'latest',
+          tsuru_server_version: 'latest',
         }
       end
+
       it 'file /etc/tsuru/tsuru.conf must contain http configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^listen: "0.0.0.0:8080"$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^host: "http://0.0.0.0:8080"$})
@@ -83,84 +83,83 @@ describe 'api::install' do
       it 'file /etc/tsuru/tsuru.conf not contain iaas configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^iaas:$})
       end
-
     end
 
     context "with all parameters" do
       let :params do
         {
-          :tsuru_server_version => 'latest',
+          tsuru_server_version: 'latest',
 
-          :tsuru_server_listen => '0.0.0.0:8080',
-          :tsuru_host          => 'http://tsuru.io:8080',
-          :tsuru_use_tls       => 'true',
-          :tsuru_tls_cert_file => '/var/lib/tsuru/cert_file.cert',
-          :tsuru_tls_key_file  => '/var/lib/tsuru/key_file.key',
-          :tsuru_tls_listen    => '0.0.0.0:443',
+          tsuru_server_listen: '0.0.0.0:8080',
+          tsuru_host:          'http://tsuru.io:8080',
+          tsuru_use_tls:       'true',
+          tsuru_tls_cert_file: '/var/lib/tsuru/cert_file.cert',
+          tsuru_tls_key_file:  '/var/lib/tsuru/key_file.key',
+          tsuru_tls_listen:    '0.0.0.0:443',
 
-          :mongodb_url               => 'localhost:27017',
-          :mongodb_database_name     => 'tsuru',
-          :mongodb_database_password => 'tsuru',
+          mongodb_url:               'localhost:27017',
+          mongodb_database_name:     'tsuru',
+          mongodb_database_password: 'tsuru',
 
-          :smtp_server   => 'smtp.gmail.com',
-          :smtp_user     => 'tsuru',
-          :smtp_password => 'tsuru',
+          smtp_server:   'smtp.gmail.com',
+          smtp_user:     'tsuru',
+          smtp_password: 'tsuru',
 
-          :repo_manager   => 'gandalf',
-          :git_api_server => 'localhost:9090',
+          repo_manager:   'gandalf',
+          git_api_server: 'localhost:9090',
 
-          :auth_user_registration => true,
-          :auth_scheme            => 'oauth',
-          :oauth_client_id        => 'oauth_client_id',
-          :oauth_client_secret    => 'oauth_client_secret',
-          :oauth_scope            => 'tsuru',
-          :oauth_auth_url         => 'https://cloud.tsuru.io/authorize',
-          :oauth_token_url        => 'https://cloud.tsuru.io/token',
-          :oauth_info_url         => 'https://cloud.tsuru.io/info',
-          :oauth_collection       => 'oauth_tokens',
-          :oauth_callback_port    => '37621',
+          auth_user_registration: true,
+          auth_scheme:            'oauth',
+          oauth_client_id:        'oauth_client_id',
+          oauth_client_secret:    'oauth_client_secret',
+          oauth_scope:            'tsuru',
+          oauth_auth_url:         'https://cloud.tsuru.io/authorize',
+          oauth_token_url:        'https://cloud.tsuru.io/token',
+          oauth_info_url:         'https://cloud.tsuru.io/info',
+          oauth_collection:       'oauth_tokens',
+          oauth_callback_port:    '37621',
 
-          :redis_host     => 'localhost',
-          :redis_port     => 6379,
-          :redis_password => 'redis_password',
-          :redis_db       => 'tsuru_redis_db',
+          redis_host:     'localhost',
+          redis_port:     6379,
+          redis_password: 'redis_password',
+          redis_db:       'tsuru_redis_db',
 
-          :tsuru_admin_team => 'admin',
+          tsuru_admin_team: 'admin',
 
-          :tsuru_apps_per_user => 8,
-          :tsuru_units_per_app => 20,
+          tsuru_apps_per_user: 8,
+          tsuru_units_per_app: 20,
 
-          :tsuru_provisioner                         => 'docker',
-          :docker_bs_image                           => 'tsuru/custom_bs',
-          :docker_bs_reporter_interval               => 20,
-          :docker_bs_socket                          => '/tmp/docker.sock',
-          :docker_segregate                          => true,
-          :docker_registry                           => 'registry.tsuru.io',
-          :docker_max_layers                         => 42,
-          :docker_port_allocator                     => 'tsuru',
-          :docker_router                             => 'my_planb',
-          :docker_collection                         => 'docker',
-          :docker_repository_namespace               => 'tsuru',
-          :docker_deploy_cmd                         => '/var/lib/tsuru/deploy',
-          :docker_cluster_mongo_url                  => 'localhost:27017',
-          :docker_cluster_mongodb_db                 => 'tsuru',
-          :docker_run_cmd_bin                        => '/var/lib/tsuru/start',
-          :docker_run_cmd_port                       => '8888',
-          :docker_user                               => 'tsuru',
-          :docker_healing_heal_nodes                 => 'true',
-          :docker_healing_active_monitoring_interval => 3,
-          :docker_healing_disabled_time              => 40,
-          :docker_healing_max_failures               => 10,
-          :docker_healing_wait_new_time              => 400,
-          :docker_healing_heal_containers_timeout    => 3,
-          :docker_healing_events_collection          => 'healing_events',
-          :docker_healthcheck_max_time               => 150,
-          :docker_nodecontainer_max_workers          => 5,
+          tsuru_provisioner:                        'docker',
+          docker_bs_image:                          'tsuru/custom_bs',
+          docker_bs_reporter_interval:              20,
+          docker_bs_socket:                         '/tmp/docker.sock',
+          docker_segregate:                         true,
+          docker_registry:                          'registry.tsuru.io',
+          docker_max_layers:                        42,
+          docker_port_allocator:                    'tsuru',
+          docker_router:                            'my_planb',
+          docker_collection:                        'docker',
+          docker_repository_namespace:              'tsuru',
+          docker_deploy_cmd:                        '/var/lib/tsuru/deploy',
+          docker_cluster_mongo_url:                 'localhost:27017',
+          docker_cluster_mongodb_db:                'tsuru',
+          docker_run_cmd_bin:                       '/var/lib/tsuru/start',
+          docker_run_cmd_port:                      '8888',
+          docker_user:                              'tsuru',
+          docker_healing_heal_nodes:                'true',
+          docker_healing_active_monitoring_interval: 3,
+          docker_healing_disabled_time:              40,
+          docker_healing_max_failures:               10,
+          docker_healing_wait_new_time:              400,
+          docker_healing_heal_containers_timeout:    3,
+          docker_healing_events_collection:          'healing_events',
+          docker_healthcheck_max_time:               150,
+          docker_nodecontainer_max_workers:          5,
 
-          :iaas_node_protocol       => 'https',
-          :iaas_node_port           => '4243',
+          iaas_node_protocol: 'https',
+          iaas_node_port:     '4243',
 
-          :tsuru_debug  => false,
+          tsuru_debug: false,
         }
       end
 
@@ -217,7 +216,6 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  mongo-database: tsuru$})
       end
 
-
       it 'file /etc/tsuru/tsuru.conf must contain pubsub configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^pubsub:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  redis-host: localhost$})
@@ -243,7 +241,6 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  apps-per-user: 8$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  units-per-app: 20$})
       end
-
 
       it 'file /etc/tsuru/tsuru.conf must contain docker configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^provisioner: docker$})
@@ -281,13 +278,14 @@ describe 'api::install' do
       end
 
       context 'using sentinel as pubsub' do
-        before {
+        before do
           params.merge!(
-            :redis_sentinel_hosts => '10.10.10.10:26379, 10.20.20.20:26379',
-            :redis_sentinel_master => 'master_sentinel',
-            :redis_password => 'secret'
+            redis_sentinel_hosts: '10.10.10.10:26379, 10.20.20.20:26379',
+            redis_sentinel_master: 'master_sentinel',
+            redis_password: 'secret'
           )
-        }
+        end
+
         let :match_string do
 '
 pubsub:
@@ -305,11 +303,11 @@ pubsub:
       end
 
       context 'setting unknown auth type' do
-        before {
+        before do
           params.merge!(
-            :auth_scheme => 'whatever'
+            auth_scheme: 'whatever'
           )
-        }
+        end
 
         it 'rises unknown auth type' do
           should raise_error(Puppet::Error, /Auth scheme unknown. Valid types are: native or oauth/)
@@ -317,24 +315,24 @@ pubsub:
       end
 
       context 'setting routers hipache, planb, galeb, vulcand and api' do
-        before {
-            params.merge!(
-              :routers => { 'bar_galeb' => {'router_type' => 'galeb', 'galeb_api_url' => 'galeb2.endpoint.com', 'galeb_username' => 'bilbo', 'galeb_password' => 'secret2',
-                                            'galeb_domain' => 'cloud3.test.com', 'galeb_environment' => 'prod', 'galeb_project' => 'Y',
-                                            'galeb_balance_policy' => 'ip-hash', 'galeb_rule_type' => '2', 'galeb_debug' => 'true', 'galeb_use_token' => true },
-                            'foo_galeb' => {'router_type' => 'galeb', 'galeb_api_url' => 'galeb1.endpoint.com', 'galeb_username' => 'foobar', 'galeb_password' => 'secret',
-                                            'galeb_domain' => 'cloud2.test.com', 'galeb_environment' => 'dev', 'galeb_project' => 'X',
-                                            'galeb_balance_policy' => 'round-robin', 'galeb_rule_type' => '1'},
-                            'foo_hipache' => {'router_type' => 'hipache', 'hipache_domain' => 'cloud.test.com', 'hipache_redis_server' => '10.10.10.10:6379' },
-                            'foo_hipache_sentinel' => {'router_type' => 'hipache', 'hipache_domain' => 'cloud5.test.com', 'hipache_redis_sentinel_addrs' => '10.10.10.10:26379, 10.20.30.40:26379',
-                                                       'hipache_redis_sentinel_master' => 'master_sentinel', 'hipache_redis_password' => 'secret'},
-                            'foo_vulcand' => {'router_type' => 'vulcand', 'vulcand_api_url' => 'http://localhost:8009', 'vulcand_domain' => 'cloud4.test.com'},
-                            'foo_planb' => {'router_type' => 'planb', 'planb_domain' => 'cloud.test.com', 'planb_redis_server' => '10.10.10.10:6379' },
-                            'foo_api' => {'router_type' => 'api', 'api_url' => 'http://localhost:8090', 'api_debug' => true, 'api_headers' => ['KEY1: VAL1', 'KEY2: VAL2']},
-                            'foo_api2' => {'router_type' => 'api', 'api_url' => 'http://localhost:8091' },
-                          }
-            )
-        }
+        before do
+          params.merge!(
+            routers: { 'bar_galeb' => {'router_type' => 'galeb', 'galeb_api_url' => 'galeb2.endpoint.com', 'galeb_username' => 'bilbo', 'galeb_password' => 'secret2',
+                                          'galeb_domain' => 'cloud3.test.com', 'galeb_environment' => 'prod', 'galeb_project' => 'Y',
+                                          'galeb_balance_policy' => 'ip-hash', 'galeb_rule_type' => '2', 'galeb_debug' => 'true', 'galeb_use_token' => true },
+                          'foo_galeb' => {'router_type' => 'galeb', 'galeb_api_url' => 'galeb1.endpoint.com', 'galeb_username' => 'foobar', 'galeb_password' => 'secret',
+                                          'galeb_domain' => 'cloud2.test.com', 'galeb_environment' => 'dev', 'galeb_project' => 'X',
+                                          'galeb_balance_policy' => 'round-robin', 'galeb_rule_type' => '1'},
+                          'foo_hipache' => {'router_type' => 'hipache', 'hipache_domain' => 'cloud.test.com', 'hipache_redis_server' => '10.10.10.10:6379' },
+                          'foo_hipache_sentinel' => {'router_type' => 'hipache', 'hipache_domain' => 'cloud5.test.com', 'hipache_redis_sentinel_addrs' => '10.10.10.10:26379, 10.20.30.40:26379',
+                                                     'hipache_redis_sentinel_master' => 'master_sentinel', 'hipache_redis_password' => 'secret'},
+                          'foo_vulcand' => {'router_type' => 'vulcand', 'vulcand_api_url' => 'http://localhost:8009', 'vulcand_domain' => 'cloud4.test.com'},
+                          'foo_planb' => {'router_type' => 'planb', 'planb_domain' => 'cloud.test.com', 'planb_redis_server' => '10.10.10.10:6379' },
+                          'foo_api' => {'router_type' => 'api', 'api_url' => 'http://localhost:8090', 'api_debug' => true, 'api_headers' => ['KEY1: VAL1', 'KEY2: VAL2']},
+                          'foo_api2' => {'router_type' => 'api', 'api_url' => 'http://localhost:8091' },
+                        }
+          )
+        end
 
         let :match_string do
 '
@@ -401,29 +399,29 @@ routers:
       end
 
       context 'setting unknown router type' do
-        before {
+        before do
           params.merge!(
-            :routers => {'test' => { 'router_type' => 'whatever', 'option1' => 'A', 'option2' => 'B' }}
+            routers: {'test' => { 'router_type' => 'whatever', 'option1' => 'A', 'option2' => 'B' }}
           )
-        }
+        end
 
         it 'rises unknown router type' do
           should raise_error(Puppet::Error, /Failed to parse template api\/tsuru.conf.erb/)
         end
       end
 
-
       context 'configuring iaas for cloudstack' do
-        before {
+        before do
           params.merge!(
-            :tsuru_iaas_default       => 'cloudstack',
-            :cloudstack_apikey        => 'cloudstack_apikey',
-            :cloudstack_secretkey     => 'cloudstack_secretkey',
-            :cloudstack_api_url       => 'https://cloudstack.tsuru.io',
-            :cloudstack_user_data     => '/var/lib/user-data/docker_user_data.sh',
-            :cloudstack_wait_timeout  => '600'
+            tsuru_iaas_default:      'cloudstack',
+            cloudstack_apikey:       'cloudstack_apikey',
+            cloudstack_secretkey:    'cloudstack_secretkey',
+            cloudstack_api_url:      'https://cloudstack.tsuru.io',
+            cloudstack_user_data:    '/var/lib/user-data/docker_user_data.sh',
+            cloudstack_wait_timeout: '600'
           )
-        }
+        end
+
         it 'file /etc/tsuru/tsuru.conf must contain iaas configuration for cloudstack' do
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^iaas:$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  default: cloudstack$})
@@ -437,15 +435,16 @@ routers:
       end
 
       context 'configuring iaas for ec2' do
-        before {
+        before do
           params.merge!(
-            :tsuru_iaas_default       => 'ec2',
-            :ec2_key_id               => 'ec2_key_id',
-            :ec2_secret_key           => 'ec2_secret_key',
-            :ec2_wait_timeout         => 400,
-            :ec2_user_data            => '/var/lib/user-data/docker_user_data.sh'
+            tsuru_iaas_default: 'ec2',
+            ec2_key_id:         'ec2_key_id',
+            ec2_secret_key:     'ec2_secret_key',
+            ec2_wait_timeout:   400,
+            ec2_user_data:      '/var/lib/user-data/docker_user_data.sh'
           )
-        }
+        end
+
         it 'file /etc/tsuru/tsuru.conf must contain iaas configuration for ec2' do
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^iaas:$})
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  default: ec2$})
@@ -496,9 +495,10 @@ iaas:
       wait-timeout: 2
 '
         end
-        before {
+
+        before do
           params.merge!(
-            :custom_iaas => { 'test_cloudstack_1' => { 'provider' => 'cloudstack', 'cloudstack_apikey' => 'cloudstack_api_key_1',
+            custom_iaas: { 'test_cloudstack_1' => { 'provider' => 'cloudstack', 'cloudstack_apikey' => 'cloudstack_api_key_1',
                                                        'cloudstack_secretkey' => 'cloudstack_secret_key_1', 'cloudstack_user_data' => 'user_data_1',
                                                        'cloudstack_api_url' => 'https://cloudstack.tsuru.io'},
                               'test_cloudstack_2' => { 'provider' => 'cloudstack', 'cloudstack_apikey' => 'cloudstack_api_key_2',
@@ -513,33 +513,35 @@ iaas:
 
                             }
           )
-        }
+        end
+
         it 'file /etc/tsuru/tsuru.conf must contain iaas configuration for custom iaas for test_cloudstack_1, test_cloudstack_2, test_ec2 and test_docker_machine' do
           should contain_file('/etc/tsuru/tsuru.conf').with_content(/.+#{match_string}.+/)
         end
       end
 
       context 'configuring iaas for ec2 and set default to unknow cloudstack provider' do
-        before {
+        before do
           params.merge!(
-            :tsuru_iaas_default       => 'cloudstack',
-            :ec2_key_id               => 'ec2_key_id',
-            :ec2_secret_key           => 'ec2_secret_key',
-            :ec2_wait_timeout         => 400,
-            :ec2_user_data            => '/var/lib/user-data/docker_user_data.sh'
+            tsuru_iaas_default: 'cloudstack',
+            ec2_key_id:         'ec2_key_id',
+            ec2_secret_key:     'ec2_secret_key',
+            ec2_wait_timeout:   400,
+            ec2_user_data:      '/var/lib/user-data/docker_user_data.sh'
           )
-        }
+        end
+
         it 'raises puppet error with cloudstack provider not set' do
           should raise_error(Puppet::Error, /\$tsuru_iaas_default set to cloudstack but iaas conf not set/)
         end
       end
 
       context 'using security-opts' do
-        before {
+        before do
           params.merge!(
-            :docker_security_opts   => ['apparmor:foo', 'apparmor:bar']
+            docker_security_opts: ['apparmor:foo', 'apparmor:bar']
           )
-        }
+        end
 
         it 'writes apparmor:foo and bar to conf' do
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  security-opts:$})
@@ -549,11 +551,11 @@ iaas:
       end
 
       context 'only one security-opt set' do
-        before {
+        before do
           params.merge!(
-            :docker_security_opts   => ['apparmor:foo']
+            docker_security_opts: ['apparmor:foo']
           )
-        }
+        end
 
         it 'writes apparmor:foo to conf' do
           should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  security-opts:$})
@@ -568,7 +570,6 @@ iaas:
       end
 
       context 'auto-scale' do
-
         context 'using default options' do
           let :auto_scale_default_options do
 '
@@ -576,23 +577,23 @@ iaas:
     enabled: false
 '
           end
-          before {
-            params.merge!( :docker_use_auto_scale => true)
-          }
+
+          before do
+            params.merge!(docker_use_auto_scale: true)
+          end
 
           it 'set auto-scale with disabled status' do
             should contain_file('/etc/tsuru/tsuru.conf').with_content(/.+#{auto_scale_default_options}.+/)
           end
-
         end
 
         context 'enable memory based' do
-
-          before {
-            params.merge!( :docker_scheduler_total_memory_metadata => 'memory',
-                           :docker_scheduler_max_used_memory => 0.8
+          before do
+            params.merge!(docker_scheduler_total_memory_metadata: 'memory',
+                          docker_scheduler_max_used_memory: 0.8
                          )
-          }
+          end
+
           let :docker_scheduler_file do
 '
   scheduler:
@@ -602,24 +603,20 @@ iaas:
           end
 
           it { should contain_file('/etc/tsuru/tsuru.conf').with_content(/.+#{docker_scheduler_file}.+/) }
-
         end
 
         context 'set max-used-memory to -0.1' do
-
-          before {
-            params.merge!( :docker_scheduler_total_memory_metadata => 'memory',
-                           :docker_scheduler_max_used_memory => -0.1  )
-          }
+          before do
+            params.merge!(docker_scheduler_total_memory_metadata: 'memory',
+                          docker_scheduler_max_used_memory: -0.1  )
+          end
 
           it 'raises puppet error with invalid max-used-memory' do
             should raise_error(Puppet::Error, /\$docker_scheduler_max_used_memory must be a value greater than 0/)
           end
-
         end
 
         context 'event trottling' do
-
           context 'using enabled options' do
             let :event_trottling_enabled_options do
 '
@@ -638,9 +635,10 @@ event:
     all-targets: true
     wait-finish: true'
             end
-            before {
-              params.merge!( :event_throttling_enable => true,
-                             :event_throttling_configs => [
+
+            before do
+              params.merge!(event_throttling_enable: true,
+                            event_throttling_configs: [
                 {
                     "target-type" => 'node',
                     "kind-name" => 'healer',
@@ -658,13 +656,13 @@ event:
                     "wait-finish" => true
                 }
               ])
-            }
+            end
+
             it 'set event throttling with enable status' do
               should contain_file('/etc/tsuru/tsuru.conf').with_content(/.*#{event_trottling_enabled_options}.*/)
             end
           end
         end
-
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain debug configuration' do
@@ -685,34 +683,34 @@ event:
 
       context 'enabling tsuru-server service based on version' do
         context 'for version <= 1.4.0' do
-          before {
-            params.merge!( :tsuru_server_version => "1.3.0" )
-          }
+          before do
+            params.merge!(tsuru_server_version: "1.3.0" )
+          end
+
           it 'install tsuru-server-api service ' do
-            should contain_service('tsuru-server-api').with({
-              :ensure => 'running',
-              :enable => 'true'
-            })
+            should contain_service('tsuru-server-api').with(
+              ensure: 'running',
+              enable: 'true'
+            )
           end
         end
 
         context 'for version >= 1.4.0' do
-          before {
-            params.merge!( :tsuru_server_version => "1.5.0-rc1" )
-          }
+          before do
+            params.merge!(tsuru_server_version: "1.5.0-rc1")
+          end
+
           it 'install tsurud service ' do
-            should contain_service('tsurud').with({
-              :ensure => 'running',
-              :enable => 'true'
-            })
+            should contain_service('tsurud').with(
+              ensure: 'running',
+              enable: 'true'
+            )
           end
         end
       end
 
       it 'package tsuru-server should be installed' do
-        should contain_package('tsuru-server').with({
-          :ensure => 'latest'
-        })
+        should contain_package('tsuru-server').with(ensure: 'latest')
       end
     end
   end
