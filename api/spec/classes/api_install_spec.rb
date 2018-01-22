@@ -624,7 +624,7 @@ iaas:
             let :event_trottling_enabled_options do
 '
 event:
-  throttling:
+  throttling: ' + '
   - target-type: node
     kind-name: healer
     limit: 3
