@@ -170,6 +170,7 @@ describe 'api::install' do
 
       it 'file /etc/tsuru/tsuru.conf must contain tls configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^use-tls: true$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^tls:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  cert-file: /var/lib/tsuru/cert_file.cert$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  key-file: /var/lib/tsuru/key_file.key$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  listen: 0.0.0.0:443$})
