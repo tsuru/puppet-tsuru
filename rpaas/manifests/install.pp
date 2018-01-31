@@ -291,7 +291,7 @@ class rpaas::install (
   }
 
   if $nginx_http2 {
-    $http2_value = "http2"
+    $http2_value = 'http2'
   }
 
   file { '/etc/nginx/main_ssl.conf':
