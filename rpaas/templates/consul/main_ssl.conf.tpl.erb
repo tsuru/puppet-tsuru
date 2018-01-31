@@ -1,6 +1,6 @@
 {{ with $cert := key_or_default "<%= @rpaas_service_name %>/<%= @rpaas_instance_name %>/ssl/cert" "" }}
   {{ if $cert }}
-listen <%= @nginx_ssl_listen %> ssl default_server backlog=<%= @sysctl_somaxconn %>;
+listen <%= @nginx_ssl_listen %> ssl default_server backlog=<%= @sysctl_somaxconn %> <%= @http2_value%>;
 
 ssl_certificate /etc/nginx/certs/nginx_main.crt;
 ssl_certificate_key /etc/nginx/certs/nginx_main.key;

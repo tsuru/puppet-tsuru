@@ -8,6 +8,7 @@ class rpaas::install (
   $nginx_worker_connections          = 1024,
   $nginx_listen                      = 8080,
   $nginx_ssl_listen                  = 8443,
+  $nginx_http2                       = false,
   $nginx_admin_listen                = 8089,
   $nginx_admin_ssl_listen            = 8090,
   $nginx_admin_enable_ssl            = false,
@@ -287,6 +288,10 @@ class rpaas::install (
     ensure    => running,
     require   => $service_consul_template_requirements,
     subscribe => $service_consul_template_subscribe
+  }
+
+  if $nginx_http2 {
+    $http2_value = "http2"
   }
 
   file { '/etc/nginx/main_ssl.conf':
