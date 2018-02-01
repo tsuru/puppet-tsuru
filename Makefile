@@ -1,4 +1,6 @@
 test:
 	rake spec
 clean:
-	rm -rf pkg/*
+	rm -rf ./**/pkg
+
+
