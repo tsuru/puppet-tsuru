@@ -121,6 +121,7 @@
 # [docker_image_history_size]                  number of images available for rollback using tsuru app-deploy-rollback
 # [docker_security_opts]                       list of security options that will be passed to containers
 # [docker_nodecontainer_max_workers]           number of concurrent workers creating node containers
+# [docker_max_workers]                         number of concurrent workers creating containers for a single deploy
 #
 # - IaaS configuration
 #
@@ -238,6 +239,7 @@ class api::install (
   $docker_auto_scale_enabled = false,
   $docker_auto_scale_run_interval = 3600,
   $docker_nodecontainer_max_workers = undef,
+  $docker_max_workers = undef,
 
   $kubernetes_deploy_sidecar_image = undef,
   $kubernetes_deploy_inspect_image = undef,
