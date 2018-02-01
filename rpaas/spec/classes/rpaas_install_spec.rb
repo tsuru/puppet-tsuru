@@ -303,8 +303,19 @@ EOF
         :rpaas_service_name     => 'rpaas_fe',
         :rpaas_instance_name    => 'foo_instance',
         :nginx_admin_enable_ssl => true,
-        :nginx_lua              => true
+        :nginx_lua              => true,
+        :nginx_http2            => true
       }
+    end
+
+    main_ssl_http2_enabled = <<EOF
+{{ with $cert := key_or_default "rpaas_fe/foo_instance/ssl/cert" "" }}
+  {{ if $cert }}
+listen 8443 ssl default_server backlog=2048 http2;
+EOF
+
+    it 'gerenate ssl template file with http2 enabled' do
+      should contain_file('/etc/consul-template.d/templates/main_ssl.conf.tpl').with_content(/#{Regexp.escape(main_ssl_http2_enabled)}/m)
     end
 
     it 'generate crt template file for consul' do

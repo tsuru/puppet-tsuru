@@ -149,6 +149,10 @@ class rpaas::install (
     require => File['/etc/consul-template.d/templates']
   }
 
+  if $nginx_http2 {
+    $http2_value = 'http2'
+  }
+
   file { '/etc/consul-template.d/templates/main_ssl.conf.tpl':
     ensure  => file,
     content => template('rpaas/consul/main_ssl.conf.tpl.erb'),
@@ -288,10 +292,6 @@ class rpaas::install (
     ensure    => running,
     require   => $service_consul_template_requirements,
     subscribe => $service_consul_template_subscribe
-  }
-
-  if $nginx_http2 {
-    $http2_value = 'http2'
   }
 
   file { '/etc/nginx/main_ssl.conf':
