@@ -199,6 +199,9 @@ docker:
   nodecontainer:
     max-workers: <%= @docker_nodecontainer_max_workers %>
   <%- end -%>
+  <%- if @docker_max_workers -%>
+  max-workers: <%= @docker_max_workers %>
+  <%- end -%>
 
 kubernetes:
   <%- if @kubernetes_deploy_sidecar_image -%>
