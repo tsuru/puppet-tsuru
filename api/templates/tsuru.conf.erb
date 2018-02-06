@@ -211,12 +211,21 @@ kubernetes:
   deploy-inspect-image: <%= @kubernetes_deploy_inspect_image %>
   <%- end -%>
 
-<%- if @kubernetes_nfs_volume-%>
 volume-plans:
-  nfs:
+<%- @volume_plans.keys.sort.each do |plan| -%>
+  <%= plan %>:
+  <%- if @volume_plans[plan]['kubernetes'] -%>
     kubernetes:
-      plugin: nfs
-      access-modes: ReadWriteMany
+      <%- @volume_plans[plan]['kubernetes'].keys.sort.each do |opt| -%>
+      <%= opt %>: <%= volume_plans[plan]['kubernetes'][opt] %>
+      <%- end -%>
+  <%- end -%>
+  <%- if @volume_plans[plan]['swarm'] -%>
+    swarm:
+      <%- @volume_plans[plan]['swarm'].keys.sort.each do |opt| -%>
+      <%= opt %>: <%= volume_plans[plan]['swarm'][opt] %>
+      <%- end -%>
+  <%- end -%>
 <%- end -%>
 
 # - Iaas configuration

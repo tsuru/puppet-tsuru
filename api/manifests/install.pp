@@ -243,7 +243,7 @@ class api::install (
 
   $kubernetes_deploy_sidecar_image = undef,
   $kubernetes_deploy_inspect_image = undef,
-  $kubernetes_nfs_volume = false,
+  $volume_plans = {},
 
   $tsuru_iaas_default = undef,
   $ec2_key_id = undef,
