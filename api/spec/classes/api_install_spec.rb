@@ -413,6 +413,28 @@ routers:
           should raise_error(Puppet::Error, /Failed to parse template api\/tsuru.conf.erb/)
         end
       end
+      
+      context 'configuring volume-plans' do
+        before do
+          params.merge!(
+            volume_plans: {
+              'nfs'       => {'kubernetes' => {'plugin' => 'nfs', 'access-modes' => 'ReadWriteMany'}},
+              'emptydir'  => {'kubernetes' => {'plugin' => 'emptyDir'}}
+            }
+          )
+        end
+
+        it 'file /etc/tsuru/tsuru.conf must contain volume plans' do
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^volume-plans:$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  emptydir:$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    kubernetes:$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^      plugin: emptyDir$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  nfs:$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    kubernetes:$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^      plugin: nfs$})
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^      access-modes: ReadWriteMany$})
+        end
+      end
 
       context 'configuring iaas for cloudstack' do
         before do
