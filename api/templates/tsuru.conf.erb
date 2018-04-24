@@ -151,6 +151,11 @@ docker:
     socket: <%= @docker_bs_socket %>
   segregate: <%= @docker_segregate %>
   <%= @docker_registry ? "registry: #{@docker_registry}" : '' %>
+  <%- if @docker_registry_auth_username || @docker_registry_auth_password -%>
+  registry-auth:
+    <%= @docker_registry_auth_username ? "username: #{@docker_registry_auth_username}" : "" %>
+    <%= @docker_registry_auth_password ? "password: #{@docker_registry_auth_password}" : "" %>
+  <%- end -%>
   <%= @docker_max_layers ? "max-layers: #{@docker_max_layers}" : '' %>
   <%= @docker_port_allocator ? "port-allocator: #{@docker_port_allocator}" : '' %>
   collection: <%= @docker_collection %>
