@@ -83,6 +83,10 @@ describe 'api::install' do
       it 'file /etc/tsuru/tsuru.conf not contain iaas configuration' do
         should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^iaas:$})
       end
+
+      it "does not contain docker registry auth info" do
+        should contain_file('/etc/tsuru/tsuru.conf').without_content(%r{^  registry-auth:$})
+      end
     end
 
     context "with all parameters" do
@@ -135,6 +139,8 @@ describe 'api::install' do
           docker_bs_socket:                         '/tmp/docker.sock',
           docker_segregate:                         true,
           docker_registry:                          'registry.tsuru.io',
+          docker_registry_auth_username:            'tsuru_user',
+          docker_registry_auth_password:            'pwd123',
           docker_max_layers:                        42,
           docker_port_allocator:                    'tsuru',
           docker_router:                            'my_planb',
@@ -253,6 +259,9 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    socket: /tmp/docker.sock$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  segregate: true$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  registry: registry.tsuru.io$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  registry-auth:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    username: tsuru_user$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    password: pwd123$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  max-layers: 42$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  port-allocator: tsuru$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  router: my_planb$})
@@ -413,7 +422,7 @@ routers:
           should raise_error(Puppet::Error, /Failed to parse template api\/tsuru.conf.erb/)
         end
       end
-      
+
       context 'configuring volume-plans' do
         before do
           params.merge!(
