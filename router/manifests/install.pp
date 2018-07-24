@@ -5,7 +5,6 @@
 #
 # === Parameters
 #
-# TODO
 
 class router::install (
 
