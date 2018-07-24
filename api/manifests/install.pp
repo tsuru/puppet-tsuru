@@ -141,6 +141,9 @@
 # [ec2_user_data]             custom url for ec2 userdata (defaults to script on tsuru now installation)
 # [custom_iaas]               hash params to custom iaas with custom name as key. Format:
 #                             { custom_iaas_id => { provider => <ec2|cloudstack|dockermachine>, <ec2|cloudstack|dockermachine params> }}
+# - Kubernetes configuration
+#
+# [kubernetes_use_pool_namespaces]   use a different Kubernetes namespace per pool
 #
 # - Debug configuration
 #
@@ -247,6 +250,7 @@ class api::install (
 
   $kubernetes_deploy_sidecar_image = undef,
   $kubernetes_deploy_inspect_image = undef,
+  $kubernetes_use_pool_namespaces = undef,
   $volume_plans = {},
 
   $tsuru_iaas_default = undef,

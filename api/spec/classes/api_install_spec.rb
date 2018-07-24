@@ -167,6 +167,8 @@ describe 'api::install' do
           iaas_node_port:     '4243',
 
           tsuru_debug: false,
+
+          kubernetes_use_pool_namespaces: true,
         }
       end
 
@@ -288,6 +290,11 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  nodecontainer:$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^    max-workers: 5$})
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  max-workers: 10$})
+      end
+
+      it 'file /etc/tsuru/tsuru.conf must contain kubernetes configuration' do
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^kubernetes:$})
+        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  use-pool-namespaces: true$})
       end
 
       context 'using sentinel as pubsub' do

@@ -215,6 +215,9 @@ kubernetes:
   <%- if @kubernetes_deploy_inspect_image -%>
   deploy-inspect-image: <%= @kubernetes_deploy_inspect_image %>
   <%- end -%>
+  <%- if @kubernetes_use_pool_namespaces -%>
+  use-pool-namespaces: <%= @kubernetes_use_pool_namespaces %>
+  <%- end -%>
 
 volume-plans:
 <%- @volume_plans.keys.sort.each do |plan| -%>
