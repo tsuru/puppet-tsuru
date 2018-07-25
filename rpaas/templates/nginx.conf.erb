@@ -127,7 +127,9 @@ http {
 <% end -%>
 
     server {
+<% if @nginx_listen -%>
         listen <%= @nginx_listen %> default_server backlog=<%= @sysctl_somaxconn %>;
+<% end -%>
         include /etc/nginx/main_ssl.conf;
 
         server_name  _tsuru_nginx_app;
