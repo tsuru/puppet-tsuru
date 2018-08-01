@@ -89,6 +89,7 @@
 # [galeb_project]                 Galeb manager project used to create virtual hosts, backend pools and pools.
 # [galeb_load_balance_policy]     Galeb manager load balancing policy used to create backend pools.
 # [galeb_rule_type]               Galeb manager rule type used to create rules.
+# [galeb_max_requests]            Galeb manager maximum number of parallel requests.
 # [vulcand_api_url]               Vulcand API URL
 # [vulcand_domain]                Vulcand Domain
 #
