@@ -124,6 +124,7 @@ routers:
     project: <%= routers[router]['galeb_project'] %>
     balance-policy: <%= routers[router]['galeb_balance_policy'] %>
     rule-type: <%= routers[router]['galeb_rule_type'] %>
+    max-requests: <%= routers[router]['galeb_max_requests'] || 0 %>
     <%= @routers[router]['galeb_debug'] ? "debug: #{routers[router]['galeb_debug']}" : "debug: false" %>
     <%= @routers[router]['galeb_use_token'] ? "use-token: #{routers[router]['galeb_use_token']}" : "use-token: false" %>
 <%- when 'api' -%>
