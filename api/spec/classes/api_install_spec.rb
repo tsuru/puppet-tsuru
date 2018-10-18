@@ -343,6 +343,9 @@ pubsub:
                           'foo_galeb' => {'router_type' => 'galeb', 'galeb_api_url' => 'galeb1.endpoint.com', 'galeb_username' => 'foobar', 'galeb_password' => 'secret',
                                           'galeb_domain' => 'cloud2.test.com', 'galeb_environment' => 'dev', 'galeb_project' => 'X',
                                           'galeb_balance_policy' => 'round-robin', 'galeb_rule_type' => '1', 'galeb_max_requests' => 10},
+                          'foo_galebv2' => {'router_type' => 'galebv2', 'galeb_api_url' => 'galeb1.endpoint.com', 'galeb_username' => 'foobar', 'galeb_password' => 'secret',
+                                          'galeb_domain' => 'cloud2.test.com', 'galeb_environment' => 'dev', 'galeb_project' => 'X',
+                                          'galeb_balance_policy' => 'round-robin', 'galeb_rule_type' => '1', 'galeb_max_requests' => 10},
                           'foo_hipache' => {'router_type' => 'hipache', 'hipache_domain' => 'cloud.test.com', 'hipache_redis_server' => '10.10.10.10:6379' },
                           'foo_hipache_sentinel' => {'router_type' => 'hipache', 'hipache_domain' => 'cloud5.test.com', 'hipache_redis_sentinel_addrs' => '10.10.10.10:26379, 10.20.30.40:26379',
                                                      'hipache_redis_sentinel_master' => 'master_sentinel', 'hipache_redis_password' => 'secret'},
@@ -383,6 +386,19 @@ routers:
     debug: false
   foo_galeb:
     type: galeb
+    api-url: galeb1.endpoint.com
+    username: foobar
+    password: secret
+    domain: cloud2.test.com
+    environment: dev
+    project: X
+    balance-policy: round-robin
+    rule-type: 1
+    max-requests: 10
+    debug: false
+    use-token: false
+  foo_galebv2:
+    type: galebv2
     api-url: galeb1.endpoint.com
     username: foobar
     password: secret
