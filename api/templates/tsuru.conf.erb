@@ -114,8 +114,8 @@ routers:
     type: vulcand
     api-url: <%= routers[router]['vulcand_api_url'] %>
     domain: <%= routers[router]['vulcand_domain'] %>
-<%- when 'galeb' -%>
-    type: galeb
+<%- when /galeb.*/ -%>
+    type: <%= routers[router]['router_type'] %>
     api-url: <%= routers[router]['galeb_api_url'] %>
     username: <%= routers[router]['galeb_username'] %>
     password: <%= routers[router]['galeb_password'] %>
