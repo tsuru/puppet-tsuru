@@ -100,6 +100,7 @@ describe 'api::install' do
           tsuru_tls_cert_file: '/var/lib/tsuru/cert_file.cert',
           tsuru_tls_key_file:  '/var/lib/tsuru/key_file.key',
           tsuru_tls_listen:    '0.0.0.0:443',
+          tsuru_tls_autoreload_interval: '1d',
 
           mongodb_url:               'localhost:27017',
           mongodb_database_name:     'tsuru',
@@ -177,12 +178,18 @@ describe 'api::install' do
         should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^host: "http://tsuru.io:8080"$})
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain tls configuration' do
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^use-tls: true$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^tls:$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  cert-file: /var/lib/tsuru/cert_file.cert$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  key-file: /var/lib/tsuru/key_file.key$})
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^  listen: 0.0.0.0:443$})
+      let :match_string do '
+use-tls: true
+tls:
+  cert-file: /var/lib/tsuru/cert_file.cert
+  key-file: /var/lib/tsuru/key_file.cert
+  listen: 0.0.0.0:443
+  auto-reload:
+    interval: 1d'
+
+        it 'file /etc/tsuru/tsuru.conf must contain tls configuration' do
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(/.+#{match_string}/m)
+        end
       end
 
       it 'file /etc/tsuru/tsuru.conf must contain database configuration' do
