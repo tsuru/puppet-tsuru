@@ -19,6 +19,7 @@
 # [tsuru_tls_cert_file] is the path to the X.509 certificate file configured to serve the domain
 # [tsuru_tls_key_file]  is the path to private key file configured to serve the domain
 # [tsuru_tls_listen]    is the address webserver will listen over TLS
+# [tsuru_tls_autoreload_interval] defines the time frequency which the TLS certificates are reloaded by the webserver.
 #
 # - Database access
 #
@@ -160,6 +161,7 @@ class api::install (
   $tsuru_tls_cert_file = undef,
   $tsuru_tls_key_file = undef,
   $tsuru_tls_listen = undef,
+  $tsuru_tls_autoreload_interval = undef,
   $disable_index_page = false,
   $index_page_template = undef,
 

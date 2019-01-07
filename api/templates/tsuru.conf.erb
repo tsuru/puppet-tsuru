@@ -8,6 +8,10 @@ tls:
   cert-file: <%= @tsuru_tls_cert_file %>
   key-file: <%= @tsuru_tls_key_file %>
   listen: <%= @tsuru_tls_listen %>
+  <%- if @tsuru_tls_autoreload_interval %>
+  auto-reload:
+    interval: <%= @tsuru_tls_autoreload_interval %>
+  <%- end %>
 <%- end %>
 
 # - Index API page
