@@ -29,7 +29,7 @@ class docker (
     fail('\$docker_version must be greater than 1.9.1')
   }
 
-  if (versioncmp($docker_version, '17.03.2') >=0 or $docker_version == latest) {
+  if (versioncmp($docker_version, '5:18.09.2') >=0 or versioncmp($docker_version, '17.03.2') >=0 or $docker_version == latest) {
     $docker_package = 'docker-ce'
   } else {
     $docker_package = 'docker-engine'
