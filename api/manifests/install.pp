@@ -9,7 +9,7 @@
 #
 # === tsuru configuration parameters
 #
-# See more information in the config docs http://docs.tsuru.io/en/latest/reference/config.html
+# See more information in the config docs https://docs.tsuru.io/en/latest/reference/config.html
 #
 # - HTTP Server
 #
@@ -19,7 +19,8 @@
 # [tsuru_tls_cert_file] is the path to the X.509 certificate file configured to serve the domain
 # [tsuru_tls_key_file]  is the path to private key file configured to serve the domain
 # [tsuru_tls_listen]    is the address webserver will listen over TLS
-# [tsuru_tls_autoreload_interval] defines the time frequency which the TLS certificates are reloaded by the webserver.
+# [tsuru_tls_autoreload_interval] defines the time frequency which the TLS certificates are reloaded by the webserver
+# [tsuru_tls_validate_certificate] indicates whether server should validate the certificate before to offer that
 #
 # - Database access
 #
@@ -162,6 +163,7 @@ class api::install (
   $tsuru_tls_key_file = undef,
   $tsuru_tls_listen = undef,
   $tsuru_tls_autoreload_interval = undef,
+  $tsuru_tls_validate_certificate = undef,
   $disable_index_page = false,
   $index_page_template = undef,
 
