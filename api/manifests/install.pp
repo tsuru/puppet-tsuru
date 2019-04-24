@@ -276,6 +276,11 @@ class api::install (
   $event_throttling_configs = undef,
 
   $tsuru_debug = false,
+  $log_file = undef,
+  $log_disable_syslog = false,
+  $log_syslog_tag = 'tsr',
+  $log_use_stderr = false,
+  $log_queue_size = 10000
 
 ) inherits api {
 

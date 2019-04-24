@@ -732,8 +732,36 @@ event:
         end
       end
 
-      it 'file /etc/tsuru/tsuru.conf must contain debug configuration' do
-        should contain_file('/etc/tsuru/tsuru.conf').with_content(%r{^debug: false$})
+      context "set log options" do
+        let :log_options do
+'
+debug: false
+log:
+  syslog-tag: tsr
+  queue-size: 10000
+'
+        end
+        let :log_options_custom do
+'
+debug: false
+log:
+  log-file: /var/log/tsuru.log
+  disable-syslog: true
+  syslog-tag: tsr
+  queue-size: 10000
+'
+        end
+        it 'using default log config' do
+          should contain_file('/etc/tsuru/tsuru.conf').with_content(/.*#{log_options}.*/)
+        end
+        context "set disable syslog and set log file" do
+          before do
+            params.merge!(log_file: "/var/log/tsuru.log", log_disable_syslog: true )
+          end
+          it 'set log config custom' do
+            should contain_file('/etc/tsuru/tsuru.conf').with_content(/.*#{log_options_custom}.*/)
+          end
+        end
       end
 
       it 'requires class base' do
