@@ -310,6 +310,12 @@ iaas:
 # - Debug configuration
 # http://docs.tsuru.io/en/stable/reference/config.html#log-level
 debug: <%= @tsuru_debug %>
+log:
+<%= @log_file ? "  log-file: #{@log_file}\n": nil -%>
+<%= @log_disable_syslog ? "  disable-syslog: #{@log_disable_syslog}\n": nil -%>
+  syslog-tag: <%= @log_syslog_tag %>
+<%= @log_use_stderr ? "  use-stderr: #{@log_use_stderr}\n": nil -%>
+  queue-size: <%= @log_queue_size %>
 
 <%- if @event_throttling_enable -%>
 # - Event throttling configuration
