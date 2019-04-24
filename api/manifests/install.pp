@@ -278,7 +278,7 @@ class api::install (
   $tsuru_debug = false,
   $log_file = undef,
   $log_disable_syslog = false,
-  $log_syslog_tag = 'tsr',
+  $log_syslog_tag = 'tsurud',
   $log_use_stderr = false,
   $log_queue_size = 10000
 

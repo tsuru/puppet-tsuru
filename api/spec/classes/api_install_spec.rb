@@ -737,7 +737,7 @@ event:
 '
 debug: false
 log:
-  syslog-tag: tsr
+  syslog-tag: tsurud
   queue-size: 10000
 '
         end
@@ -747,7 +747,7 @@ debug: false
 log:
   log-file: /var/log/tsuru.log
   disable-syslog: true
-  syslog-tag: tsr
+  syslog-tag: tsurud
   queue-size: 10000
 '
         end
