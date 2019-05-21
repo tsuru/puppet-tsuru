@@ -1,9 +1,9 @@
 user <%= @nginx_user %>;
 worker_processes  <%= @nginx_worker_processes %>;
+<% if @nginx_worker_shutdown_timeout -%>
+worker_shutdown_timeout <%= @nginx_worker_shutdown_timeout %>;
+<% end -%>
 include /etc/nginx/modules-enabled/*.conf;
-<% if @nginx_worker_shutdown_timeout %>
-worker_shutdown_timeout <%= @nginx_worker_shutdown_timeout %>
-<% end %>
 
 events {
     worker_connections  <%= @nginx_worker_connections %>;

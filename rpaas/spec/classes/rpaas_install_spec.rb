@@ -107,10 +107,31 @@ events {
 }
 EOF
 
+      custom_worker_shutdown_timeout = <<"EOF"
+user foobar;
+worker_processes  10;
+worker_shutdown_timeout 5m;
+include /etc/nginx/modules-enabled/*.conf;
+
+events {
+    worker_connections  10;
+}
+EOF
+
+
       it 'custom user, worker_processes and worker_connections' do
         should contain_file('/etc/nginx/nginx.conf').with_content(/#{Regexp.escape(custom_worker_process)}/m)
       end
 
+      context "using worker_shutdown timeout" do
+        let(:params) do
+          super().merge({ 'nginx_worker_shutdown_timeout' => '5m' })
+        end
+
+        it 'set worker_shutdown_timeout to 5m' do
+          should contain_file('/etc/nginx/nginx.conf').with_content(/#{Regexp.escape(custom_worker_shutdown_timeout)}/m)
+        end
+      end
 
       it 'purge custom location with ip restriction' do
         should contain_file('/etc/nginx/nginx.conf').with_content(/#{Regexp.escape(server_purge_entry)}/)
