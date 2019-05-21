@@ -6,6 +6,7 @@ class rpaas::install (
   $nginx_group                       = 'www-data',
   $nginx_worker_processes            = 'auto',
   $nginx_worker_connections          = 1024,
+  $nginx_worker_shutdown_timeout     = undef,
   $nginx_listen                      = 8080,
   $nginx_ssl_listen                  = 8443,
   $nginx_http2                       = false,
