@@ -14,7 +14,7 @@
    ],
   "dependencies": [
     { "name": "puppetlabs/stdlib", "version_requirement": ">= 4.17.1" },
-    { "name": "saz/sudo" },
-    { "name": "tsuru/base" }
+    { "name": "saz/sudo", "version_requirement": "> 0.0.1" },
+    { "name": "tsuru/base", "version_requirement": "> 0.0.1" }
   ]
 }
