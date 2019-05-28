@@ -316,6 +316,9 @@ log:
   syslog-tag: <%= @log_syslog_tag %>
 <%= @log_use_stderr ? "  use-stderr: #{@log_use_stderr}\n": nil -%>
   queue-size: <%= @log_queue_size %>
+  app-log-rate-limit: <%= @log_app_rate_limit %>
+  global-app-log-rate-limit: <%= @log_global_rate_limit %>
+  unsafe-write: <%= @log_unsafe_write %>
 
 <%- if @event_throttling_enable -%>
 # - Event throttling configuration

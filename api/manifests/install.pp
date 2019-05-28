@@ -280,7 +280,10 @@ class api::install (
   $log_disable_syslog = false,
   $log_syslog_tag = 'tsurud',
   $log_use_stderr = false,
-  $log_queue_size = 10000
+  $log_queue_size = 10000,
+  $log_app_rate_limit = 0,
+  $log_global_rate_limit = 0,
+  $log_unsafe_write = false
 
 ) inherits api {
 
