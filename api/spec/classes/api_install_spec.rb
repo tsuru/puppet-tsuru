@@ -739,6 +739,7 @@ debug: false
 log:
   syslog-tag: tsurud
   queue-size: 10000
+  app-log-service: memory
   app-log-rate-limit: 0
   global-app-log-rate-limit: 0
   unsafe-write: false
@@ -752,6 +753,7 @@ log:
   disable-syslog: true
   syslog-tag: tsurud
   queue-size: 10000
+  app-log-service: storage
   app-log-rate-limit: 0
   global-app-log-rate-limit: 100
   unsafe-write: false
@@ -762,7 +764,7 @@ log:
         end
         context "set disable syslog and set log file" do
           before do
-            params.merge!(log_file: "/var/log/tsuru.log", log_disable_syslog: true, log_global_rate_limit: 100 )
+            params.merge!(log_file: "/var/log/tsuru.log", log_app_service: "storage", log_disable_syslog: true, log_global_rate_limit: 100 )
           end
           it 'set log config custom' do
             should contain_file('/etc/tsuru/tsuru.conf').with_content(/.*#{log_options_custom}.*/)

@@ -283,7 +283,8 @@ class api::install (
   $log_queue_size = 10000,
   $log_app_rate_limit = 0,
   $log_global_rate_limit = 0,
-  $log_unsafe_write = false
+  $log_unsafe_write = false,
+  $log_app_service = 'memory',
 
 ) inherits api {
 
