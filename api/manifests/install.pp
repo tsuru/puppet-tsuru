@@ -285,6 +285,7 @@ class api::install (
   $log_global_rate_limit = 0,
   $log_unsafe_write = false,
   $log_app_service = 'memory',
+  $log_app_memory_buffer_bytes = 524288,
 
 ) inherits api {
 
