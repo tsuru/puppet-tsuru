@@ -58,7 +58,8 @@ http {
 <% else -%>
       'Agent:\t${http_user_agent}\t'
 <% end -%>
-      'Fwd:\t${http_x_forwarded_for}';
+      'Fwd:\t${http_x_forwarded_for}\t'
+      'SSL:\t${ssl_server_name}\t${ssl_protocol}\t${ssl_cipher}\t-';
 
     access_log syslog:server=<%= @nginx_syslog_server %>,facility=local6,tag=<%= @nginx_syslog_tag ? @nginx_syslog_tag : 'rpaas' %> main;
     error_log syslog:server=<%= @nginx_syslog_server %>,facility=local6,tag=<%= @nginx_syslog_tag ? @nginx_syslog_tag : 'rpaas' %>;
