@@ -298,7 +298,8 @@ EOF
       'Proxy:\\t${upstream_addr}\\t${upstream_status}\\t${upstream_cache_status}\\t'
       '${upstream_response_length}\\t${upstream_response_time}\\t${request_uri}\\t'
       'Agent:\\t${http_user_agent}\\t$request_id_final\\t'
-      'Fwd:\\t${http_x_forwarded_for}';
+      'Fwd:\\t${http_x_forwarded_for}\\t'
+      'SSL:\\t${ssl_server_name}\\t${ssl_protocol}\\t${ssl_cipher}\\t-';
 
     access_log syslog:server=localhost,facility=local6,tag=rpaas main;
     error_log syslog:server=localhost,facility=local6,tag=rpaas;
