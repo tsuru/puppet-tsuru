@@ -144,11 +144,16 @@ http {
         proxy_cache_lock on;
         proxy_cache_lock_age 60s;
         proxy_cache_lock_timeout 60s;
+        set $xx_real_ip_final $real_ip_final;
+        set $xx_proxy_add_x_forwarded_for $proxy_add_x_forwarded_for;
+        set $xx_forwarded_proto_final $forwarded_proto_final;
+        set $xx_forwarded_host_final $forwarded_host_final;
         more_set_input_headers "X-Real-IP: $real_ip_final";
         more_set_input_headers "X-Forwarded-For: $proxy_add_x_forwarded_for";
         more_set_input_headers "X-Forwarded-Proto: $forwarded_proto_final";
         more_set_input_headers "X-Forwarded-Host: $forwarded_host_final";
 <% if @nginx_request_id_enabled -%>
+        set $xx_request_id_final $request_id_final;
         more_set_input_headers "X-Request-ID: $request_id_final";
 <% if not @nginx_disable_response_request_id -%>
         more_set_headers "X-Request-ID: $request_id_final";
