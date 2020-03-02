@@ -3,6 +3,9 @@ worker_processes  <%= @nginx_worker_processes %>;
 <% if @nginx_worker_shutdown_timeout -%>
 worker_shutdown_timeout <%= @nginx_worker_shutdown_timeout %>;
 <% end -%>
+<% if @nginx_worker_rlimit_nofile -%>
+worker_rlimit_nofile <%= @nginx_worker_rlimit_nofile %>;
+<% end -%>
 include /etc/nginx/modules-enabled/*.conf;
 
 events {

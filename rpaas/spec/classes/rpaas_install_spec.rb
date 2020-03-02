@@ -111,6 +111,7 @@ EOF
 user foobar;
 worker_processes  10;
 worker_shutdown_timeout 5m;
+worker_rlimit_nofile 65536;
 include /etc/nginx/modules-enabled/*.conf;
 
 events {
@@ -123,9 +124,9 @@ EOF
         should contain_file('/etc/nginx/nginx.conf').with_content(/#{Regexp.escape(custom_worker_process)}/m)
       end
 
-      context "using worker_shutdown timeout" do
+      context "using worker_shutdown timeout and rlimt_nofile" do
         let(:params) do
-          super().merge({ 'nginx_worker_shutdown_timeout' => '5m' })
+          super().merge({ 'nginx_worker_shutdown_timeout' => '5m', 'nginx_worker_rlimit_nofile' => '65536' })
         end
 
         it 'set worker_shutdown_timeout to 5m' do
