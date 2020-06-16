@@ -29,7 +29,7 @@ class rpaas::install (
   $nginx_syslog_error_server         = undef,
   $nginx_syslog_access_tag           = undef,
   $nginx_syslog_error_tag            = undef,
-  $nginx_rpaas_tags                  = "rpaas",
+  $nginx_rpaas_tags                  = 'rpaas',
   $nginx_dhparams                    = undef,
   $nginx_vts_enabled                 = false,
   $nginx_lua                         = false,
