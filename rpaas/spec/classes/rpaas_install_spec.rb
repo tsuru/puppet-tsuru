@@ -326,7 +326,8 @@ EOF
         {
           :nginx_request_id_enabled   => true,
           :nginx_syslog_access_type => 'json',
-          :nginx_syslog_access_server => 'localhost'
+          :nginx_syslog_access_server => 'localhost',
+          :nginx_rpaas_tags => 'RPAAS,TESTING'
         }
       end
       log_format = <<"EOF"
@@ -357,7 +358,7 @@ EOF
        '"ssl_server_name":"${ssl_server_name}",'
        '"ssl_protocol":"${ssl_protocol}",'
        '"ssl_cipher":"${ssl_cipher}",'
-       '"_tags":""'
+       '"_tags":"RPAAS,TESTING"'
        '}';
 
     access_log syslog:server=localhost,facility=local6,tag=rpaas main;
