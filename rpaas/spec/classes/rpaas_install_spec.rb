@@ -331,7 +331,7 @@ EOF
         }
       end
       log_format = <<"EOF"
-    log_format mainJSON escape=json '{'
+    log_format main escape=json '{'
        '"@timestamp":"${time_iso8601}",'
        '"@version":"1",'
        '"host":"${hostname}",'
@@ -347,7 +347,7 @@ EOF
        '"connection":"${connection}",'
        '"body_bytes_sent":"${body_bytes_sent}",'
        '"request_time":"${request_time}",'
-       '"request_id":"${request_id_final",'
+       '"request_id":"${request_id_final}",'
        '"upstream_addr":"${upstream_addr}",'
        '"upstream_status":"${upstream_status}",'
        '"upstream_response_length":"${upstream_response_length}",'

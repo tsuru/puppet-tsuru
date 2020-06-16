@@ -64,7 +64,7 @@ http {
       'Fwd:\t${http_x_forwarded_for}\t'
       'SSL:\t${ssl_server_name}\t${ssl_protocol}\t${ssl_cipher}\t-';
 <% else %>
-    log_format mainJSON escape=json '{'
+    log_format main escape=json '{'
        '"@timestamp":"${time_iso8601}",'
        '"@version":"1",'
        '"host":"${hostname}",'
@@ -81,7 +81,7 @@ http {
        '"body_bytes_sent":"${body_bytes_sent}",'
        '"request_time":"${request_time}",'
 <% if @nginx_request_id_enabled -%>
-       '"request_id":"${request_id_final",'
+       '"request_id":"${request_id_final}",'
 <% end -%>
        '"upstream_addr":"${upstream_addr}",'
        '"upstream_status":"${upstream_status}",'
