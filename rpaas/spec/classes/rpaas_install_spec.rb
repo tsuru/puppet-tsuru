@@ -359,7 +359,7 @@ EOF
        '"ssl_server_name":"${ssl_server_name}",'
        '"ssl_protocol":"${ssl_protocol}",'
        '"ssl_cipher":"${ssl_cipher}",'
-       '"_tags":"RPAAS,TESTING"'
+       '"_tags":"RPAAS,TESTING" '
        '}';
 
     access_log syslog:server=localhost,facility=local6,tag=rpaas main;
